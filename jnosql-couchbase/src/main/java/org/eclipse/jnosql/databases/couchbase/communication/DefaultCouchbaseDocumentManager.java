@@ -43,7 +43,9 @@ import java.util.stream.StreamSupport;
 import static java.util.Objects.requireNonNull;
 
 /**
- * The default implementation of {@link CouchbaseDocumentManager}
+ * The default implementation of {@link CouchbaseDocumentManager}.
+ * <br/>
+ * Closing a {@link DefaultCouchbaseDocumentManager} has no effect.
  */
 class DefaultCouchbaseDocumentManager implements CouchbaseDocumentManager {
 
@@ -225,6 +227,9 @@ class DefaultCouchbaseDocumentManager implements CouchbaseDocumentManager {
     }
 
 
+    /**
+     * Closing a {@link DefaultCouchbaseDocumentManager} has no effect.
+     */
     @Override
     public void close() {
     }

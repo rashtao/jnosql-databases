@@ -24,6 +24,8 @@ import java.util.List;
 
 /**
  * The Cassandra implementation to {@link DatabaseManagerFactory}
+ * <br/>
+ * Closing a {@link CassandraColumnManagerFactory} has no effect.
  */
 public class CassandraColumnManagerFactory implements DatabaseManagerFactory {
 
@@ -45,6 +47,9 @@ public class CassandraColumnManagerFactory implements DatabaseManagerFactory {
         return new DefaultCassandraColumnManager(sessionBuilder.build(), database);
     }
 
+    /**
+     * Closing a {@link CassandraColumnManagerFactory} has no effect.
+     */
     @Override
     public void close() {
     }

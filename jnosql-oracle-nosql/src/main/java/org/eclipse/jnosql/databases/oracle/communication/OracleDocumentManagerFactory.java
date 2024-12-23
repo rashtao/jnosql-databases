@@ -23,6 +23,8 @@ import java.util.Objects;
 
 /**
  * The Oracle implementation to {@link DatabaseManagerFactory}
+ * <br/>
+ * Closing a {@link OracleDocumentManagerFactory} has no effect.
  */
 public final class OracleDocumentManagerFactory implements DatabaseManagerFactory {
 
@@ -33,6 +35,9 @@ public final class OracleDocumentManagerFactory implements DatabaseManagerFactor
         this.configuration = configuration;
     }
 
+    /**
+     * Closing a {@link OracleDocumentManagerFactory} has no effect.
+     */
     @Override
     public void close() {
     }

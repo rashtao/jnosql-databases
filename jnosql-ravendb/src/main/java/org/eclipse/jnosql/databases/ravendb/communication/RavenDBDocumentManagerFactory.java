@@ -23,6 +23,8 @@ import java.util.Objects;
 
 /**
  * The RavenDB implementation to {@link DatabaseManagerFactory}
+ * <br/>
+ * Closing a {@link RavenDBDocumentManagerFactory} has no effect.
  */
 public class RavenDBDocumentManagerFactory implements DatabaseManagerFactory {
 
@@ -39,7 +41,9 @@ public class RavenDBDocumentManagerFactory implements DatabaseManagerFactory {
         return new RavenDBDocumentManager(documentStore, database);
     }
 
-
+    /**
+     * Closing a {@link RavenDBDocumentManagerFactory} has no effect.
+     */
     @Override
     public void close() {
 

@@ -22,6 +22,8 @@ import java.util.Objects;
 
 /**
  * The solr implementation to {@link DatabaseManagerFactory}
+ * <br/>
+ * Closing a {@link SolrDocumentManagerFactory} has no effect.
  */
 public class SolrDocumentManagerFactory implements DatabaseManagerFactory {
 
@@ -42,6 +44,9 @@ public class SolrDocumentManagerFactory implements DatabaseManagerFactory {
     }
 
 
+    /**
+     * Closing a {@link SolrDocumentManagerFactory} has no effect.
+     */
     @Override
     public void close() {
     }
