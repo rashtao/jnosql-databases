@@ -41,7 +41,9 @@ import java.util.stream.StreamSupport;
 import static java.util.stream.Collectors.toList;
 
 /**
- * The default implementation of {@link SolrDocumentManager}
+ * The default implementation of {@link SolrDocumentManager}.
+ * <br/>
+ * Closing a {@link DefaultSolrDocumentManager} has no effect.
  */
 class DefaultSolrDocumentManager implements SolrDocumentManager {
 
@@ -182,6 +184,9 @@ class DefaultSolrDocumentManager implements SolrDocumentManager {
         }
     }
 
+    /**
+     * Closing a {@link DefaultSolrDocumentManager} has no effect.
+     */
     @Override
     public void close() {
 

@@ -20,6 +20,11 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
 
 import java.util.Objects;
 
+/**
+ * The couchdb implementation of {@link DatabaseManagerFactory} that returns {@link DefaultCouchDBDocumentManager}.
+ * <br/>
+ * Closing a {@link CouchDBDocumentManagerFactory} has no effect.
+ */
 public class CouchDBDocumentManagerFactory implements DatabaseManagerFactory {
 
 
@@ -39,6 +44,9 @@ public class CouchDBDocumentManagerFactory implements DatabaseManagerFactory {
     }
 
 
+    /**
+     * Closing a {@link CouchDBDocumentManagerFactory} has no effect.
+     */
     @Override
     public void close() {
     }
