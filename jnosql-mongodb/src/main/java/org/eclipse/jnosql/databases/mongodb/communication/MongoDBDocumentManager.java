@@ -50,6 +50,7 @@ import static org.eclipse.jnosql.databases.mongodb.communication.MongoDBUtils.ge
 /**
  * The mongodb implementation to {@link DatabaseManager} that does not support TTL methods
  * <p>{@link MongoDBDocumentManager#insert(CommunicationEntity, Duration)}</p>
+ * <p>Closing a {@link MongoDBDocumentManager} has no effect.
  */
 public class MongoDBDocumentManager implements DatabaseManager {
 
@@ -159,6 +160,11 @@ public class MongoDBDocumentManager implements DatabaseManager {
 
         FindIterable<Document> documents = collection.find(mongoDBQuery);
         documents.projection(Projections.include(query.columns()));
+
+        if (!query.sorts().isEmpty()) {
+            documents.sort(sort(query.sorts()));
+        }
+
         if (query.skip() > 0) {
             documents.skip((int) query.skip());
         }
@@ -166,8 +172,6 @@ public class MongoDBDocumentManager implements DatabaseManager {
         if (query.limit() > 0) {
             documents.limit((int) query.limit());
         }
-
-        query.sorts().stream().map(this::getSort).forEach(documents::sort);
 
         return stream(documents.spliterator(), false).map(MongoDBUtils::of)
                 .map(ds -> CommunicationEntity.of(collectionName, ds));
@@ -181,6 +185,9 @@ public class MongoDBDocumentManager implements DatabaseManager {
         return collection.countDocuments();
     }
 
+    /**
+     * Closing a {@link MongoDBDocumentManager} has no effect.
+     */
     @Override
     public void close() {
 
@@ -254,8 +261,13 @@ public class MongoDBDocumentManager implements DatabaseManager {
                 .map(ds -> CommunicationEntity.of(collectionName, ds));
     }
 
-    private Bson getSort(Sort<?> sort) {
+    private Bson sort(Sort<?> sort) {
         return sort.isAscending() ? Sorts.ascending(sort.property()) : Sorts.descending(sort.property());
+    }
+
+    private Bson sort(List<Sort<?>> sorts) {
+        List<Bson> bsonSorts = sorts.stream().map(this::sort).toList();
+        return Sorts.orderBy(bsonSorts);
     }
 
     /**

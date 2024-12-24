@@ -11,6 +11,7 @@
  *   Contributors:
  *
  *   Otavio Santana
+ *   Michele Rastelli
  */
 package org.eclipse.jnosql.databases.arangodb.communication;
 
@@ -38,6 +39,8 @@ final class QueryAQLConverter {
     private static final String REMOVE = " REMOVE ";
     private static final String RETURN = " RETURN ";
     private static final String SEPARATOR = " ";
+    private static final String START_EXPRESSION = "(";
+    private static final String END_EXPRESSION = ")";
     private static final String AND = " AND ";
     private static final String OR = " OR ";
     private static final String EQUALS = " == ";
@@ -98,6 +101,8 @@ final class QueryAQLConverter {
                     .append(", ").append(maxResult);
         } else if (maxResult > 0) {
             aql.append(LIMIT).append(maxResult);
+        } else if (firstResult > 0) {
+            aql.append(LIMIT).append(firstResult).append(", null");
         }
 
         aql.append(conclusion).append(entity);
@@ -125,6 +130,7 @@ final class QueryAQLConverter {
                                          char entity, int counter) {
 
         Element document = condition.element();
+        int localCounter = counter;
         switch (condition.condition()) {
             case IN:
                 appendCondition(aql, params, entity, document, IN);
@@ -152,26 +158,33 @@ final class QueryAQLConverter {
                 for (CriteriaCondition dc : document.get(new TypeReference<List<CriteriaCondition>>() {
                 })) {
 
-                    if (isFirstCondition(aql, counter)) {
+                    if (isFirstCondition(aql, localCounter)) {
                         aql.append(AND);
                     }
-                    definesCondition(dc, aql, params, entity, ++counter);
+                    definesCondition(dc, aql, params, entity, ++localCounter);
                 }
                 return;
             case OR:
 
                 for (CriteriaCondition dc : document.get(new TypeReference<List<CriteriaCondition>>() {
                 })) {
-                    if (isFirstCondition(aql, counter)) {
+                    if (isFirstCondition(aql, localCounter)) {
                         aql.append(OR);
                     }
-                    definesCondition(dc, aql, params, entity, ++counter);
+                    definesCondition(dc, aql, params, entity, ++localCounter);
                 }
                 return;
             case NOT:
                 CriteriaCondition documentCondition = document.get(CriteriaCondition.class);
-                aql.append(NOT);
-                definesCondition(documentCondition, aql, params, entity, ++counter);
+                aql.append(NOT).append(START_EXPRESSION);
+                definesCondition(documentCondition, aql, params, entity, ++localCounter);
+                aql.append(END_EXPRESSION);
+                return;
+            case BETWEEN:
+                List<Object> betweenList = ValueUtil.convertToList(document.value(), ArangoDBValueWriteDecorator.ARANGO_DB_VALUE_WRITER);
+                appendCondition(aql, params, entity, Element.of(document.name(), betweenList.get(0)), GREATER_EQUALS_THAN);
+                aql.append(AND);
+                appendCondition(aql, params, entity, Element.of(document.name(), betweenList.get(1)), LESSER_EQUALS_THAN);
                 return;
             default:
                 throw new IllegalArgumentException("The condition does not support in AQL: " + condition.condition());
@@ -188,7 +201,7 @@ final class QueryAQLConverter {
         aql.append(SEPARATOR).append(entity).append('.').append(document.name())
                 .append(condition).append(PARAM_APPENDER).append(nameParam);
         if (IN.equals(condition)) {
-            params.put(nameParam, ValueUtil.convertToList(document.value()));
+            params.put(nameParam, ValueUtil.convertToList(document.value(), ArangoDBValueWriteDecorator.ARANGO_DB_VALUE_WRITER));
         } else {
             params.put(nameParam, document.get());
         }

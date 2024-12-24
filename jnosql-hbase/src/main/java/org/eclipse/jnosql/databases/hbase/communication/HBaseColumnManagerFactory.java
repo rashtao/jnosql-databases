@@ -32,6 +32,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The HBase implementation of {@link DatabaseManagerFactory} that returns {@link HBaseColumnManager}.
+ * <br/>
+ * Closing an {@link HBaseColumnManagerFactory} has no effect.
+ */
 public class HBaseColumnManagerFactory implements DatabaseManagerFactory {
 
     private final Configuration configuration;
@@ -85,6 +90,9 @@ public class HBaseColumnManagerFactory implements DatabaseManagerFactory {
         admin.createTable(descriptor);
     }
 
+    /**
+     * Closing an {@link HBaseColumnManagerFactory} has no effect.
+     */
     @Override
     public void close() {
 

@@ -18,12 +18,14 @@ package org.eclipse.jnosql.databases.mongodb.communication;
 
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
+import org.eclipse.jnosql.communication.Condition;
 import org.eclipse.jnosql.communication.TypeReference;
 import org.eclipse.jnosql.communication.ValueUtil;
 import org.eclipse.jnosql.communication.semistructured.CriteriaCondition;
 import org.eclipse.jnosql.communication.semistructured.Element;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 final class DocumentQueryConversor {
 
@@ -32,7 +34,7 @@ final class DocumentQueryConversor {
 
     public static Bson convert(CriteriaCondition condition) {
         Element document = condition.element();
-        Object value = ValueUtil.convert(document.value());
+        Object value = ValueUtil.convert(document.value(), MongoDBValueWriteDecorator.MONGO_DB_VALUE_WRITER);
         return switch (condition.condition()) {
             case EQUALS -> Filters.eq(document.name(), value);
             case GREATER_THAN -> Filters.gt(document.name(), value);
@@ -40,11 +42,20 @@ final class DocumentQueryConversor {
             case LESSER_THAN -> Filters.lt(document.name(), value);
             case LESSER_EQUALS_THAN -> Filters.lte(document.name(), value);
             case IN -> {
-                List<Object> inList = ValueUtil.convertToList(document.value());
+                List<Object> inList = ValueUtil.convertToList(document.value(), MongoDBValueWriteDecorator.MONGO_DB_VALUE_WRITER);
                 yield Filters.in(document.name(), inList.toArray());
             }
-            case NOT -> Filters.not(convert(document.get(CriteriaCondition.class)));
-            case LIKE -> Filters.regex(document.name(), value.toString());
+            case NOT -> {
+                var criteriaCondition = document.get(CriteriaCondition.class);
+                if (Condition.EQUALS.equals(criteriaCondition.condition())) {
+                    Element element = criteriaCondition.element();
+                    if (element.get() == null) {
+                        yield Filters.exists(element.name(), true);
+                    }
+                }
+                yield Filters.nor(convert(criteriaCondition));
+            }
+            case LIKE -> Filters.regex(document.name(), Pattern.compile(prepareRegexValue(value.toString())));
             case AND -> {
                 List<CriteriaCondition> andList = condition.element().value().get(new TypeReference<>() {
                 });
@@ -57,10 +68,23 @@ final class DocumentQueryConversor {
                 yield Filters.or(orList.stream()
                         .map(DocumentQueryConversor::convert).toList());
             }
+            case BETWEEN -> {
+                List<Object> betweenList = ValueUtil.convertToList(document.value(), MongoDBValueWriteDecorator.MONGO_DB_VALUE_WRITER);
+                yield Filters.and(Filters.gte(document.name(), betweenList.get(0)),
+                        Filters.lte(document.name(), betweenList.get(1)));
+
+            }
             default -> throw new UnsupportedOperationException("The condition " + condition.condition()
                     + " is not supported from mongoDB diana driver");
         };
     }
 
+    public static String prepareRegexValue(String rawData) {
+        if (rawData == null)
+            return "^$";
+        return "^" + rawData
+                .replaceAll("_", ".{1}")
+                .replaceAll("%", ".{1,}");
+    }
 
 }

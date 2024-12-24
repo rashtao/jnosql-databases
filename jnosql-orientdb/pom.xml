@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.eclipse.jnosql.databases</groupId>
         <artifactId>jnosql-databases-parent</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>1.1.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>jnosql-orientdb</artifactId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-graphdb</artifactId>
-            <version>3.2.28</version>
+            <version>3.2.35</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

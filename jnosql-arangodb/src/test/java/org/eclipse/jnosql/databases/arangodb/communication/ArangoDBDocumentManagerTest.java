@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -278,6 +279,109 @@ public class ArangoDBDocumentManagerTest {
         assertThat(entities).isEmpty();
     }
 
+
+    @Test
+    void shouldIncludeLimit() {
+        for (int index = 0; index < 20; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var select = select().from(COLLECTION_NAME).orderBy("index").asc().limit(4).build();
+        var entities = entityManager.select(select).toList();
+        var indexes = entities.stream().map(e -> e.find("index").orElseThrow().get()).toList();
+        org.assertj.core.api.Assertions.assertThat(indexes).hasSize(4).contains(0, 1, 2, 3);
+        DeleteQuery deleteQuery = delete().from(COLLECTION_NAME).build();
+        entityManager.delete(deleteQuery);
+    }
+
+    @Test
+    void shouldIncludeSkipLimit() {
+        for (int index = 0; index < 20; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var select = select().from(COLLECTION_NAME).orderBy("index").asc().skip(3).limit(4).build();
+        var entities = entityManager.select(select).toList();
+        var indexes = entities.stream().map(e -> e.find("index").orElseThrow().get()).toList();
+        org.assertj.core.api.Assertions.assertThat(indexes).hasSize(4).contains(3, 4, 5, 6);
+    }
+
+    @Test
+    void shouldIncludeSkip() {
+        for (int index = 0; index < 20; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var select = select().from(COLLECTION_NAME).orderBy("index").asc().skip(5).build();
+        var entities = entityManager.select(select).toList();
+        var indexes = entities.stream().map(e -> e.find("index").orElseThrow().get()).toList();
+        org.assertj.core.api.Assertions.assertThat(indexes).hasSize(15);
+    }
+
+    @Test
+    void shouldExposeArangoDB() {
+        ArangoDB adb = entityManager.getArangoDB();
+        assertThat(adb).isNotNull();
+        assertThat(adb.getVersion()).isNotNull();
+    }
+
+    @Test
+    void shouldInsertUUID() {
+        var entity = getEntity();
+        entity.add("uuid", UUID.randomUUID());
+        var documentEntity = entityManager.insert(entity);
+        Optional<Element> uuid = documentEntity.find("uuid");
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(uuid).isPresent();
+            Element element = uuid.orElseThrow();
+            soft.assertThat(element.name()).isEqualTo("uuid");
+            soft.assertThat(element.get(UUID.class)).isInstanceOf(UUID.class);
+        });
+
+    }
+
+    @Test
+    void shouldFindBetween() {
+        var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
+        entityManager.delete(deleteQuery);
+        entityManager.insert(getEntitiesWithValues());
+
+        var query = select().from(COLLECTION_NAME)
+                .where("age").between(22, 23)
+                .build();
+
+        var result = entityManager.select(query).toList();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(2);
+            softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).contains(22, 23);
+            softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).doesNotContain(25);
+        });
+    }
+
+    @Test
+    void shouldFindBetween2() {
+        var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
+        entityManager.delete(deleteQuery);
+        entityManager.insert(getEntitiesWithValues());
+
+        var query = select().from(COLLECTION_NAME)
+                .where("age").between(22, 23)
+                .and("type").eq("V")
+                .build();
+
+        var result = entityManager.select(query).toList();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(2);
+            softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).contains(22, 23);
+            softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).doesNotContain(25);
+        });
+    }
+
     private CommunicationEntity getEntity() {
         CommunicationEntity entity = CommunicationEntity.of(COLLECTION_NAME);
         Map<String, Object> map = new HashMap<>();
@@ -290,8 +394,9 @@ public class ArangoDBDocumentManagerTest {
     }
 
     private CommunicationEntity createDocumentList() {
+        String id = UUID.randomUUID().toString();
         CommunicationEntity entity = CommunicationEntity.of("AppointmentBook");
-        entity.add(Element.of("_id", "ids"));
+        entity.add(Element.of("_key", id));
         List<List<Element>> documents = new ArrayList<>();
 
         documents.add(asList(Element.of("name", "Ada"), Element.of("type", ContactType.EMAIL),
@@ -305,6 +410,29 @@ public class ArangoDBDocumentManagerTest {
 
         entity.add(Element.of("contacts", documents));
         return entity;
+    }
+
+    private List<CommunicationEntity> getEntitiesWithValues() {
+        var lucas = CommunicationEntity.of(COLLECTION_NAME);
+        lucas.add(Element.of("name", "Lucas"));
+        lucas.add(Element.of("age", 22));
+        lucas.add(Element.of("location", "BR"));
+        lucas.add(Element.of("type", "V"));
+
+        var luna = CommunicationEntity.of(COLLECTION_NAME);
+        luna.add(Element.of("name", "Luna"));
+        luna.add(Element.of("age", 23));
+        luna.add(Element.of("location", "US"));
+        luna.add(Element.of("type", "V"));
+
+        var otavio = CommunicationEntity.of(COLLECTION_NAME);
+        otavio.add(Element.of("name", "Otavio"));
+        otavio.add(Element.of("age", 25));
+        otavio.add(Element.of("location", "BR"));
+        otavio.add(Element.of("type", "V"));
+
+
+        return asList(lucas, otavio, luna);
     }
 
 }

@@ -19,6 +19,7 @@ import com.arangodb.ArangoDB;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.DocumentCreateEntity;
 import com.arangodb.entity.DocumentUpdateEntity;
+import jakarta.json.JsonObject;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
@@ -26,7 +27,6 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -61,36 +61,35 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
 
     @Override
     public CommunicationEntity insert(CommunicationEntity entity)  {
-        Objects.requireNonNull(entity, "entity is required");
+        requireNonNull(entity, "entity is required");
         String collectionName = entity.name();
         checkCollection(collectionName);
-        BaseDocument baseDocument = ArangoDBUtil.getBaseDocument(entity);
-        DocumentCreateEntity<Void> arandoDocument = arangoDB.db(database)
-                .collection(collectionName).insertDocument(baseDocument);
-        updateEntity(entity, arandoDocument.getKey(), arandoDocument.getId(), arandoDocument.getRev());
+        JsonObject jsonObject = ArangoDBUtil.toJsonObject(entity);
+        DocumentCreateEntity<Void> arangoDocument = arangoDB.db(database)
+                .collection(collectionName).insertDocument(jsonObject);
+        updateEntity(entity, arangoDocument.getKey(), arangoDocument.getId(), arangoDocument.getRev());
         return entity;
     }
 
     @Override
     public CommunicationEntity update(CommunicationEntity entity) {
-        Objects.requireNonNull(entity, "entity is required");
+        requireNonNull(entity, "entity is required");
         String collectionName = entity.name();
         checkCollection(collectionName);
-        String id = entity.find(ID, String.class)
+        entity.find(KEY, String.class)
                 .orElseThrow(() -> new IllegalArgumentException("The document does not provide" +
-                        " the _id column"));
-        feedKey(entity, id);
-        BaseDocument baseDocument = ArangoDBUtil.getBaseDocument(entity);
-        DocumentUpdateEntity<Void> arandoDocument = arangoDB.db(database)
-                .collection(collectionName).updateDocument(baseDocument.getKey(), baseDocument);
-        updateEntity(entity, arandoDocument.getKey(), arandoDocument.getId(), arandoDocument.getRev());
+                        " the _key column"));
+        JsonObject jsonObject = ArangoDBUtil.toJsonObject(entity);
+        DocumentUpdateEntity<Void> arangoDocument = arangoDB.db(database)
+                .collection(collectionName).updateDocument(jsonObject.getString(KEY), jsonObject);
+        updateEntity(entity, arangoDocument.getKey(), arangoDocument.getId(), arangoDocument.getRev());
         return entity;
     }
 
 
     @Override
     public Iterable<CommunicationEntity> update(Iterable<CommunicationEntity> entities) {
-        Objects.requireNonNull(entities, "entities is required");
+        requireNonNull(entities, "entities is required");
         return StreamSupport.stream(entities.spliterator(), false)
                 .map(this::update)
                 .collect(Collectors.toList());
@@ -100,7 +99,7 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
     public void delete(DeleteQuery query) {
         requireNonNull(query, "query is required");
         try {
-
+            checkCollection(query.name());
             if (query.condition().isEmpty()) {
                 AQLQueryResult delete = QueryAQLConverter.delete(query);
                 arangoDB.db(database).query(delete.query(), BaseDocument.class);
@@ -123,10 +122,11 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
     @Override
     public Stream<CommunicationEntity> select(SelectQuery query) throws NullPointerException {
         requireNonNull(query, "query is required");
-
+        checkCollection(query.name());
         AQLQueryResult result = QueryAQLConverter.select(query);
-        ArangoCursor<BaseDocument> documents = arangoDB.db(database).query(result.query(),
-                BaseDocument.class,
+        LOGGER.finest("Executing AQL: " + result.query());
+        ArangoCursor<JsonObject> documents = arangoDB.db(database).query(result.query(),
+                JsonObject.class,
                 result.values(), null);
 
         return StreamSupport.stream(documents.spliterator(), false)
@@ -135,7 +135,7 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
 
     @Override
     public long count(String documentCollection) {
-        Objects.requireNonNull(documentCollection, "document collection is required");
+        requireNonNull(documentCollection, "document collection is required");
         String aql = "RETURN LENGTH(" + documentCollection + ")";
         ArangoCursor<Object> query = arangoDB.db(database).query(aql, Object.class, emptyMap(), null);
         return StreamSupport.stream(query.spliterator(), false).findFirst().map(Number.class::cast)
@@ -147,10 +147,9 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
     public Stream<CommunicationEntity> aql(String query, Map<String, Object> params) throws NullPointerException {
         requireNonNull(query, "query is required");
         requireNonNull(params, "values is required");
-        ArangoCursor<BaseDocument> result = arangoDB.db(database).query(query,BaseDocument.class, params, null);
+        ArangoCursor<JsonObject> result = arangoDB.db(database).query(query, JsonObject.class, params, null);
         return StreamSupport.stream(result.spliterator(), false)
                 .map(ArangoDBUtil::toEntity);
-
     }
 
     @Override
@@ -188,7 +187,7 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
 
     @Override
     public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities) {
-        Objects.requireNonNull(entities, "entities is required");
+        requireNonNull(entities, "entities is required");
         return StreamSupport.stream(entities.spliterator(), false)
                 .map(this::insert)
                 .collect(Collectors.toList());
@@ -196,32 +195,22 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
 
     @Override
     public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities, Duration ttl) {
-        Objects.requireNonNull(entities, "entities is required");
-        Objects.requireNonNull(ttl, "ttl is required");
+        requireNonNull(entities, "entities is required");
+        requireNonNull(ttl, "ttl is required");
         return StreamSupport.stream(entities.spliterator(), false)
                 .map(e -> this.insert(e, ttl))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ArangoDB getArangoDB() {
+        return arangoDB;
     }
 
     private void updateEntity(CommunicationEntity entity, String key, String id, String rev) {
         entity.add(Element.of(KEY, key));
         entity.add(Element.of(ID, id));
         entity.add(Element.of(REV, rev));
-    }
-
-    private static void feedKey(CommunicationEntity entity, String id) {
-        if (entity.find(KEY).isEmpty()) {
-            String[] values = id.split("/");
-            if (values.length == 2) {
-                entity.add(KEY, values[1]);
-            } else {
-                entity.add(KEY, values[0]);
-            }
-        }
-    }
-
-    ArangoDB getArangoDB() {
-        return arangoDB;
     }
 
 }

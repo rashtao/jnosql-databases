@@ -15,6 +15,7 @@
 
 package org.eclipse.jnosql.databases.arangodb.communication;
 
+import com.arangodb.ArangoDB;
 import org.eclipse.jnosql.communication.Value;
 import org.eclipse.jnosql.communication.keyvalue.BucketManager;
 import org.eclipse.jnosql.communication.keyvalue.BucketManagerFactory;
@@ -41,8 +42,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ArangoDBKeyValueEntityManagerTest {
     private BucketManager keyValueEntityManager;
 
-    private BucketManagerFactory keyValueEntityManagerFactory;
-
     private User userOtavio = new User("otavio");
     private KeyValueEntity keyValueOtavio = KeyValueEntity.of("otavio", Value.of(userOtavio));
 
@@ -51,7 +50,7 @@ public class ArangoDBKeyValueEntityManagerTest {
 
     @BeforeEach
     public void init() {
-        keyValueEntityManagerFactory = KeyvalueDatabase.INSTANCE.get();
+        BucketManagerFactory keyValueEntityManagerFactory = KeyvalueDatabase.INSTANCE.get();
         keyValueEntityManager = keyValueEntityManagerFactory.apply("users-entity");
     }
 
@@ -118,4 +117,14 @@ public class ArangoDBKeyValueEntityManagerTest {
         Iterable<Value> users = values;
         assertEquals(0L, StreamSupport.stream(keyValueEntityManager.get(keys).spliterator(), false).count());
     }
+
+    @Test
+    void getArangoDB() {
+        assertThat(keyValueEntityManager).isInstanceOf(ArangoDBBucketManager.class);
+        ArangoDBBucketManager adbAccessor = (ArangoDBBucketManager) keyValueEntityManager;
+        ArangoDB adb = adbAccessor.getArangoDB();
+        assertThat(adb).isNotNull();
+        assertThat(adb.getVersion()).isNotNull();
+    }
+
 }

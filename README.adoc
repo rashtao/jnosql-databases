@@ -22,7 +22,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-arangodb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -179,7 +179,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-cassandra</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -330,7 +330,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-couchbase</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -455,7 +455,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-couchdb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -531,7 +531,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-dynamodb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -681,7 +681,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-elasticsearch</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -765,7 +765,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-hazelcast</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -873,7 +873,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-hbase</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -916,7 +916,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-infinispan</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -966,7 +966,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-memcached</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1050,7 +1050,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-mongodb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1147,7 +1147,7 @@ Stream<Person> stream = template.select(Person.class , filter);
 
 image::https://www.jnosql.org/img/logos/oracle.png[Oracle NoSQL Project,align="center"width=25%,height=25%]
 
-[Oracle NoSQL Database](https://www.oracle.com/database/nosql/technologies/nosql/) is a versatile multi-model database offering flexible data models for documents, graphs, and key-value pairs. It empowers developers to build high-performance applications using a user-friendly SQL-like query language or JavaScript extensions.
+https://www.oracle.com/database/nosql/technologies/nosql/[Oracle NoSQL Database] is a versatile multi-model database offering flexible data models for documents, graphs, and key-value pairs. It empowers developers to build high-performance applications using a user-friendly SQL-like query language or JavaScript extensions.
 
 This API provides support for *Document* and *Key-Value* data types.
 
@@ -1160,13 +1160,13 @@ You can include Oracle NoSQL as a dependency using either Maven or Gradle:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-oracle-nosql</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
 === Configuration
 
-The API offers the `OracleNoSQLConfigurations` class to programmatically set up credentials. It also supports configuration via the [MicroProfile Config](https://microprofile.io/microprofile-config/) specification.
+The API offers the `OracleNoSQLConfigurations` class to programmatically set up credentials. It also supports configuration via the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
 
 [cols="Oracle NoSQL Properties"]
 |===
@@ -1308,7 +1308,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-orientdb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1419,7 +1419,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-ravendb</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1464,58 +1464,164 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-redis</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
 === Configuration
 
-This API provides the ```RedisConfigurations``` class to programmatically establish the credentials.
-Please note that you can establish properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
-
-[cols="Redis"]
-|===
-|Configuration property |Description
-
-|`jnosql.redis.host`
-|The database host
-
-|`jnosql.redis.port`
-|The database port
-
-|`jnosql.redis.timeout`
-|The redis timeout, the default value 2000 on milliseconds
-
-|`jnosql.redis.password`
-|The user's password
-
-|`jnosql.redis.database`
-|The redis database number, the default value is 0
-
-|`jnosql.redis.client.name`
-|The client's name
-
-|`jnosql.redis.max.total`
-|The value for the maxTotal configuration attribute for pools created with this configuration instance, the default value 1000.
-
-|`jnosql.redis.max.idle`
-|The value for the maxIdle configuration attribute for pools created with this configuration instance, the default value 10.
-
-|`jnosql.redis.min.idle`
-|The value for the minIdle configuration attribute for pools created with this configuration instance, the default value 1.
-
-|`jnosql.redis.max.wait.millis`
-|The value for the maxWait configuration attribute for pools created with this configuration instance, the default value 3000.
-
-|===
-
 This is an example using Redis's Key-Value API with MicroProfile Config.
+Please note that you can establish properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
 
 [source,properties]
 ----
 jnosql.keyvalue.provider=org.eclipse.jnosql.databases.redis.communication.RedisConfiguration
 jnosql.keyvalue.database=heroes
 ----
+
+This API provides enum classes to programmatically establish the credentials as:
+
+- link:README.adoc#_single_node_configuration[`RedisConfigurations`] for single node configuration
++
+[source,properties]
+----
+# Single Node Configuration
+
+# by default the host is localhost
+jnosql.redis.host=localhost
+# by default the port is 6379
+jnosql.redis.port=6379
+# if you have user
+jnosql.redis.user=youruser
+# if you have password
+jnosql.redis.password=yourpassword
+----
+
+- link:README.adoc#_redis_sentinel_configuration[`RedisSentinelConfigurations`] for sentinel configuration
++
+[source,properties]
+----
+# Sentinel Configuration
+jnosql.redis.sentinel.hosts=host1:26379,host2:26379
+
+jnosql.redis.sentinel.master.name=masterName
+jnosql.redis.sentinel.master.user=masterUser
+jnosql.redis.sentinel.master.password=masterPassword
+#jnosql.redis.sentinel.master.ssl=false
+#jnosql.redis.sentinel.master.timeout=2000
+#jnosql.redis.sentinel.master.connection.timeout=2000
+#jnosql.redis.sentinel.master.socket.timeout=2000
+
+jnosql.redis.sentinel.slave.user=slaveUser
+jnosql.redis.sentinel.slave.password=slavePassword
+#jnosql.redis.sentinel.slave.ssl=false
+#jnosql.redis.sentinel.slave.timeout=2000
+#jnosql.redis.sentinel.slave.connection.timeout=2000
+#jnosql.redis.sentinel.slave.socket.timeout=2000
+----
+
+- link:README.adoc#_redis_sentinel_configuration[`RedisClusterConfigurations`] for cluster configuration
++
+[source,properties]
+----
+# Cluster Configuration
+
+jnosql.redis.cluster.hosts=host1:6379,host2:6379
+jnosql.redis.cluster.user=clusterUser
+jnosql.redis.cluster.password=clusterPassword
+jnosql.redis.cluster.client.name=clusterClientName
+jnosql.redis.cluster.max.attempts=5
+jnosql.redis.cluster.max.total.retries.duration=10000
+#jnosql.redis.cluster.ssl=false
+#jnosql.redis.cluster.timeout=2000
+#jnosql.redis.cluster.connection.timeout=2000
+#jnosql.redis.cluster.socket.timeout=2000
+----
+
+==== Single Node Configuration
+
+This API provides the `RedisConfigurations` class to programmatically establish the credentials.
+Please note that you can establish properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
+
+[cols="2,2", options="header"]
+|===
+|Configuration property |Description
+
+|`jnosql.redis.host` |The database host
+|`jnosql.redis.port` |The database port
+|`jnosql.redis.timeout` |The redis timeout, the default value is 2000 milliseconds
+|`jnosql.redis.password` |The password's credential
+|`jnosql.redis.database` |The redis database number
+|`jnosql.redis.client.name` |The cluster client's name. The default value is 0.
+|`jnosql.redis.max.total` |The value for the maxTotal configuration attribute for pools created with this configuration instance. The default value is 1000.
+|`jnosql.redis.max.idle` |The value for the maxIdle configuration attribute for pools created with this configuration instance. The default value is 10.
+|`jnosql.redis.min.idle` |The value for the minIdle configuration attribute for pools created with this configuration instance. The default value is 1.
+|`jnosql.redis.max.wait.millis` |The value for the maxWait configuration attribute for pools created with this configuration instance. The default value is 3000 milliseconds.
+|`jnosql.redis.connection.timeout` |The connection timeout in milliseconds configuration attribute for the jedis client configuration created with this configuration instance.
+|`jnosql.redis.socket.timeout` |The socket timeout in milliseconds configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.user` |The user configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.ssl` |The ssl configuration attribute for the jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.protocol` |The protocol configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.clientset.info.config.disabled` |The clientset info disabled configuration attribute for the jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.clientset.info.config.libname.suffix` |The clientset info configuration libname suffix attribute for the jedis client configuration with this configuration instance.
+|===
+
+==== Redis Sentinel Configuration
+
+This API provides the `RedisSentinelConfigurations` class to programmatically establish the credentials.
+Please note that you can establish properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
+
+[cols="2,2", options="header"]
+|===
+|Configuration Property |Description
+
+|`jnosql.redis.sentinel.hosts` |The value for the sentinel HOST:PORT (separated by comma) configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.name` |The value for the master name configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.client.name` |The master client's name, the default value is 0
+|`jnosql.redis.sentinel.slave.client.name` |The slave client's name, the default value is 0
+|`jnosql.redis.sentinel.master.timeout` |The master redis timeout, the default value is 2000 milliseconds
+|`jnosql.redis.sentinel.slave.timeout` |The slave redis timeout, the default value is 2000 milliseconds
+|`jnosql.redis.sentinel.master.connection.timeout` |The connection timeout in milliseconds configuration attribute for the master jedis client configuration created with this configuration instance.
+|`jnosql.redis.sentinel.slave.connection.timeout` |The connection timeout in milliseconds configuration attribute for the slave jedis client configuration created with this configuration instance.
+|`jnosql.redis.sentinel.master.socket.timeout` |The socket timeout in milliseconds configuration attribute for the master jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.slave.socket.timeout` |The socket timeout in milliseconds configuration attribute for the slave jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.user` |The user configuration attribute for the master jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.slave.user` |The user configuration attribute for the slave jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.password` |The password configuration attribute for the master jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.slave.password` |The password configuration attribute for the slave jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.ssl` |The ssl configuration attribute for the master jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.sentinel.slave.ssl` |The ssl configuration attribute for the slave jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.sentinel.master.protocol` |The protocol configuration attribute for the master jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.slave.protocol` |The protocol configuration attribute for the slave jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.master.clientset.info.config.disabled` |The clientset info disabled configuration attribute for the master jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.sentinel.slave.clientset.info.config.disabled` |The clientset info disabled configuration attribute for the slave jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.sentinel.master.clientset.info.config.libname.suffix` |The clientset info configuration libname suffix attribute for the master jedis client configuration with this configuration instance.
+|`jnosql.redis.sentinel.slave.clientset.info.config.libname.suffix` |The clientset info configuration libname suffix attribute for the slave jedis client configuration with this configuration instance.
+|===
+
+==== Redis Cluster Configuration
+
+This API provides the `RedisClusterConfigurations` class to programmatically establish the credentials.
+Please note that you can establish properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
+
+[cols="2,2", options="header"]
+|===
+|Configuration Property |Description
+
+|`jnosql.redis.cluster.hosts` |The value for the sentinel HOST:PORT (separated by comma) configuration attribute for the jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.client.name` |The cluster client's name. The default value is 0.
+|`jnosql.redis.cluster.timeout` |The cluster redis timeout, the default value is 2000 milliseconds
+|`jnosql.redis.cluster.connection.timeout` |The connection timeout in milliseconds configuration attribute for the cluster jedis client configuration created with this configuration instance.
+|`jnosql.redis.cluster.socket.timeout` |The socket timeout in milliseconds configuration attribute for the cluster jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.user` |The user configuration attribute for the cluster jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.password` |The password configuration attribute for the cluster jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.ssl` |The ssl configuration attribute for the cluster jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.cluster.protocol` |The protocol configuration attribute for the cluster jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.clientset.info.config.disabled` |The clientset info disabled configuration attribute for the cluster jedis client configuration with this configuration instance. The default value is false.
+|`jnosql.redis.cluster.clientset.info.config.libname.suffix` |The clientset info configuration libname suffix attribute for the cluster jedis client configuration with this configuration instance.
+|`jnosql.redis.cluster.max.attempts` |The value for the max attempts configuration attribute for the cluster jedis client configuration with this configuration instance. Default is 5.
+|`jnosql.redis.cluster.max.total.retries.duration` |The value for the max total retries configuration attribute for the cluster jedis client configuration with this configuration instance. Default is 10000 milliseconds.
+|===
 
 === RedisBucketManagerFactory
 
@@ -1571,7 +1677,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-redis</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1617,7 +1723,7 @@ You can use either the Maven or Gradle dependencies:
 <dependency>
   <groupId>org.eclipse.jnosql.databases</groupId>
   <artifactId>jnosql-solr</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.4</version>
 </dependency>
 ----
 
@@ -1699,6 +1805,118 @@ The ```SolrTemplate``` interface is a specialization of the ```DocumentTemplate`
 SolrTemplate template;
 ...
 List<Person> people = template.solr("age:@age AND type:@type AND _entity:@entity", params);
+----
+
+
+=== Graph (Apache Tinkerpop)
+
+Currently, the Jakarta NoSQL doesn't define an API for Graph database types but Eclipse JNoSQL provides a Graph template to explore the specific behavior of this NoSQL type.
+
+Eclipse JNoSQL offers a mapping implementation for Graph NoSQL types:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.jnosql.databases</groupId>
+    <artifactId>jnosql-tinkerpop</artifactId>
+    <version>1.1.4</version>
+</dependency>
+----
+
+Despite the other three NoSQL types, Eclipse JNoSQL API does not offer a communication layer for Graph NoSQL types. Instead, it integrates with https://tinkerpop.apache.org/[Apache Tinkerpop 3.x].
+
+[source,java]
+----
+@Inject
+GraphTemplate template;
+...
+
+Category java = Category.of("Java");
+Book effectiveJava = Book.of("Effective Java");
+
+template.insert(java);
+template.insert(effectiveJava);
+EdgeEntity edge = template.edge(java, "is", software);
+
+Stream<Book> books = template.getTraversalVertex()
+        .hasLabel("Category")
+        .has("name", "Java")
+        .in("is")
+        .hasLabel("Book")
+        .getResult();
+----
+
+Apache TinkerPop is database agnostic. Thus, you can change the database in your application with no or minimal impact on source code.
+
+You can define the database settings using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification, so you can add properties and overwrite it in the environment following the https://12factor.net/config[Twelve-Factor App].
+
+[source,properties]
+----
+jnosql.graph.provider=<CLASS-DRIVER>
+jnosql.provider.host=<HOST>
+jnosql.provider.user=<USER>
+jnosql.provider.password=<PASSWORD>
+----
+
+TIP: The ```jnosql.graph.provider``` property is necessary when you have more than one driver in the classpath. Otherwise, it will take the first one.
+
+These configuration settings are the default behavior. Nevertheless, there is an option to programmatically configure these settings. Create a class that implements the ```Supplier<Graph>```, then define it using the ```@Alternative``` and ```@Priority``` annotations.
+
+[source,java]
+----
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION)
+public class ManagerSupplier implements Supplier<Graph> {
+
+    @Produces
+    public Graph get() {
+        Graph graph = ...; // from a provider
+        return graph;
+    }
+}
+----
+
+You can work with several document database instances through CDI qualifier. To identify each database instance, make a `Graph` visible for CDI by putting the ```@Produces``` and the ```@Database``` annotations in the method.
+
+[source,java]
+----
+@Inject
+@Database(value = DatabaseType.GRAPH, provider = "databaseA")
+private GraphTemplate templateA;
+
+@Inject
+@Database(value = DatabaseType.GRAPH, provider = "databaseB")
+private GraphTemplate templateB;
+
+// producers methods
+@Produces
+@Database(value = DatabaseType.GRAPH, provider = "databaseA")
+public Graph getManagerA() {
+    return manager;
+}
+
+@Produces
+@Database(value = DatabaseType.GRAPH, provider = "databaseB")
+public Graph getManagerB() {
+    return manager;
+}
+----
+
+
+Eclipse JNoSQL does not provide https://mvnrepository.com/artifact/org.apache.tinkerpop/gremlin-core[Apache Tinkerpop 3 dependency]; check if the provider does. Otherwise, do it manually.
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.tinkerpop</groupId>
+    <artifactId>jnosql-gremlin-core</artifactId>
+    <version>${tinkerpop.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.tinkerpop</groupId>
+    <artifactId>jnosql-gremlin-groovy</artifactId>
+    <version>${tinkerpop.version}</version>
+</dependency>
 ----
 
 == Getting Help

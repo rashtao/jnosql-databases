@@ -36,6 +36,8 @@ import static org.eclipse.jnosql.communication.ValueUtil.convert;
 
 /**
  * The couchbase implementation to {@link BucketManager}
+ * <br/>
+ * Closing a {@link CouchbaseBucketManager} has no effect.
  */
 public class CouchbaseBucketManager implements BucketManager {
 
@@ -148,6 +150,9 @@ public class CouchbaseBucketManager implements BucketManager {
         keys.forEach(this::delete);
     }
 
+    /**
+     * Closing a {@link CouchbaseBucketManager} has no effect.
+     */
     @Override
     public void close() {
     }
