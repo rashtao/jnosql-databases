@@ -91,7 +91,7 @@ class DefaultMongoDBTemplateTest {
         assertThrows(NullPointerException.class,() -> template.delete("Collection", null));
         assertThrows(NullPointerException.class,() -> template.delete((String) null, filter));
 
-        assertThrows(NullPointerException.class,() -> template.delete(MongoDBPerson.class, null));
+        assertThrows(NullPointerException.class,() -> template.delete(BirthdayPerson.class, null));
         assertThrows(NullPointerException.class,() -> template.delete((Class<Object>) null, filter));
     }
 
@@ -105,15 +105,15 @@ class DefaultMongoDBTemplateTest {
     @Test
     void shouldDeleteWithEntity() {
         Bson filter = eq("name", "Poliana");
-        template.delete(MongoDBPerson.class, filter);
+        template.delete(BirthdayPerson.class, filter);
         Mockito.verify(manager).delete("Person", filter);
     }
 
     @Test
     void shouldDeleteAll() {
-        EntityMetadata metadata = entities.get(MongoDBPerson.class);
+        EntityMetadata metadata = entities.get(BirthdayPerson.class);
         DeleteQuery query = DeleteQuery.delete().from(metadata.name()).build();
-        template.deleteAll(MongoDBPerson.class);
+        template.deleteAll(BirthdayPerson.class);
         Mockito.verify(manager).delete(query);
     }
 
@@ -126,21 +126,21 @@ class DefaultMongoDBTemplateTest {
         assertThrows(NullPointerException.class, () -> template.select((String) null, filter));
 
         assertThrows(NullPointerException.class, () -> template.select((Class<?>) null, null));
-        assertThrows(NullPointerException.class, () -> template.select(MongoDBPerson.class, null));
+        assertThrows(NullPointerException.class, () -> template.select(BirthdayPerson.class, null));
         assertThrows(NullPointerException.class, () -> template.select((Class<?>) null, filter));
     }
 
     @Test
     void shouldSelectWithCollectionName() {
-        var entity = CommunicationEntity.of("Person", Arrays
+        var entity = CommunicationEntity.of("BirthdayPerson", Arrays
                 .asList(Element.of("_id", "Poliana"),
                         Element.of("age", 30)));
         Bson filter = eq("name", "Poliana");
         Mockito.when(manager.select("Person", filter))
                 .thenReturn(Stream.of(entity));
-        Stream<MongoDBPerson> stream = template.select("Person", filter);
+        Stream<BirthdayPerson> stream = template.select("Person", filter);
         Assertions.assertNotNull(stream);
-        MongoDBPerson poliana = stream.findFirst()
+        BirthdayPerson poliana = stream.findFirst()
                 .orElseThrow(() -> new IllegalStateException("There is an issue on the test"));
 
         Assertions.assertNotNull(poliana);
@@ -150,15 +150,15 @@ class DefaultMongoDBTemplateTest {
 
     @Test
     void shouldSelectWithEntity() {
-        var entity = CommunicationEntity.of("Person", Arrays
+        var entity = CommunicationEntity.of("BirthdayPerson", Arrays
                 .asList(Element.of("_id", "Poliana"),
                         Element.of("age", 30)));
         Bson filter = eq("name", "Poliana");
         Mockito.when(manager.select("Person", filter))
                 .thenReturn(Stream.of(entity));
-        Stream<MongoDBPerson> stream = template.select(MongoDBPerson.class, filter);
+        Stream<BirthdayPerson> stream = template.select(BirthdayPerson.class, filter);
         Assertions.assertNotNull(stream);
-        MongoDBPerson poliana = stream.findFirst()
+        BirthdayPerson poliana = stream.findFirst()
                 .orElseThrow(() -> new IllegalStateException("There is an issue on the test"));
 
         Assertions.assertNotNull(poliana);
@@ -188,8 +188,8 @@ class DefaultMongoDBTemplateTest {
         assertThrows(NullPointerException.class, () -> template.aggregate((String) null, pipeline));
         assertThrows(NullPointerException.class, () -> template.aggregate((String) null, pipelineArray));
         assertThrows(NullPointerException.class, () -> template.aggregate((String) null, bson));
-        assertThrows(NullPointerException.class, () -> template.aggregate(MongoDBPerson.class, (List<Bson>) null));
-        assertThrows(NullPointerException.class, () -> template.aggregate(MongoDBPerson.class, (Bson[]) null));
+        assertThrows(NullPointerException.class, () -> template.aggregate(BirthdayPerson.class, (List<Bson>) null));
+        assertThrows(NullPointerException.class, () -> template.aggregate(BirthdayPerson.class, (Bson[]) null));
 
     }
 
@@ -211,7 +211,7 @@ class DefaultMongoDBTemplateTest {
                 Aggregates.group("$stars", Accumulators.sum("count", 1))
         };
 
-        template.aggregate(MongoDBPerson.class, predicates);
+        template.aggregate(BirthdayPerson.class, predicates);
         Mockito.verify(manager).aggregate("Person", predicates);
     }
 
@@ -228,7 +228,7 @@ class DefaultMongoDBTemplateTest {
     void shouldCountByFilterWithEntity() {
         var filter = eq("name", "Poliana");
 
-        template.count(MongoDBPerson.class, filter);
+        template.count(BirthdayPerson.class, filter);
 
         Mockito.verify(manager).count("Person", filter);
     }
@@ -239,8 +239,8 @@ class DefaultMongoDBTemplateTest {
         assertThrows(NullPointerException.class, () -> template.count((String) null, null));
         assertThrows(NullPointerException.class, () -> template.count((String) null, filter));
         assertThrows(NullPointerException.class, () -> template.count("Person", null));
-        assertThrows(NullPointerException.class, () -> template.count((Class<MongoDBPerson>) null, null));
-        assertThrows(NullPointerException.class, () -> template.count((Class<MongoDBPerson>) null, filter));
-        assertThrows(NullPointerException.class, () -> template.count(MongoDBPerson.class, null));
+        assertThrows(NullPointerException.class, () -> template.count((Class<BirthdayPerson>) null, null));
+        assertThrows(NullPointerException.class, () -> template.count((Class<BirthdayPerson>) null, filter));
+        assertThrows(NullPointerException.class, () -> template.count(BirthdayPerson.class, null));
     }
 }

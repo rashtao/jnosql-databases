@@ -22,7 +22,7 @@ import jakarta.nosql.Id;
 import java.util.Objects;
 
 @Entity
-public class MongoDBPerson {
+public class BirthdayPerson {
 
     @Id
     private String name;
@@ -39,21 +39,21 @@ public class MongoDBPerson {
         return age;
     }
 
-    public MongoDBPerson(String name, Integer age) {
+    public BirthdayPerson(String name, Integer age) {
         this.name = name;
         this.age = age;
     }
 
-    public MongoDBPerson() {
+    public BirthdayPerson() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MongoDBPerson mongoDBPerson = (MongoDBPerson) o;
-        return Objects.equals(name, mongoDBPerson.name) &&
-                Objects.equals(age, mongoDBPerson.age);
+        BirthdayPerson birthdayPerson = (BirthdayPerson) o;
+        return Objects.equals(name, birthdayPerson.name) &&
+                Objects.equals(age, birthdayPerson.age);
     }
 
     @Override
