@@ -106,7 +106,7 @@ class DefaultMongoDBTemplateTest {
     void shouldDeleteWithEntity() {
         Bson filter = eq("name", "Poliana");
         template.delete(BirthdayPerson.class, filter);
-        Mockito.verify(manager).delete("Person", filter);
+        Mockito.verify(manager).delete("BirthdayPerson", filter);
     }
 
     @Test
@@ -154,7 +154,7 @@ class DefaultMongoDBTemplateTest {
                 .asList(Element.of("_id", "Poliana"),
                         Element.of("age", 30)));
         Bson filter = eq("name", "Poliana");
-        Mockito.when(manager.select("Person", filter))
+        Mockito.when(manager.select("BirthdayPerson", filter))
                 .thenReturn(Stream.of(entity));
         Stream<BirthdayPerson> stream = template.select(BirthdayPerson.class, filter);
         Assertions.assertNotNull(stream);
@@ -212,7 +212,7 @@ class DefaultMongoDBTemplateTest {
         };
 
         template.aggregate(BirthdayPerson.class, predicates);
-        Mockito.verify(manager).aggregate("Person", predicates);
+        Mockito.verify(manager).aggregate("BirthdayPerson", predicates);
     }
 
     @Test
@@ -230,7 +230,7 @@ class DefaultMongoDBTemplateTest {
 
         template.count(BirthdayPerson.class, filter);
 
-        Mockito.verify(manager).count("Person", filter);
+        Mockito.verify(manager).count("BirthdayPerson", filter);
     }
 
     @Test
