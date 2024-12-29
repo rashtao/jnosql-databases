@@ -12,11 +12,12 @@
  *
  *   Otavio Santana
  *   Alessandro Moscatelli
+ *   Maximillian Arruda
  */
 package org.eclipse.jnosql.databases.mongodb.tck;
 
-import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.nosql.Template;
 import jakarta.nosql.tck.TemplateSupplier;
 import org.eclipse.jnosql.databases.mongodb.communication.MongoDBDocumentConfigurations;
@@ -27,14 +28,13 @@ import static org.eclipse.jnosql.databases.mongodb.communication.DocumentDatabas
 public class MongoDBTemplateSupplier implements TemplateSupplier {
 
     static {
-        INSTANCE.get("jakarta-nosql-tck");
         System.setProperty(MongoDBDocumentConfigurations.HOST.get() + ".1", INSTANCE.host());
         System.setProperty(MappingConfigurations.DOCUMENT_DATABASE.get(), "jakarta-nosql-tck");
+        SeContainerInitializer.newInstance().initialize();
     }
 
     @Override
     public Template get() {
-        SeContainer container = SeContainerInitializer.newInstance().initialize();
-        return container.select(Template.class).get();
+        return CDI.current().select(Template.class).get();
     }
 }
