@@ -153,19 +153,19 @@ class DefaultCassandraTemplate extends AbstractSemiStructuredTemplate implements
         Objects.requireNonNull(level, "level is required");
 
         return manager.get().select(query, level)
-                .map(c -> converter.toEntity(c));
+                .map(converter::toEntity);
     }
 
     @Override
     public <T> Stream<T> cql(String query) {
         return manager.get().cql(query)
-                .map(c -> converter.toEntity(c));
+                .map(converter::toEntity);
     }
 
     @Override
     public <T> Stream<T> cql(String query, Map<String, Object> values) {
         return manager.get().cql(query, values)
-                .map(c -> converter.toEntity(c));
+                .map(converter::toEntity);
     }
 
     @Override
@@ -179,7 +179,7 @@ class DefaultCassandraTemplate extends AbstractSemiStructuredTemplate implements
     @Override
     public <T> Stream<T> execute(SimpleStatement statement) {
         return manager.get().execute(statement)
-                .map(c -> converter.toEntity(c));
+                .map(converter::toEntity);
     }
 
 }
