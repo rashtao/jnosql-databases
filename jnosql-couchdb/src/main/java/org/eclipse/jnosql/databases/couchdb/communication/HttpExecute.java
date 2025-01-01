@@ -177,7 +177,7 @@ class HttpExecute {
     private String getId(CommunicationEntity entity) {
         return entity.find(CouchDBConstant.ID)
                 .orElseThrow(() -> new CouchDBHttpClientException(
-                        String.format("To update the entity %s the id field is required", entity.toString())))
+                        String.format("To update the entity %s the id field is required", entity)))
                 .get(String.class);
     }
 
