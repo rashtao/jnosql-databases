@@ -427,7 +427,7 @@ public class DefaultSolrDocumentManagerTest {
         entityManager.insert(entity);
 
         List<CommunicationEntity> entities = entityManager.select(select().from("download")
-                .where(ID).eq(id).build()).collect(Collectors.toList());;
+                .where(ID).eq(id).build()).collect(Collectors.toList());
 
         assertEquals(1, entities.size());
         var documentEntity = entities.get(0);
