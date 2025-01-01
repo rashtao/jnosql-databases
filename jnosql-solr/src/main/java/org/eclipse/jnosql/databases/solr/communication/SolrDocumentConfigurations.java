@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  */
 public enum SolrDocumentConfigurations implements Supplier<String> {
     /**
-     * Database's host. E.g.: jnosql.solr.host=http://localhost:8983/solr/
+     * Database's host. E.g.: jnosql.solr.host=<a href="http://localhost:8983/solr/">http://localhost:8983/solr</a>
      */
     HOST("jnosql.solr.host"),
     /**
