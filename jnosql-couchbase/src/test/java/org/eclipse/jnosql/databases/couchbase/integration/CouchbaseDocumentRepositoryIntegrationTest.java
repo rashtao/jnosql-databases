@@ -21,7 +21,6 @@ import org.eclipse.jnosql.databases.couchbase.communication.CouchbaseUtil;
 import org.eclipse.jnosql.databases.couchbase.communication.Database;
 import org.eclipse.jnosql.databases.couchbase.mapping.CouchbaseExtension;
 import org.eclipse.jnosql.databases.couchbase.mapping.CouchbaseTemplate;
-import jakarta.nosql.Convert;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
