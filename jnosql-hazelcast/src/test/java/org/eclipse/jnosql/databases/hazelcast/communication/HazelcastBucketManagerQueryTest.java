@@ -54,7 +54,7 @@ public class HazelcastBucketManagerQueryTest {
 
     @Test
     public void shouldReturnWhenPredicateQueryIsNull() {
-        assertThrows(NullPointerException.class, () -> bucketManager.sql((Predicate<? extends Object, ? extends Object>) null));
+        assertThrows(NullPointerException.class, () -> bucketManager.sql((Predicate<?, ? extends Object>) null));
     }
 
     @Test

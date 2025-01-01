@@ -223,11 +223,11 @@ class DefaultSolrDocumentManager implements SolrDocumentManager {
     }
 
     @Override
-    public List<CommunicationEntity> solr(String query, Map<String, ? extends Object> params) {
+    public List<CommunicationEntity> solr(String query, Map<String, ?> params) {
         Objects.requireNonNull(query, "query is required");
         Objects.requireNonNull(params, "params is required");
         String nativeQuery = query;
-        for (Entry<String, ? extends Object> entry : params.entrySet()) {
+        for (Entry<String, ?> entry : params.entrySet()) {
             nativeQuery = nativeQuery.replace('@' + entry.getKey(), entry.getValue().toString());
         }
         return solr(nativeQuery);

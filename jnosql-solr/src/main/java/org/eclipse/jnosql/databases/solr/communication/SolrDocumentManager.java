@@ -44,5 +44,5 @@ public interface SolrDocumentManager extends DatabaseManager {
      * @return the result
      * @throws NullPointerException when there is null parameter
      */
-    List<CommunicationEntity> solr(String query, Map<String, ? extends Object> params);
+    List<CommunicationEntity> solr(String query, Map<String, ?> params);
 }
