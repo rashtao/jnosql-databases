@@ -53,7 +53,7 @@ public class DocumentManagerSupplier implements Supplier<DynamoDBDatabaseManager
             LOGGER.log(Level.FINEST, """
                     Starting a DynamoDBDocumentManager instance using Eclipse MicroProfile Config,\
                     database name: %s
-                     """.formatted(db));
+                    """.formatted(db));
         }
         return manager;
     }
