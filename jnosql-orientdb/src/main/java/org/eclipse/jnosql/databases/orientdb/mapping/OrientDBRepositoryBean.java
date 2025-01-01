@@ -27,7 +27,6 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
 
-
 class OrientDBRepositoryBean<T, K> extends AbstractBean<OrientDBCrudRepository<T, K>> {
 
     private final Class<T> type;
@@ -67,11 +66,6 @@ class OrientDBRepositoryBean<T, K> extends AbstractBean<OrientDBCrudRepository<T
     @Override
     public Set<Annotation> getQualifiers() {
         return qualifiers;
-    }
-
-    @Override
-    public boolean isAlternative() {
-        return false;
     }
 
     @Override
