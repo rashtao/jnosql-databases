@@ -46,31 +46,20 @@ class DynamoDBConverter {
 
     private static Object convertValue(Object value) {
         if (value instanceof AttributeValue attributeValue) {
-            switch (attributeValue.type()) {
-                case S:
-                    return attributeValue.s();
-                case N:
-                    return Double.valueOf(attributeValue.n());
-                case B:
-                    return attributeValue.b().asByteArray();
-                case SS:
-                    return attributeValue.ss();
-                case NS:
-                    return attributeValue.ns().stream().map(Double::valueOf).toList();
-                case BS:
-                    return attributeValue.bs().stream().map(SdkBytes::asByteArray).toList();
-                case L:
-                    return attributeValue.l().stream().map(DynamoDBConverter::convertValue).toList();
-                case M:
-                    return attributeValue.m().entrySet().stream().map(e -> Element.of(e.getKey(), convertValue(e.getValue()))).toList();
-                case NUL:
-                    return null;
-                case BOOL:
-                    return attributeValue.bool();
-                case UNKNOWN_TO_SDK_VERSION:
-                default:
-                    return null; // map type
-            }
+            return switch (attributeValue.type()) {
+                case S -> attributeValue.s();
+                case N -> Double.valueOf(attributeValue.n());
+                case B -> attributeValue.b().asByteArray();
+                case SS -> attributeValue.ss();
+                case NS -> attributeValue.ns().stream().map(Double::valueOf).toList();
+                case BS -> attributeValue.bs().stream().map(SdkBytes::asByteArray).toList();
+                case L -> attributeValue.l().stream().map(DynamoDBConverter::convertValue).toList();
+                case M ->
+                        attributeValue.m().entrySet().stream().map(e -> Element.of(e.getKey(), convertValue(e.getValue()))).toList();
+                case NUL -> null;
+                case BOOL -> attributeValue.bool();
+                default -> null; // map type
+            };
         }
         return value;
     }
