@@ -95,6 +95,7 @@ public class OrientDBDocumentConfiguration implements DatabaseConfiguration {
         return find(settings, OrientDBDocumentConfigurations.STORAGE_TYPE);
     }
 
+    @SafeVarargs
     private String find(Settings settings, Supplier<String>... keys) {
         return settings.get(Stream.of(keys)
                         .map(Supplier::get).collect(toList()))
