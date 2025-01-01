@@ -170,14 +170,10 @@ class RepositoryIntegrationTest {
 
         var abcdfo = characters.getABCDFO();
 
-        assertSoftly(softly -> {
-
-            softly.assertThat(abcdfo)
-                    .as("should return a non null reference")
-                    .isNotNull()
-                    .as("Should return the characters 'A', 'B', 'C', 'D', 'F', and 'O'")
-                    .contains('A', 'B', 'C', 'D', 'F', 'O');
-
-        });
+        assertSoftly(softly -> softly.assertThat(abcdfo)
+                .as("should return a non null reference")
+                .isNotNull()
+                .as("Should return the characters 'A', 'B', 'C', 'D', 'F', and 'O'")
+                .contains('A', 'B', 'C', 'D', 'F', 'O'));
     }
 }

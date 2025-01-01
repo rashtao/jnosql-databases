@@ -431,22 +431,16 @@ class DefaultDynamoDBDatabaseManagerTest {
 
             if (manager instanceof DynamoDBDatabaseManager partiManager) {
 
-                assertSoftly(softly -> {
-                    softly.assertThat(partiManager.partiQL("SELECT * FROM " + entity1.name()))
-                            .as("the returned count number of items from a given DocumentQuery is incorrect")
-                            .hasSize(3);
+                assertSoftly(softly -> softly.assertThat(partiManager.partiQL("SELECT * FROM " + entity1.name()))
+                        .as("the returned count number of items from a given DocumentQuery is incorrect")
+                        .hasSize(3));
 
-                });
-
-                assertSoftly(softly -> {
-                    softly.assertThat(partiManager.partiQL("""
-                                            SELECT * FROM %s WHERE %s = ?
-                                            """.formatted(entity1.name(), ID),
-                                    entity1.find(ID).orElseThrow().get()))
-                            .as("the returned count number of items from a given DocumentQuery is incorrect")
-                            .hasSize(1);
-
-                });
+                assertSoftly(softly -> softly.assertThat(partiManager.partiQL("""
+                                        SELECT * FROM %s WHERE %s = ?
+                                        """.formatted(entity1.name(), ID),
+                                entity1.find(ID).orElseThrow().get()))
+                        .as("the returned count number of items from a given DocumentQuery is incorrect")
+                        .hasSize(1));
             }
         }
     }

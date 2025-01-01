@@ -46,9 +46,7 @@ class DefaultDynamoDBDatabaseManagerFactoryTest {
     @Test
     void shouldCreateDocumentManager() {
         var documentManager = databaseManagerFactory.apply("anydatabase");
-        assertSoftly(softly -> {
-            softly.assertThat(documentManager).isNotNull();
-        });
+        assertSoftly(softly -> softly.assertThat(documentManager).isNotNull());
     }
 
 }
