@@ -20,7 +20,6 @@ import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.oracle.communication.Database;
 import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLConfigurations;
 import org.eclipse.jnosql.databases.oracle.mapping.OracleNoSQLTemplate;
-import jakarta.nosql.Convert;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;

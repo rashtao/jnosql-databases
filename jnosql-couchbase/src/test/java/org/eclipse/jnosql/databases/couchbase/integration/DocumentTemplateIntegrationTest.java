@@ -18,7 +18,6 @@ package org.eclipse.jnosql.databases.couchbase.integration;
 import jakarta.inject.Inject;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.couchbase.communication.CouchbaseUtil;
-import jakarta.nosql.Convert;
 import org.eclipse.jnosql.databases.couchbase.communication.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
