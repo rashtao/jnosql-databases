@@ -90,7 +90,7 @@ public class DefaultCassandraTemplateTest {
 
     @Test
     void shouldSaveConsistency() {
-        var entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        var entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
         entity.addNull("home");
         ArgumentCaptor<CommunicationEntity> captor = ArgumentCaptor.forClass(CommunicationEntity.class);
 
@@ -112,7 +112,7 @@ public class DefaultCassandraTemplateTest {
 
     @Test
     void shouldSaveConsistencyIterable() {
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
         entity.addNull("home");
         ArgumentCaptor<CommunicationEntity> captor = ArgumentCaptor.forClass(CommunicationEntity.class);
 
@@ -134,7 +134,7 @@ public class DefaultCassandraTemplateTest {
     @Test
     void shouldSaveConsistencyDuration() {
         Duration duration = Duration.ofHours(2);
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
         entity.addNull("home");
         ArgumentCaptor<CommunicationEntity> captor = ArgumentCaptor.forClass(CommunicationEntity.class);
 
@@ -156,7 +156,7 @@ public class DefaultCassandraTemplateTest {
     @Test
     void shouldSaveConsistencyDurationIterable() {
         Duration duration = Duration.ofHours(2);
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
         entity.addNull("home");
         ArgumentCaptor<CommunicationEntity> captor = ArgumentCaptor.forClass(CommunicationEntity.class);
 
@@ -190,7 +190,7 @@ public class DefaultCassandraTemplateTest {
         contact.setName("Name");
         contact.setAge(20);
 
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
         SelectQuery query = select().from("columnFamily").build();
         ConsistencyLevel level = ConsistencyLevel.THREE;
         when(manager.select(query, level)).thenReturn(Stream.of(entity));
@@ -205,7 +205,7 @@ public class DefaultCassandraTemplateTest {
         contact.setName("Name");
         contact.setAge(20);
         String cql = "select * from Person";
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
 
         when(manager.cql(cql)).thenReturn(Stream.of(entity));
 
@@ -215,11 +215,11 @@ public class DefaultCassandraTemplateTest {
 
     @Test
     void shouldFindSimpleStatement() {
-        SimpleStatement statement = QueryBuilder.selectFrom("Person").all().build();
+        SimpleStatement statement = QueryBuilder.selectFrom("Contact").all().build();
         Contact contact = new Contact();
         contact.setName("Name");
         contact.setAge(20);
-        CommunicationEntity entity = CommunicationEntity.of("Person", asList(Element.of("name", "Name"), Element.of("age", 20)));
+        CommunicationEntity entity = CommunicationEntity.of("Contact", asList(Element.of("name", "Name"), Element.of("age", 20)));
 
         when(manager.execute(statement)).thenReturn(Stream.of(entity));
 
