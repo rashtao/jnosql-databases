@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
 import jakarta.inject.Inject;
+import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
@@ -100,7 +101,9 @@ public class OrientDBDocumentRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingInsert() {
-        Person person = Person.of("Ada", 10);
+        var person = new Person();
+        person.setName("Ada");
+        person.setAge(10);
         personRepository.save(person);
         verify(template).insert(eq(person));
     }
@@ -108,7 +111,9 @@ public class OrientDBDocumentRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Person person = Person.of("Ada-2", 10);
+        var person = new Person();
+        person.setName("Ada-2");
+        person.setAge(10);
         when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
         personRepository.save(person);
         verify(template).update(eq(person));
@@ -123,7 +128,10 @@ public class OrientDBDocumentRepositoryProxyTest {
 
     @Test
     public void shouldDeleteEntity(){
-        Person person = Person.of("Ada", 10);
+
+        var person = new Person();
+        person.setName("Ada");
+        person.setAge(10);
         personRepository.delete(person);
         verify(template).delete(Person.class, person.getName());
     }
