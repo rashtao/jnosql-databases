@@ -22,7 +22,7 @@ import jakarta.nosql.Id;
 import java.util.Objects;
 
 @Entity
-public class Person {
+public class Contact {
 
     @Id("name")
     private String name;
@@ -57,21 +57,21 @@ public class Person {
         this.home = home;
     }
 
-    public Person(String name, Integer age) {
+    public Contact(String name, Integer age) {
         this.name = name;
         this.age = age;
     }
 
-    public Person() {
+    public Contact() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(name, person.name) &&
-                Objects.equals(age, person.age);
+        Contact contact = (Contact) o;
+        return Objects.equals(name, contact.name) &&
+                Objects.equals(age, contact.age);
     }
 
     @Override
