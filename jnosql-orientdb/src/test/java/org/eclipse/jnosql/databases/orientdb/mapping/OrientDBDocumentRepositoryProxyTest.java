@@ -114,7 +114,8 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada-2");
         person.setAge(10);
-        when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
+        person.setId(10L);
+        when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
         personRepository.save(person);
         verify(template).update(eq(person));
     }
@@ -132,8 +133,9 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada");
         person.setAge(10);
+        person.setId(10L);
         personRepository.delete(person);
-        verify(template).delete(Person.class, person.getName());
+        verify(template).delete(Person.class, person.getId());
     }
 
     interface PersonRepository extends OrientDBCrudRepository<Person, String> {
