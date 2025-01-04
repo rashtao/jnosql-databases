@@ -92,7 +92,7 @@ class DefaultDynamoDBTemplateTest {
         Mockito.verify(manager).delete(argumentCaptor.capture());
         var query = argumentCaptor.getValue();
         SoftAssertions.assertSoftly(soft -> {
-            soft.assertThat(query.name()).isEqualTo("Person");
+            soft.assertThat(query.name()).isEqualTo("Human");
             soft.assertThat(query.columns()).isEmpty();
             soft.assertThat(query.condition()).isEmpty();
         });
