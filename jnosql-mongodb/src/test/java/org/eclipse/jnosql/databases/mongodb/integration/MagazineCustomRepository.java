@@ -49,7 +49,7 @@ public interface MagazineCustomRepository {
     @Find
     Page<Magazine> listAll(PageRequest pageRequest, Order<Magazine> sortBy);
 
-    @Query("delete from Book")
+    @Query("delete from Magazine")
     void deleteAll();
 
 }
