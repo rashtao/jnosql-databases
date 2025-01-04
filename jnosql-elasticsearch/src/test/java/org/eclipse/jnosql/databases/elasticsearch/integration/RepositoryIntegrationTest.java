@@ -51,7 +51,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, Converters.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(ElasticsearchTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
@@ -83,35 +83,35 @@ class RepositoryIntegrationTest {
     @Test
     public void shouldInsert() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        library.save(book);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        library.save(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = library.findById(book.id());
+            Optional<Magazine> optional = library.findById(magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
-        assertThat(reference.get()).isNotNull().isEqualTo(book);
+        assertThat(reference.get()).isNotNull().isEqualTo(magazine);
     }
 
     @Test
     public void shouldUpdate() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        Book updated = book.updateEdition(2);
+        Magazine updated = magazine.updateEdition(2);
 
         assertThat(library.save(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = library.findById(book.id());
+            Optional<Magazine> optional = library.findById(magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
@@ -122,34 +122,34 @@ class RepositoryIntegrationTest {
     @Test
     public void shouldFindById() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
 
-        assertThat(library.save(book))
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = library.findById(book.id());
+            Optional<Magazine> optional = library.findById(magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
 
-        assertThat(reference.get()).isNotNull().isEqualTo(book);
+        assertThat(reference.get()).isNotNull().isEqualTo(magazine);
     }
 
     @Test
     public void shouldDelete() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
 
-        library.deleteById(book.id());
+        library.deleteById(magazine.id());
 
-        assertThat(library.findById(book.id()))
+        assertThat(library.findById(magazine.id()))
                 .isNotNull().isEmpty();
     }
 
@@ -157,47 +157,47 @@ class RepositoryIntegrationTest {
     @Test
     public void shouldFindByAuthorName() throws InterruptedException {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
 
-        List<Book> expectedBooks = List.of(book, book.newEdition(), book.newEdition());
-        library.saveAll(expectedBooks);
+        List<Magazine> expectedMagazines = List.of(magazine, magazine.newEdition(), magazine.newEdition());
+        library.saveAll(expectedMagazines);
 
         await().until(() ->
-                !library.findByAuthorName(book.author().name()).toList().isEmpty());
+                !library.findByAuthorName(magazine.author().name()).toList().isEmpty());
 
-        var books = library.findByAuthorName(book.author().name()).toList();
+        var books = library.findByAuthorName(magazine.author().name()).toList();
         assertThat(books)
                 .hasSize(3);
 
         assertThat(books)
-                .containsAll(expectedBooks);
+                .containsAll(expectedMagazines);
     }
 
     @Test
     public void shouldFindByTitleLike() throws InterruptedException {
         Author joshuaBloch = new Author("Joshua Bloch");
 
-        Book effectiveJava1stEdition = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        Book effectiveJava2ndEdition = effectiveJava1stEdition.newEdition();
-        Book effectiveJava3rdEdition = effectiveJava2ndEdition.newEdition();
+        Magazine effectiveJava1stEdition = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        Magazine effectiveJava2ndEdition = effectiveJava1stEdition.newEdition();
+        Magazine effectiveJava3rdEdition = effectiveJava2ndEdition.newEdition();
 
         Author elderMoraes = new Author("Elder Moraes");
-        Book jakartaEECookBook = new Book(randomUUID().toString(), "Jakarta EE CookBook", 1, elderMoraes);
+        Magazine jakartaEECookMagazine = new Magazine(randomUUID().toString(), "Jakarta EE CookBook", 1, elderMoraes);
 
-        List<Book> allBooks = List.of(jakartaEECookBook, effectiveJava1stEdition, effectiveJava2ndEdition, effectiveJava3rdEdition);
+        List<Magazine> allMagazines = List.of(jakartaEECookMagazine, effectiveJava1stEdition, effectiveJava2ndEdition, effectiveJava3rdEdition);
 
-        List<Book> effectiveBooks = List.of(effectiveJava1stEdition, effectiveJava2ndEdition, effectiveJava3rdEdition);
+        List<Magazine> effectiveMagazines = List.of(effectiveJava1stEdition, effectiveJava2ndEdition, effectiveJava3rdEdition);
 
-        library.saveAll(allBooks);
+        library.saveAll(allMagazines);
 
-        AtomicReference<List<Book>> booksWithEffective = new AtomicReference<>();
+        AtomicReference<List<Magazine>> booksWithEffective = new AtomicReference<>();
         await().until(() -> {
             var books = library.findByTitleLike("Effective").toList();
             booksWithEffective.set(books);
             return !books.isEmpty();
         });
 
-        AtomicReference<List<Book>> booksWithJa = new AtomicReference<>();
+        AtomicReference<List<Magazine>> booksWithJa = new AtomicReference<>();
         await().until(() -> {
             var books = library.findByTitleLike("Ja*").toList();
             booksWithJa.set(books);
@@ -206,12 +206,12 @@ class RepositoryIntegrationTest {
 
         assertSoftly(softly -> assertThat(booksWithEffective.get())
                 .as("returned book list with 'Effective' is not equals to the expected items ")
-                .containsAll(effectiveBooks));
+                .containsAll(effectiveMagazines));
 
 
         assertSoftly(softly -> assertThat(booksWithJa.get())
                 .as("returned book list with 'Ja*' is not equals to the expected items ")
-                .containsAll(allBooks));
+                .containsAll(allMagazines));
     }
 
 

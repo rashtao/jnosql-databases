@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public final class Book {
+public final class Magazine {
     @Id
     private final String id;
     @Column("title")
@@ -32,7 +32,7 @@ public final class Book {
     @Column("author")
     private final Author author;
 
-    public Book(
+    public Magazine(
             @Id String id,
             @Column("title") String title,
             @Column("edition") int edition,
@@ -43,15 +43,15 @@ public final class Book {
         this.author = author;
     }
 
-    public Book newEdition() {
-        return new Book(UUID.randomUUID().toString(),
+    public Magazine newEdition() {
+        return new Magazine(UUID.randomUUID().toString(),
                 this.title,
                 this.edition + 1,
                 this.author);
     }
 
-    public Book updateEdition(int edition) {
-        return new Book(this.id,
+    public Magazine updateEdition(int edition) {
+        return new Magazine(this.id,
                 this.title,
                 edition,
                 this.author);
@@ -77,7 +77,7 @@ public final class Book {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Book) obj;
+        var that = (Magazine) obj;
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.title, that.title) &&
                 this.edition == that.edition &&
