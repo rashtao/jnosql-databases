@@ -22,12 +22,12 @@ import org.eclipse.jnosql.databases.couchbase.mapping.CouchbaseRepository;
 import java.util.stream.Stream;
 
 @Repository
-public interface Library extends CouchbaseRepository<Book, String> {
+public interface Library extends CouchbaseRepository<Magazine, String> {
 
-    Stream<Book> findByEditionLessThan(Integer edition);
+    Stream<Magazine> findByEditionLessThan(Integer edition);
 
-    Stream<Book> findByEditionGreaterThan(Integer edition);
+    Stream<Magazine> findByEditionGreaterThan(Integer edition);
 
-    Stream<Book> findByTitleLike(String title);
+    Stream<Magazine> findByTitleLike(String title);
 
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022 Contributors to the Eclipse Foundation
+ *  Copyright (c) 2023 Contributors to the Eclipse Foundation
  *   All rights reserved. This program and the accompanying materials
  *   are made available under the terms of the Eclipse Public License v1.0
  *   and Apache License v2.0 which accompanies this distribution.
@@ -10,13 +10,14 @@
  *
  *   Contributors:
  *
- *   Otavio Santana
+ *   Maximillian Arruda
  */
-package org.eclipse.jnosql.databases.couchbase.mapping;
+package org.eclipse.jnosql.databases.couchbase.integration;
 
+import jakarta.nosql.Column;
+import jakarta.nosql.Entity;
+import jakarta.nosql.Id;
 
-import jakarta.data.repository.Repository;
-
-@Repository
-public interface PersonRepository extends CouchbaseRepository<Person, String> {
+@Entity
+public record Magazine(@Id String id, @Column("title") String title, @Column("edition") int edition) {
 }

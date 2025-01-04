@@ -47,7 +47,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(CouchbaseTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
@@ -66,90 +66,90 @@ class CouchbaseTemplateIntegrationTest {
     @BeforeEach
     @AfterEach
     public void cleanUp(){
-        template.deleteAll(Book.class);
+        template.deleteAll(Magazine.class);
     }
 
     @Test
     public void shouldInsert() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.insert(book);
-        Optional<Book> optional = template.find(Book.class, book.id());
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.insert(magazine);
+        Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
         assertThat(optional).isNotNull().isNotEmpty()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldUpdate() throws InterruptedException {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        Book updated = new Book(book.id(), book.title() + " updated", 2);
+        Magazine updated = new Magazine(magazine.id(), magazine.title() + " updated", 2);
 
         assertThat(template.update(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        assertThat(template.find(Book.class, book.id()))
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().get().isEqualTo(updated);
 
     }
 
     @Test
     public void shouldFindById() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        assertThat(template.find(Book.class, book.id()))
-                .isNotNull().get().isEqualTo(book);
+        assertThat(template.find(Magazine.class, magazine.id()))
+                .isNotNull().get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldFindByN1qlWithParams() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         var data = template.n1qlQuery("select * from " + CouchbaseUtil.BUCKET_NAME + "._default.Book where title = $title",
-                JsonObject.from(Map.of("title", book.title()))).toList();
+                JsonObject.from(Map.of("title", magazine.title()))).toList();
 
         assertSoftly(softly -> {
             softly.assertThat(data).as("query result is a non-null instance").isNotNull();
             softly.assertThat(data.size()).as("query result size is correct").isEqualTo(1);
-            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(book);
+            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(magazine);
         });
     }
 
     @Test
     public void shouldFindByN1qlWithoutParams() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         var data = template.n1qlQuery("select * from " + CouchbaseUtil.BUCKET_NAME + "._default.Book").toList();
         assertSoftly(softly -> {
             softly.assertThat(data).as("query result is a non-null instance").isNotNull();
             softly.assertThat(data.size()).as("query result size is correct").isEqualTo(1);
-            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(book);
+            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(magazine);
         });
     }
 
     @Test
     public void shouldDelete() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        template.delete(Book.class, book.id());
-        assertThat(template.find(Book.class, book.id()))
+        template.delete(Magazine.class, magazine.id());
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().isEmpty();
     }
 
