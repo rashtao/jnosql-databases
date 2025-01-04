@@ -13,68 +13,70 @@
  * Maximillian Arruda
  */
 
-package org.eclipse.jnosql.databases.dynamodb.integration;
+package org.eclipse.jnosql.databases.dynamodb.mapping;
 
-import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
+import jakarta.nosql.Column;
 
 import java.util.Objects;
 
 @Entity
-public class Book {
+public class Human {
 
-    @Id("id")
-    private String id;
+    @Id
+    private String name;
 
-    @Column("title")
-    private String title;
+    @Column
+    private Integer age;
 
-    @Column("edition")
-    private int edition;
-
-    public Book(String id, String title, int edition) {
-        this.id = id;
-        this.title = title;
-        this.edition = edition;
+    public String getName() {
+        return name;
     }
 
-    Book() {
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String id() {
-        return id;
+    public Integer getAge() {
+        return age;
     }
 
-    public String title() {
-        return title;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
-    public int edition() {
-        return edition;
+    public Human(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Human() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return edition == book.edition
-                && Objects.equals(id, book.id)
-                && Objects.equals(title, book.title);
+        Human human = (Human) o;
+        return Objects.equals(name, human.name) &&
+                Objects.equals(age, human.age);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, edition);
+        return Objects.hash(name, age);
     }
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", edition=" + edition +
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
                 '}';
+    }
+
+    public static Human of(String name, Integer age) {
+        return new Human(name, age);
     }
 }

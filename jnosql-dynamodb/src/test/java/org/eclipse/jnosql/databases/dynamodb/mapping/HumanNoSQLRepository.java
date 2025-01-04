@@ -18,5 +18,5 @@ package org.eclipse.jnosql.databases.dynamodb.mapping;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface PersonNoSQLRepository extends DynamoDBRepository<Person, String> {
+public interface HumanNoSQLRepository extends DynamoDBRepository<Human, String> {
 }

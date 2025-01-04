@@ -88,7 +88,7 @@ class DefaultDynamoDBTemplateTest {
     @Test
     void shouldDeleteAll(){
         ArgumentCaptor<DeleteQuery> argumentCaptor = ArgumentCaptor.forClass(DeleteQuery.class);
-        template.deleteAll(Person.class);
+        template.deleteAll(Human.class);
         Mockito.verify(manager).delete(argumentCaptor.capture());
         var query = argumentCaptor.getValue();
         SoftAssertions.assertSoftly(soft -> {
