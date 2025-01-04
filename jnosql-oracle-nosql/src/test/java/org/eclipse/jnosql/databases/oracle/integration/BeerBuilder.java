@@ -43,7 +43,7 @@ public class BeerBuilder {
         return this;
     }
 
-    public Beer build() {
-        return new Beer(id, comments, crew, data);
+    public Wine build() {
+        return new Wine(id, comments, crew, data);
     }
 }

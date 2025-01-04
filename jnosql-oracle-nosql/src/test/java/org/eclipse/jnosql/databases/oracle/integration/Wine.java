@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Entity
-public class Beer {
+public class Wine {
 
     @Id
     private String id;
@@ -54,10 +54,10 @@ public class Beer {
         return data;
     }
 
-    Beer() {
+    Wine() {
     }
 
-    Beer(String id, List<String> comments, List<Crew> crew, Map<String, Object> data) {
+    Wine(String id, List<String> comments, List<Crew> crew, Map<String, Object> data) {
         this.id = id;
         this.comments = comments;
         this.crew = crew;
@@ -82,8 +82,8 @@ public class Beer {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Beer beer = (Beer) o;
-        return Objects.equals(id, beer.id);
+        Wine wine = (Wine) o;
+        return Objects.equals(id, wine.id);
     }
 
     @Override

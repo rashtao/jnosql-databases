@@ -43,14 +43,14 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Beer.class)
+@AddPackages(Wine.class)
 @AddPackages(OracleNoSQLTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
-class BeerTemplateIntegrationTest {
+class WineTemplateIntegrationTest {
 
     @Inject
     private OracleNoSQLTemplate template;
@@ -63,24 +63,24 @@ class BeerTemplateIntegrationTest {
     @Test
     void shouldInsert() {
 
-        Beer beer = Beer.builder()
+        Wine wine = Wine.builder()
                 .id(UUID.randomUUID().toString())
                 .data(Map.of("name", "beer"))
                 .comments(List.of("comment1", "comment2"))
                 .crew(List.of(new Crew("Otavio")))
                 .build();
 
-        this.template.insert(beer);
+        this.template.insert(wine);
 
-        Optional<Beer> result = this.template.select(Beer.class).where("id").eq(beer.id()).singleResult();
+        Optional<Wine> result = this.template.select(Wine.class).where("id").eq(wine.id()).singleResult();
 
         SoftAssertions.assertSoftly(soft ->{
             soft.assertThat(result).isPresent();
-            Beer updateBeer = result.orElseThrow();
-            soft.assertThat(updateBeer.id()).isEqualTo(beer.id());
-            soft.assertThat(updateBeer.data()).isEqualTo(beer.data());
-            soft.assertThat(updateBeer.comments()).isEqualTo(beer.comments());
-            soft.assertThat(updateBeer.crew()).isEqualTo(beer.crew());
+            Wine updateWine = result.orElseThrow();
+            soft.assertThat(updateWine.id()).isEqualTo(wine.id());
+            soft.assertThat(updateWine.data()).isEqualTo(wine.data());
+            soft.assertThat(updateWine.comments()).isEqualTo(wine.comments());
+            soft.assertThat(updateWine.crew()).isEqualTo(wine.crew());
         });
 
     }
