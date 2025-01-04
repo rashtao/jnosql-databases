@@ -408,7 +408,7 @@ public abstract class AbstractGraphTemplateTest {
                 .withName("Otavio").build();
         getGraphTemplate().insert(human);
         List<Human> people = getGraphTemplate()
-                .<Human>gremlin("g.V().hasLabel('Person')")
+                .<Human>gremlin("g.V().hasLabel('Human')")
                 .toList();
         assertThat(people.stream().map(Human::getName).collect(toList())).contains("Otavio");
     }
@@ -424,7 +424,7 @@ public abstract class AbstractGraphTemplateTest {
         Human otavio = Human.builder().withAge()
                 .withName("Otavio").build();
         getGraphTemplate().insert(otavio);
-        Optional<Human> person = getGraphTemplate().gremlinSingleResult("g.V().hasLabel('Person')");
+        Optional<Human> person = getGraphTemplate().gremlinSingleResult("g.V().hasLabel('Human')");
         assertTrue(person.isPresent());
     }
 
@@ -433,14 +433,14 @@ public abstract class AbstractGraphTemplateTest {
 
         getGraphTemplate().insert(Human.builder().withAge().withName("Otavio").build());
         getGraphTemplate().insert(Human.builder().withAge().withName("Poliana").build());
-        assertThrows(NonUniqueResultException.class, () -> getGraphTemplate().gremlinSingleResult("g.V().hasLabel('Person')"));
+        assertThrows(NonUniqueResultException.class, () -> getGraphTemplate().gremlinSingleResult("g.V().hasLabel('Human')"));
     }
 
     @Test
     void shouldExecutePrepareStatement() {
         getGraphTemplate().insert(Human.builder().withAge().withName("Otavio").build());
         PreparedStatement prepare = getGraphTemplate().gremlinPrepare("g.V().hasLabel(@param)");
-        prepare.bind("param", "Person");
+        prepare.bind("param", "Human");
         List<Human> people = prepare.<Human>result().toList();
         assertThat(people.stream().map(Human::getName).collect(toList())).contains("Otavio");
     }
@@ -449,7 +449,7 @@ public abstract class AbstractGraphTemplateTest {
     void shouldExecutePrepareStatementSingleton() {
         getGraphTemplate().insert(Human.builder().withAge().withName("Otavio").build());
         PreparedStatement prepare = getGraphTemplate().gremlinPrepare("g.V().hasLabel(@param)");
-        prepare.bind("param", "Person");
+        prepare.bind("param", "Human");
         Optional<Human> otavio = prepare.singleResult();
         assertTrue(otavio.isPresent());
     }
@@ -467,7 +467,7 @@ public abstract class AbstractGraphTemplateTest {
         getGraphTemplate().insert(Human.builder().withAge().withName("Otavio").build());
         getGraphTemplate().insert(Human.builder().withAge().withName("Poliana").build());
         PreparedStatement prepare = getGraphTemplate().gremlinPrepare("g.V().hasLabel(@param)");
-        prepare.bind("param", "Person");
+        prepare.bind("param", "Human");
         assertThrows(NonUniqueResultException.class, prepare::singleResult);
     }
 
@@ -475,7 +475,7 @@ public abstract class AbstractGraphTemplateTest {
     void shouldCount() {
         getGraphTemplate().insert(Human.builder().withAge().withName("Otavio").build());
         getGraphTemplate().insert(Human.builder().withAge().withName("Poliana").build());
-        assertEquals(2L, getGraphTemplate().count("Person"));
+        assertEquals(2L, getGraphTemplate().count("Human"));
     }
 
     @Test

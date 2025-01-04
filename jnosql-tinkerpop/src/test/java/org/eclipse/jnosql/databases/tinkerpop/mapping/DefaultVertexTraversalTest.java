@@ -175,7 +175,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldHaveLabel() {
-        List<Magazine> magazines = graphTemplate.traversalVertex().hasLabel("Book").<Magazine>result().collect(toList());
+        List<Magazine> magazines = graphTemplate.traversalVertex().hasLabel("Magazine").<Magazine>result().collect(toList());
         assertEquals(3, magazines.size());
         assertThat(magazines).contains(shack, license, effectiveJava);
     }
@@ -184,7 +184,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
     void shouldHaveLabel2() {
 
         List<Object> entities = graphTemplate.traversalVertex()
-                .hasLabel(P.eq("Book").or(P.eq("Person")))
+                .hasLabel(P.eq("Magazine").or(P.eq("Human")))
                 .result().collect(toList());
         assertThat(entities).hasSize(6).contains(shack, license, effectiveJava, otavio, poliana, paulo);
     }
@@ -272,7 +272,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldMapValuesAsStream() {
-        List<Map<String, Object>> maps = graphTemplate.traversalVertex().hasLabel("Person")
+        List<Map<String, Object>> maps = graphTemplate.traversalVertex().hasLabel("Human")
                 .valueMap("name").stream().toList();
 
         assertFalse(maps.isEmpty());
@@ -287,7 +287,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldMapValuesAsStreamLimit() {
-        List<Map<String, Object>> maps = graphTemplate.traversalVertex().hasLabel("Person")
+        List<Map<String, Object>> maps = graphTemplate.traversalVertex().hasLabel("Human")
                 .valueMap("name").next(2).toList();
 
         assertFalse(maps.isEmpty());
@@ -304,7 +304,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnNext() {
-        Map<String, Object> map = graphTemplate.traversalVertex().hasLabel("Person")
+        Map<String, Object> map = graphTemplate.traversalVertex().hasLabel("Human")
                 .valueMap("name").next();
 
         assertNotNull(map);
@@ -403,7 +403,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
         String property = "name";
 
         List<String> properties = graphTemplate.traversalVertex()
-                .hasLabel("Book")
+                .hasLabel("Magazine")
                 .has(property)
                 .orderBy(property)
                 .asc().<Magazine>result()
@@ -418,7 +418,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
         String property = "name";
 
         List<String> properties = graphTemplate.traversalVertex()
-                .hasLabel("Book")
+                .hasLabel("Magazine")
                 .has(property)
                 .orderBy(property)
                 .desc().<Magazine>result()
@@ -452,7 +452,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnResultAsList() {
-        List<Human> people = graphTemplate.traversalVertex().hasLabel("Person")
+        List<Human> people = graphTemplate.traversalVertex().hasLabel("Human")
                 .<Human>result()
                 .toList();
         assertEquals(3, people.size());
@@ -460,7 +460,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnErrorWhenThereAreMoreThanOneInGetSingleResult() {
-        assertThrows(NonUniqueResultException.class, () -> graphTemplate.traversalVertex().hasLabel("Person").singleResult());
+        assertThrows(NonUniqueResultException.class, () -> graphTemplate.traversalVertex().hasLabel("Human").singleResult());
     }
 
     @Test
@@ -472,7 +472,7 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnSingleResult() {
         String name = "Poliana";
-        Optional<Human> poliana = graphTemplate.traversalVertex().hasLabel("Person").
+        Optional<Human> poliana = graphTemplate.traversalVertex().hasLabel("Human").
                 has("name", name).singleResult();
         assertEquals(name, poliana.map(Human::getName).orElse(""));
     }
