@@ -22,7 +22,7 @@
     <description>The Eclipse JNoSQL layer implementation AWS DynamoDB</description>
 
     <properties>
-        <dynamodb.version>2.27.2</dynamodb.version>
+        <dynamodb.version>2.29.45</dynamodb.version>
     </properties>
 
     <dependencies>
