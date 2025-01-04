@@ -79,29 +79,29 @@ public class Magazine {
                 '}';
     }
 
-    public static BookBuilder builder() {
-        return new BookBuilder();
+    public static MagazineBuilder builder() {
+        return new MagazineBuilder();
     }
 
-    public static class BookBuilder {
+    public static class MagazineBuilder {
         private String name;
         private Integer age;
         private Long id;
 
-        private BookBuilder() {
+        private MagazineBuilder() {
         }
 
-        public BookBuilder withName(String name) {
+        public MagazineBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public BookBuilder withAge(Integer age) {
+        public MagazineBuilder withAge(Integer age) {
             this.age = age;
             return this;
         }
 
-        public BookBuilder withId(Long id) {
+        public MagazineBuilder withId(Long id) {
             this.id = id;
             return this;
         }
