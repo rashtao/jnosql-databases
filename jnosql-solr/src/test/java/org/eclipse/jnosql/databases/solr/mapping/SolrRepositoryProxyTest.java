@@ -69,9 +69,9 @@ public class SolrRepositoryProxyTest {
         SolrRepositoryProxy handler = new SolrRepositoryProxy(template,
                 PersonRepository.class, converters, entitiesMetadata);
 
-        when(template.insert(any(Person.class))).thenReturn(new Person());
-        when(template.insert(any(Person.class), any(Duration.class))).thenReturn(new Person());
-        when(template.update(any(Person.class))).thenReturn(new Person());
+        when(template.insert(any(Human.class))).thenReturn(new Human());
+        when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
+        when(template.update(any(Human.class))).thenReturn(new Human());
         personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
                 new Class[]{PersonRepository.class},
                 handler);
@@ -96,40 +96,40 @@ public class SolrRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingInsert() {
-        Person person = Person.of("Ada", 10);
-        personRepository.save(person);
-        verify(template).insert(eq(person));
+        Human human = Human.of("Ada", 10);
+        personRepository.save(human);
+        verify(template).insert(eq(human));
     }
 
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Person person = Person.of("Ada-2", 10);
-        when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
-        personRepository.save(person);
-        verify(template).update(eq(person));
+        Human human = Human.of("Ada-2", 10);
+        when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
+        personRepository.save(human);
+        verify(template).update(eq(human));
     }
 
     @Test
     public void shouldDelete(){
         personRepository.deleteById("id");
-        verify(template).delete(Person.class, "id");
+        verify(template).delete(Human.class, "id");
     }
 
 
     @Test
     public void shouldDeleteEntity(){
-        Person person = Person.of("Ada", 10);
-        personRepository.delete(person);
-        verify(template).delete(Person.class, person.getName());
+        Human human = Human.of("Ada", 10);
+        personRepository.delete(human);
+        verify(template).delete(Human.class, human.getName());
     }
 
-    interface PersonRepository extends SolrRepository<Person, String> {
+    interface PersonRepository extends SolrRepository<Human, String> {
 
         @Solr("_entity:person")
-        List<Person> findAllQuery();
+        List<Human> findAllQuery();
 
         @Solr("name:@name AND _entity:person")
-        List<Person> findByName(@Param("name") String name);
+        List<Human> findByName(@Param("name") String name);
     }
 }

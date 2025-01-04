@@ -202,7 +202,7 @@ public class ArangoDBDocumentManagerTest {
     void shouldReadFromDifferentBaseDocumentUsingInstance() {
         entityManager.insert(getEntity());
         ArangoDB arangoDB = DefaultArangoDBDocumentManager.class.cast(entityManager).getArangoDB();
-        arangoDB.db(DATABASE).collection(COLLECTION_NAME).insertDocument(new Person());
+        arangoDB.db(DATABASE).collection(COLLECTION_NAME).insertDocument(new Human());
         SelectQuery select = select().from(COLLECTION_NAME).build();
         List<CommunicationEntity> entities = entityManager.select(select).collect(Collectors.toList());
         assertFalse(entities.isEmpty());

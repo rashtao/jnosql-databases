@@ -72,7 +72,7 @@ public class HazelcastRepositoryProxyTest {
     @BeforeEach
     public void setUp() {
 
-        Collection<Object> people = asList(new Person("Poliana", 25), new Person("Otavio", 28));
+        Collection<Object> people = asList(new Human("Poliana", 25), new Human("Otavio", 28));
 
         when(template.sql(anyString())).thenReturn(people);
         HazelcastRepositoryProxy handler = new HazelcastRepositoryProxy<>(template, PersonRepository.class, entitiesMetadata);
@@ -86,35 +86,35 @@ public class HazelcastRepositoryProxyTest {
 
     @Test
     public void shouldFindAll() {
-        List<Person> people = personRepository.findActive();
+        List<Human> people = personRepository.findActive();
         verify(template).sql("active");
         assertNotNull(people);
-        assertTrue(people.stream().allMatch(Person.class::isInstance));
+        assertTrue(people.stream().allMatch(Human.class::isInstance));
     }
 
     @Test
     public void shouldFindByAgeAndInteger() {
-        Set<Person> people = personRepository.findByAgeAndInteger("Ada", 10);
+        Set<Human> people = personRepository.findByAgeAndInteger("Ada", 10);
         Map<String, Object> params = new HashMap<>();
         params.put("age", 10);
         params.put("name", "Ada");
         verify(template).sql("name = :name AND age = :age", params);
         assertNotNull(people);
-        assertTrue(people.stream().allMatch(Person.class::isInstance));
+        assertTrue(people.stream().allMatch(Human.class::isInstance));
     }
 
     @Test
     public void shouldSaveUsingInsert() {
-        Person person = Person.of("Ada", 10);
-        personRepository.save(person);
+        Human human = Human.of("Ada", 10);
+        personRepository.save(human);
     }
 
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Person person = Person.of("Ada-2", 10);
-        when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
-        personRepository.save(person);
+        Human human = Human.of("Ada-2", 10);
+        when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
+        personRepository.save(human);
     }
 
     @Test
@@ -125,17 +125,17 @@ public class HazelcastRepositoryProxyTest {
 
     @Test
     public void shouldDeleteEntity(){
-        Person person = Person.of("Ada", 10);
-        personRepository.delete(person);
+        Human human = Human.of("Ada", 10);
+        personRepository.delete(human);
     }
 
 
-    interface PersonRepository extends HazelcastRepository<Person, String> {
+    interface PersonRepository extends HazelcastRepository<Human, String> {
 
         @Query("active")
-        List<Person> findActive();
+        List<Human> findActive();
 
         @Query("name = :name AND age = :age")
-        Set<Person> findByAgeAndInteger(@Param("name") String name, @Param("age") Integer age);
+        Set<Human> findByAgeAndInteger(@Param("name") String name, @Param("age") Integer age);
     }
 }

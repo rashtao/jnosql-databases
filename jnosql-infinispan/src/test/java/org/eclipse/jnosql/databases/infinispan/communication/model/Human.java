@@ -12,11 +12,23 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.hazelcast.mapping;
+
+package org.eclipse.jnosql.databases.infinispan.communication.model;
+
+import java.io.Serializable;
 
 
-import jakarta.data.repository.Repository;
+public record Human(String name, Integer age) implements Serializable {
 
-@Repository
-public interface PersonRepository extends HazelcastRepository<Person, String> {
+    private static final long serialVersionUID = 5089852596376703955L;
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Person{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", age=").append(age);
+        sb.append('}');
+        return sb.toString();
+    }
 }

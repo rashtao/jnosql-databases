@@ -12,27 +12,11 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.arangodb.communication;
+package org.eclipse.jnosql.databases.hazelcast.mapping;
 
-public class Person {
 
-    private String name = "Ada";
+import jakarta.data.repository.Repository;
 
-    private String city = "London";
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
+@Repository
+public interface HumanRepository extends HazelcastRepository<Human, String> {
 }

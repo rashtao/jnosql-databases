@@ -12,18 +12,19 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.elasticsearch.mapping;
+package org.eclipse.jnosql.databases.hazelcast.mapping;
 
 
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
+import jakarta.nosql.Id;
 
 import java.util.Objects;
 
 @Entity
-public class Person {
+public class Human {
 
-    @Column
+    @Id
     private String name;
 
     @Column
@@ -45,21 +46,21 @@ public class Person {
         this.age = age;
     }
 
-    public Person(String name, Integer age) {
+    public Human(String name, Integer age) {
         this.name = name;
         this.age = age;
     }
 
-    public Person() {
+    public Human() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(name, person.name) &&
-                Objects.equals(age, person.age);
+        Human human = (Human) o;
+        return Objects.equals(name, human.name) &&
+                Objects.equals(age, human.age);
     }
 
     @Override
@@ -69,9 +70,13 @@ public class Person {
 
     @Override
     public String toString() {
-        String sb = "Person{" + "name='" + name + '\'' +
+        return "Person{" +
+                "name='" + name + '\'' +
                 ", age=" + age +
                 '}';
-        return sb;
+    }
+
+    public static Human of(String name, Integer age) {
+        return new Human(name, age);
     }
 }

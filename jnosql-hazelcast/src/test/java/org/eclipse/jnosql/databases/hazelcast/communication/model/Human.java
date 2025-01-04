@@ -13,31 +13,20 @@
  *   Otavio Santana
  */
 
-package org.eclipse.jnosql.databases.redis.communication;
-
-import jakarta.json.bind.annotation.JsonbCreator;
-import jakarta.json.bind.annotation.JsonbProperty;
+package org.eclipse.jnosql.databases.hazelcast.communication.model;
 
 import java.io.Serializable;
 
 
-public record Person(String name, Integer age) implements Serializable {
+public record Human(String name, Integer age) implements Serializable {
 
     private static final long serialVersionUID = 5089852596376703955L;
 
 
-    @JsonbCreator
-    public Person(@JsonbProperty("name") String name, @JsonbProperty("age") Integer age) {
-        this.name = name;
-        this.age = age;
-    }
-
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Person{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", age=").append(age);
-        sb.append('}');
-        return sb.toString();
+        return "Person{" + "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

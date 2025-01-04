@@ -21,7 +21,7 @@ import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.databases.arangodb.communication.ArangoDBDocumentManager;
-import org.eclipse.jnosql.databases.arangodb.communication.Person;
+import org.eclipse.jnosql.databases.arangodb.communication.Human;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
@@ -106,7 +106,7 @@ public class DefaultArangoDBTemplateTest {
     @Test
     public void shouldDeleteAll(){
         ArgumentCaptor<DeleteQuery> argumentCaptor = ArgumentCaptor.forClass(DeleteQuery.class);
-        template.deleteAll(Person.class);
+        template.deleteAll(Human.class);
         Mockito.verify(manager).delete(argumentCaptor.capture());
         DeleteQuery query = argumentCaptor.getValue();
         SoftAssertions.assertSoftly(soft -> {

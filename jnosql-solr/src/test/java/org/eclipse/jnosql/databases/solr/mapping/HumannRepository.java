@@ -18,5 +18,5 @@ package org.eclipse.jnosql.databases.solr.mapping;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface PersonRepository extends SolrRepository<Person, String> {
+public interface HumannRepository extends SolrRepository<Human, String> {
 }

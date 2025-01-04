@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 public class SolrExtensionTest {
 
     @Inject
-    private PersonRepository repository;
+    private HumannRepository repository;
 
     @Test
     public void shouldSaveOrientDB() {

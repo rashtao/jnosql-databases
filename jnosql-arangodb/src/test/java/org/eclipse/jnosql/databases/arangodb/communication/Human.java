@@ -12,23 +12,27 @@
  *
  *   Otavio Santana
  */
+package org.eclipse.jnosql.databases.arangodb.communication;
 
-package org.eclipse.jnosql.databases.infinispan.communication.model;
+public class Human {
 
-import java.io.Serializable;
+    private String name = "Ada";
 
+    private String city = "London";
 
-public record Person(String name, Integer age) implements Serializable {
+    public String getName() {
+        return name;
+    }
 
-    private static final long serialVersionUID = 5089852596376703955L;
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getCity() {
+        return city;
+    }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Person{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", age=").append(age);
-        sb.append('}');
-        return sb.toString();
+    public void setCity(String city) {
+        this.city = city;
     }
 }
