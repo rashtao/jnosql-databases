@@ -18,5 +18,5 @@ package org.eclipse.jnosql.databases.arangodb.mapping;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface PersonRepository extends ArangoDBRepository<Person, String> {
+public interface HumanRepository extends ArangoDBRepository<Human, String> {
 }

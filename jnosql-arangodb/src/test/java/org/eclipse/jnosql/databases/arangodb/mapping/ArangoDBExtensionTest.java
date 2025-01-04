@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ArangoDBExtensionTest {
 
     @Inject
-    private PersonRepository repository;
+    private HumanRepository repository;
 
     @Test
     public void shouldSave() {

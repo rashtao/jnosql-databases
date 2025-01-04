@@ -208,7 +208,7 @@ class ArangoDBTemplateIntegrationTest {
             var book = new Magazine(randomUUID().toString(), "Effective Java", index);
             template.insert(book);
         }
-        var select = SelectQuery.select().from("Book").orderBy("edition").asc()
+        var select = SelectQuery.select().from("Magazine").orderBy("edition").asc()
                 .skip(4).limit(3).build();
         var pageRequest = PageRequest.ofSize(3);
         CursoredPage<Magazine> entities = template.selectCursor(select, pageRequest);
