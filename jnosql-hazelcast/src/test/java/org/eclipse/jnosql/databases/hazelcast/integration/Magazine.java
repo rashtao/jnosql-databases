@@ -12,14 +12,16 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.solr.integration;
+package org.eclipse.jnosql.databases.hazelcast.integration;
 
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 
+import java.io.Serializable;
+
 @Entity
-public record Book(@Id String id, @Column("title") String title, @Column("edition") int edition) {
+public record Magazine(@Id String id, @Column("title") String title, @Column("edition") int edition) implements Serializable {
 
 
 }

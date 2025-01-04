@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, KeyValueEntityConverter.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(Reflections.class)
 @AddPackages(HazelcastTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
@@ -52,38 +52,38 @@ class KeyValueTemplateIntegrationTest {
 
     @Test
     public void shouldPutValue() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.put(book);
-        Optional<Book> effective = template.get(book.id(), Book.class);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.put(magazine);
+        Optional<Magazine> effective = template.get(magazine.id(), Magazine.class);
         assertThat(effective)
                 .isNotNull()
                 .isPresent()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldGet() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.put(book);
-        Optional<Book> effective = template.get(book.id(), Book.class);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.put(magazine);
+        Optional<Magazine> effective = template.get(magazine.id(), Magazine.class);
         assertThat(effective)
                 .isNotNull()
                 .isPresent()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldDelete() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.put(book);
-        Optional<Book> effective = template.get(book.id(), Book.class);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.put(magazine);
+        Optional<Magazine> effective = template.get(magazine.id(), Magazine.class);
         assertThat(effective)
                 .isNotNull()
                 .isPresent()
-                .get().isEqualTo(book);
-        template.delete(Book.class, book.id());
+                .get().isEqualTo(magazine);
+        template.delete(Magazine.class, magazine.id());
 
-        assertThat(template.get(book.id(), Book.class))
+        assertThat(template.get(magazine.id(), Magazine.class))
                 .isEmpty();
     }
 }

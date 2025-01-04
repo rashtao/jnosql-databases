@@ -21,7 +21,7 @@ import jakarta.nosql.Id;
 import java.util.Objects;
 
 @Entity
-public class Book {
+public class Magazine {
     @Id
     private String id;
     @Column("title")
@@ -29,13 +29,13 @@ public class Book {
     @Column("edition")
     private int edition;
 
-    public Book(String id, String title, int edition) {
+    public Magazine(String id, String title, int edition) {
         this.id = id;
         this.title = title;
         this.edition = edition;
     }
 
-    Book() {
+    Magazine() {
     }
 
     public String id() {
@@ -58,10 +58,10 @@ public class Book {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Book book = (Book) o;
-        return edition == book.edition
-                && Objects.equals(id, book.id)
-                && Objects.equals(title, book.title);
+        Magazine magazine = (Magazine) o;
+        return edition == magazine.edition
+                && Objects.equals(id, magazine.id)
+                && Objects.equals(title, magazine.title);
     }
 
     @Override
