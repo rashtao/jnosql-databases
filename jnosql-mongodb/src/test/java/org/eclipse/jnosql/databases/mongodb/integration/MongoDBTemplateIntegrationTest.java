@@ -143,7 +143,7 @@ class MongoDBTemplateIntegrationTest {
         var id = randomUUID();
         var title = "Persistence with MongoDB";
         var author = "Otavio Santana";
-        var book = template.insert(new MongoDBBook(id, title, author));
+        var book = template.insert(new Article(id, title, author));
 
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(book).isNotNull();
@@ -158,9 +158,9 @@ class MongoDBTemplateIntegrationTest {
         var id = randomUUID();
         var title = "Persistence with MongoDB";
         var author = "Otavio Santana";
-        var book = template.insert(new MongoDBBook(id, title, author));
+        var book = template.insert(new Article(id, title, author));
 
-        var optional = template.find(MongoDBBook.class, id);
+        var optional = template.find(Article.class, id);
         assertThat(optional).isPresent();
         assertThat(optional.get().id()).isEqualTo(id);
         assertThat(optional.get().title()).isEqualTo(title);

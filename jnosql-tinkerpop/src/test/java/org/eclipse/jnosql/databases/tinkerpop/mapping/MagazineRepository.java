@@ -20,5 +20,5 @@ import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 
 @Repository
-public interface BookRepository extends BasicRepository<Magazine, String> {
+public interface MagazineRepository extends BasicRepository<Magazine, String> {
 }

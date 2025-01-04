@@ -21,7 +21,7 @@ import org.apache.tinkerpop.gremlin.structure.Transaction.Status;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.BookTemplate;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.MagazineTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class MagazineTemplateTest {
 
     @Inject
-    private BookTemplate template;
+    private MagazineTemplate template;
 
     @Inject
     private Graph graph;

@@ -20,7 +20,7 @@ import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.Transactional;
 
 @ApplicationScoped
-public class BookTemplate {
+public class MagazineTemplate {
 
     @Inject
     private GraphTemplate graphTemplate;

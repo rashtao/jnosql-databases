@@ -27,7 +27,7 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, Transactional.class})
-@AddPackages({BookRepository.class, Reflections.class, GraphProducer.class})
+@AddPackages({MagazineRepository.class, Reflections.class, GraphProducer.class})
 @AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
 class DefaultGraphTraversalSourceTemplateTest extends AbstractGraphTemplateTest {
 

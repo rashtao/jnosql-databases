@@ -22,5 +22,5 @@ import jakarta.nosql.Id;
 import java.util.UUID;
 
 @Entity
-public record MongoDBBook(@Id UUID id, @Column String title, @Column String author) {
+public record Article(@Id UUID id, @Column String title, @Column String author) {
 }
