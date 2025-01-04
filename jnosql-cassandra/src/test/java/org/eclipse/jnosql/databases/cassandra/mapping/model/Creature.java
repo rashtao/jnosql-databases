@@ -16,11 +16,11 @@ package org.eclipse.jnosql.databases.cassandra.mapping.model;
 
 import java.util.Objects;
 
-public class Animal {
+public class Creature {
 
     private String name;
 
-    public Animal(String name) {
+    public Creature(String name) {
         this.name = name;
     }
 
@@ -36,8 +36,8 @@ public class Animal {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Animal animal = (Animal) o;
-        return Objects.equals(name, animal.name);
+        Creature creature = (Creature) o;
+        return Objects.equals(name, creature.name);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "Animal{" + "name='" + name + '\'' +
+        return "Creature{" + "name='" + name + '\'' +
                 '}';
     }
 }
