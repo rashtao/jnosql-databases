@@ -47,8 +47,7 @@ public class Animal {
 
     @Override
     public String toString() {
-        String sb = "Animal{" + "name='" + name + '\'' +
+        return "Animal{" + "name='" + name + '\'' +
                 '}';
-        return sb;
     }
 }
