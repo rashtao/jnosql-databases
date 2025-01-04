@@ -18,5 +18,5 @@ package org.eclipse.jnosql.databases.oracle.mapping;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface PersonNoSQLRepository extends OracleNoSQLRepository<Human, String> {
+public interface HumanNoSQLRepository extends OracleNoSQLRepository<Human, String> {
 }
