@@ -17,7 +17,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 import jakarta.data.exceptions.NonUniqueResultException;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -49,7 +49,7 @@ class DefaultValueMapTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldCount() {
         long count = graphTemplate.traversalVertex()
-                .hasLabel(Person.class).valueMap("name").count();
+                .hasLabel(Human.class).valueMap("name").count();
         assertEquals(3L, count);
     }
 
@@ -57,7 +57,7 @@ class DefaultValueMapTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnMapValues() {
         List<String> names = graphTemplate.traversalVertex()
-                .hasLabel(Person.class).valueMap("name")
+                .hasLabel(Human.class).valueMap("name")
                 .stream()
                 .map(m -> m.getOrDefault("name", "").toString()).collect(Collectors.toList());
 
@@ -68,7 +68,7 @@ class DefaultValueMapTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnStream() {
         Stream<Map<String, Object>> stream = graphTemplate.traversalVertex()
-                .hasLabel(Person.class).valueMap("name")
+                .hasLabel(Human.class).valueMap("name")
                 .stream();
         assertNotNull(stream);
         assertEquals(3L, stream.count());
@@ -78,7 +78,7 @@ class DefaultValueMapTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnResultAsList() {
         List<Map<String, Object>> maps = graphTemplate.traversalVertex()
-                .hasLabel(Person.class).valueMap("name")
+                .hasLabel(Human.class).valueMap("name")
                 .resultList();
         assertEquals(3, maps.size());
     }
@@ -86,7 +86,7 @@ class DefaultValueMapTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnErrorWhenThereAreMoreThanOneInGetSingleResult() {
         assertThrows(NonUniqueResultException.class, () -> graphTemplate.traversalVertex()
-                .hasLabel(Person.class).valueMap("name")
+                .hasLabel(Human.class).valueMap("name")
                 .singleResult());
     }
 

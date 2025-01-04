@@ -21,7 +21,7 @@ import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -56,36 +56,36 @@ class EdgeEntityTest {
     @Test
     void shouldReturnErrorWhenInboundIsNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
-            Person person = Person.builder().withName("Poliana").withAge().build();
+            Human human = Human.builder().withName("Poliana").withAge().build();
             Magazine magazine = null;
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
     }
 
     @Test
     void shouldReturnErrorWhenOutboundIsNull() {
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            Person person = Person.builder().withName("Poliana").withAge().build();
+            Human human = Human.builder().withName("Poliana").withAge().build();
             Magazine magazine = Magazine.builder().withAge(2007).withName("The Shack").build();
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
     }
 
     @Test
     void shouldReturnErrorWhenLabelIsNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
-            Person person = Person.builder().withName("Poliana").withAge().build();
+            Human human = Human.builder().withName("Poliana").withAge().build();
             Magazine magazine = Magazine.builder().withAge(2007).withName("The Shack").build();
-            graphTemplate.edge(person, (String) null, magazine);
+            graphTemplate.edge(human, (String) null, magazine);
         });
     }
 
     @Test
     void shouldReturnNullWhenInboundIdIsNull() {
         Assertions.assertThrows(EmptyResultException.class, () -> {
-            Person person = Person.builder().withId(-5).withName("Poliana").withAge().build();
+            Human human = Human.builder().withId(-5).withName("Poliana").withAge().build();
             Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
 
     }
@@ -93,38 +93,38 @@ class EdgeEntityTest {
     @Test
     void shouldReturnNullWhenOutboundIdIsNull() {
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+            Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
             Magazine magazine = Magazine.builder().withAge(2007).withName("The Shack").build();
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
     }
 
     @Test
     void shouldReturnEntityNotFoundWhenOutBoundDidNotFound() {
         Assertions.assertThrows( EmptyResultException.class, () -> {
-            Person person = Person.builder().withId(-10L).withName("Poliana").withAge().build();
+            Human human = Human.builder().withId(-10L).withName("Poliana").withAge().build();
             Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
     }
 
     @Test
     void shouldReturnEntityNotFoundWhenInBoundDidNotFound() {
         Assertions.assertThrows( EmptyResultException.class, () -> {
-            Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+            Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
             Magazine magazine = Magazine.builder().withId(10L).withAge(2007).withName("The Shack").build();
-            graphTemplate.edge(person, "reads", magazine);
+            graphTemplate.edge(human, "reads", magazine);
         });
     }
 
     @Test
     void shouldCreateAnEdge() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
 
         assertEquals("reads", edge.label());
-        assertEquals(person, edge.outgoing());
+        assertEquals(human, edge.outgoing());
         assertEquals(magazine, edge.incoming());
         assertTrue(edge.isEmpty());
         assertNotNull(edge.id());
@@ -132,12 +132,12 @@ class EdgeEntityTest {
 
     @Test
     void shouldGetId() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
 
         assertEquals("reads", edge.label());
-        assertEquals(person, edge.outgoing());
+        assertEquals(human, edge.outgoing());
         assertEquals(magazine, edge.incoming());
         assertTrue(edge.isEmpty());
         assertNotNull(edge.id());
@@ -150,12 +150,12 @@ class EdgeEntityTest {
 
     @Test
     void shouldCreateAnEdgeWithSupplier() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, () -> "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, () -> "reads", magazine);
 
         assertEquals("reads", edge.label());
-        assertEquals(person, edge.outgoing());
+        assertEquals(human, edge.outgoing());
         assertEquals(magazine, edge.incoming());
         assertTrue(edge.isEmpty());
         assertNotNull(edge.id());
@@ -163,11 +163,11 @@ class EdgeEntityTest {
 
     @Test
     void shouldUseAnEdge() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
 
-        EdgeEntity sameEdge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity sameEdge = graphTemplate.edge(human, "reads", magazine);
 
         assertEquals(edge.id(), sameEdge.id());
         assertEquals(edge, sameEdge);
@@ -175,8 +175,8 @@ class EdgeEntityTest {
 
     @Test
     void shouldUseAnEdge2() {
-        Person poliana = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
-        Person nilzete = graphTemplate.insert(Person.builder().withName("Nilzete").withAge().build());
+        Human poliana = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
+        Human nilzete = graphTemplate.insert(Human.builder().withName("Nilzete").withAge().build());
 
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
         EdgeEntity edge = graphTemplate.edge(poliana, "reads", magazine);
@@ -195,8 +195,8 @@ class EdgeEntityTest {
 
     @Test
     void shouldUseADifferentEdge() {
-        Person poliana = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
-        Person nilzete = graphTemplate.insert(Person.builder().withName("Nilzete").withAge().build());
+        Human poliana = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
+        Human nilzete = graphTemplate.insert(Human.builder().withName("Nilzete").withAge().build());
 
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
         EdgeEntity edge = graphTemplate.edge(poliana, "reads", magazine);
@@ -214,9 +214,9 @@ class EdgeEntityTest {
     @Test
     void shouldReturnErrorWhenAddKeyIsNull() {
         assertThrows(NullPointerException.class, () -> {
-            Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+            Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
             Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-            EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+            EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
             edge.add(null, "Brazil");
         });
     }
@@ -225,18 +225,18 @@ class EdgeEntityTest {
     void shouldReturnErrorWhenAddValueIsNull() {
 
         assertThrows(NullPointerException.class, () -> {
-            Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+            Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
             Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-            EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+            EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
             edge.add("where", null);
         });
     }
 
     @Test
     void shouldAddProperty() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
         edge.add("where", "Brazil");
 
         assertFalse(edge.isEmpty());
@@ -246,9 +246,9 @@ class EdgeEntityTest {
 
     @Test
     void shouldAddPropertyWithValue() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
         edge.add("where", Value.of("Brazil"));
 
         assertFalse(edge.isEmpty());
@@ -260,9 +260,9 @@ class EdgeEntityTest {
     @Test
     void shouldReturnErrorWhenRemoveNullKeyProperty() {
         assertThrows(NullPointerException.class, () -> {
-            Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+            Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
             Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-            EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+            EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
             edge.add("where", "Brazil");
 
 
@@ -273,9 +273,9 @@ class EdgeEntityTest {
 
     @Test
     void shouldRemoveProperty() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
         edge.add("where", "Brazil");
         assertEquals(1, edge.size());
         assertFalse(edge.isEmpty());
@@ -286,9 +286,9 @@ class EdgeEntityTest {
 
     @Test
     void shouldFindProperty() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
         edge.add("where", "Brazil");
 
         Optional<Value> where = edge.get("where");
@@ -300,12 +300,12 @@ class EdgeEntityTest {
 
     @Test
     void shouldDeleteAnEdge() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
         edge.delete();
 
-        EdgeEntity newEdge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity newEdge = graphTemplate.edge(human, "reads", magazine);
         assertNotEquals(edge.id(), newEdge.id());
 
         graphTemplate.deleteEdge(newEdge.id());
@@ -318,14 +318,14 @@ class EdgeEntityTest {
 
     @Test
     void shouldDeleteAnEdge2() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
 
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
 
         graphTemplate.deleteEdge(edge.id());
 
-        EdgeEntity newEdge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity newEdge = graphTemplate.edge(human, "reads", magazine);
         assertNotEquals(edge.id(), newEdge.id());
     }
 
@@ -338,9 +338,9 @@ class EdgeEntityTest {
 
     @Test
     void shouldFindAnEdge() {
-        Person person = graphTemplate.insert(Person.builder().withName("Poliana").withAge().build());
+        Human human = graphTemplate.insert(Human.builder().withName("Poliana").withAge().build());
         Magazine magazine = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
-        EdgeEntity edge = graphTemplate.edge(person, "reads", magazine);
+        EdgeEntity edge = graphTemplate.edge(human, "reads", magazine);
 
         Optional<EdgeEntity> newEdge = graphTemplate.edge(edge.id());
 

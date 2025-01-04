@@ -22,5 +22,5 @@ import jakarta.data.repository.Repository;
 public interface People {
 
     @Insert
-    Person insert(Person person);
+    Human insert(Human human);
 }

@@ -19,5 +19,5 @@ import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface PersonRepository extends BasicRepository<Person, Long> {
+public interface HumanRepository extends BasicRepository<Human, Long> {
 }

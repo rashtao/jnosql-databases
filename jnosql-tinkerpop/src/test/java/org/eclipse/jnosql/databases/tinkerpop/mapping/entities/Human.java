@@ -25,7 +25,7 @@ import java.util.Objects;
 
 @Entity
 @MappedSuperclass
-public class Person {
+public class Human {
 
     @Id
     private long id;
@@ -66,10 +66,10 @@ public class Person {
         return age > 21;
     }
 
-    Person() {
+    Human() {
     }
 
-    Person(long id, String name, int age, List<String> phones, String ignore) {
+    Human(long id, String name, int age, List<String> phones, String ignore) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -95,11 +95,11 @@ public class Person {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Person person = (Person) o;
-        return id == person.id &&
-                age == person.age &&
-                Objects.equals(name, person.name) &&
-                Objects.equals(phones, person.phones);
+        Human human = (Human) o;
+        return id == human.id &&
+                age == human.age &&
+                Objects.equals(name, human.name) &&
+                Objects.equals(phones, human.phones);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class Person {
         return Objects.hash(id, name, age, phones, ignore);
     }
 
-    public static PersonBuilder builder() {
-        return new PersonBuilder();
+    public static HumanBuilder builder() {
+        return new HumanBuilder();
     }
 
     public void setName(String name){

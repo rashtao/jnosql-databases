@@ -22,7 +22,7 @@ import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Creature;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -154,7 +154,7 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnOut() {
-        List<Person> people = graphTemplate.traversalVertex().outE(READS).outV().<Person>result().collect(toList());
+        List<Human> people = graphTemplate.traversalVertex().outE(READS).outV().<Human>result().collect(toList());
         assertEquals(3, people.size());
         assertThat(people).contains(poliana, otavio, paulo);
     }
@@ -522,14 +522,14 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
         graphTemplate.edge(paulo, "knows", poliana);
 
         List<EdgeEntity> edges = graphTemplate.traversalVertex()
-                .hasLabel(Person.class)
+                .hasLabel(Human.class)
                 .inE("knows").result()
                 .collect(Collectors.toList());
 
         assertEquals(6, edges.size());
 
         edges = graphTemplate.traversalVertex()
-                .hasLabel(Person.class)
+                .hasLabel(Human.class)
                 .inE("knows")
                 .dedup()
                 .result()

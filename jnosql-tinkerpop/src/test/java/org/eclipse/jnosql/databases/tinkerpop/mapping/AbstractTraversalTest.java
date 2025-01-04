@@ -21,7 +21,7 @@ import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -36,9 +36,9 @@ public abstract class AbstractTraversalTest {
     protected Graph graph;
 
 
-    protected Person otavio;
-    protected Person poliana;
-    protected Person paulo;
+    protected Human otavio;
+    protected Human poliana;
+    protected Human paulo;
 
     protected Magazine shack;
     protected Magazine license;
@@ -54,11 +54,11 @@ public abstract class AbstractTraversalTest {
         graph.traversal().V().toList().forEach(Vertex::remove);
         graph.traversal().E().toList().forEach(Edge::remove);
 
-        otavio = graphTemplate.insert(Person.builder().withAge(27)
+        otavio = graphTemplate.insert(Human.builder().withAge(27)
                 .withName("Otavio").build());
-        poliana = graphTemplate.insert(Person.builder().withAge(26)
+        poliana = graphTemplate.insert(Human.builder().withAge(26)
                 .withName("Poliana").build());
-        paulo = graphTemplate.insert(Person.builder().withAge(50)
+        paulo = graphTemplate.insert(Human.builder().withAge(50)
                 .withName("Paulo").build());
 
         shack = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
