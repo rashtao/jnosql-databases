@@ -21,7 +21,7 @@ import jakarta.nosql.Id;
 import java.util.Objects;
 
 @Entity
-public class Animal {
+public class Creature {
 
 
     @Id
@@ -30,10 +30,10 @@ public class Animal {
     @Column
     private String name;
 
-    Animal() {
+    Creature() {
     }
 
-    public Animal(String name) {
+    public Creature(String name) {
         this.name = name;
     }
 
@@ -50,11 +50,11 @@ public class Animal {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Animal animal)) {
+        if (!(o instanceof Creature creature)) {
             return false;
         }
-        return Objects.equals(id, animal.id) &&
-                Objects.equals(name, animal.name);
+        return Objects.equals(id, creature.id) &&
+                Objects.equals(name, creature.name);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Animal {
 
     @Override
     public String toString() {
-        return  "Animal{" + "name='" + name + '\'' +
+        return  "Creature{" + "name='" + name + '\'' +
                 '}';
     }
 }

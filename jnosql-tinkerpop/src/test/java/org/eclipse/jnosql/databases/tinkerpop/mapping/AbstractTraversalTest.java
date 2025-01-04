@@ -20,7 +20,7 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,9 +40,9 @@ public abstract class AbstractTraversalTest {
     protected Person poliana;
     protected Person paulo;
 
-    protected Book shack;
-    protected Book license;
-    protected Book effectiveJava;
+    protected Magazine shack;
+    protected Magazine license;
+    protected Magazine effectiveJava;
 
     protected EdgeEntity reads;
     protected EdgeEntity reads2;
@@ -61,9 +61,9 @@ public abstract class AbstractTraversalTest {
         paulo = graphTemplate.insert(Person.builder().withAge(50)
                 .withName("Paulo").build());
 
-        shack = graphTemplate.insert(Book.builder().withAge(2007).withName("The Shack").build());
-        license = graphTemplate.insert(Book.builder().withAge(2013).withName("Software License").build());
-        effectiveJava = graphTemplate.insert(Book.builder().withAge(2001).withName("Effective Java").build());
+        shack = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
+        license = graphTemplate.insert(Magazine.builder().withAge(2013).withName("Software License").build());
+        effectiveJava = graphTemplate.insert(Magazine.builder().withAge(2001).withName("Effective Java").build());
 
 
         reads = graphTemplate.edge(otavio, READS, effectiveJava);

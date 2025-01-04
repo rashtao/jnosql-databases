@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.data.exceptions.EmptyResultException;
 import jakarta.data.exceptions.NonUniqueResultException;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.PreparedStatement;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 import org.apache.tinkerpop.gremlin.structure.Edge;
@@ -23,8 +24,7 @@ import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.assertj.core.api.SoftAssertions;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Animal;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Creature;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -245,7 +245,7 @@ public abstract class AbstractGraphTemplateTest {
                 .withName("Otavio").build());
 
         assertTrue(getGraphTemplate().find(person.getId()).isPresent());
-        getGraphTemplate().delete(Book.class, person.getId());
+        getGraphTemplate().delete(Magazine.class, person.getId());
         assertTrue(getGraphTemplate().find(person.getId()).isPresent());
         getGraphTemplate().delete(Person.class, person.getId());
         assertFalse(getGraphTemplate().find(person.getId()).isPresent());
@@ -288,8 +288,8 @@ public abstract class AbstractGraphTemplateTest {
         Person otavio = getGraphTemplate().insert(Person.builder().withAge()
                 .withName("Otavio").build());
 
-        Animal dog = getGraphTemplate().insert(new Animal("dog"));
-        Book cleanCode = getGraphTemplate().insert(Book.builder().withName("Clean code").build());
+        Creature dog = getGraphTemplate().insert(new Creature("dog"));
+        Magazine cleanCode = getGraphTemplate().insert(Magazine.builder().withName("Clean code").build());
 
         EdgeEntity likes = getGraphTemplate().edge(otavio, "likes", dog);
         EdgeEntity reads = getGraphTemplate().edge(otavio, "reads", cleanCode);
@@ -312,7 +312,7 @@ public abstract class AbstractGraphTemplateTest {
     void shouldDeleteEdge() {
         Person otavio = getGraphTemplate().insert(Person.builder().withAge()
                 .withName("Otavio").build());
-        Animal dog = getGraphTemplate().insert(new Animal("Ada"));
+        Creature dog = getGraphTemplate().insert(new Creature("Ada"));
 
         EdgeEntity likes = getGraphTemplate().edge(otavio, "likes", dog);
 
@@ -327,8 +327,8 @@ public abstract class AbstractGraphTemplateTest {
     void shouldDeleteEdges() {
         Person otavio = getGraphTemplate().insert(Person.builder().withAge()
                 .withName("Otavio").build());
-        Animal dog = getGraphTemplate().insert(new Animal("Ada"));
-        Book cleanCode = getGraphTemplate().insert(Book.builder().withName("Clean code").build());
+        Creature dog = getGraphTemplate().insert(new Creature("Ada"));
+        Magazine cleanCode = getGraphTemplate().insert(Magazine.builder().withName("Clean code").build());
 
         EdgeEntity likes = getGraphTemplate().edge(otavio, "likes", dog);
         EdgeEntity reads = getGraphTemplate().edge(otavio, "reads", cleanCode);
@@ -375,8 +375,8 @@ public abstract class AbstractGraphTemplateTest {
         Person otavio = getGraphTemplate().insert(Person.builder().withAge()
                 .withName("Otavio").build());
 
-        Animal dog = getGraphTemplate().insert(new Animal("dog"));
-        Book cleanCode = getGraphTemplate().insert(Book.builder().withName("Clean code").build());
+        Creature dog = getGraphTemplate().insert(new Creature("dog"));
+        Magazine cleanCode = getGraphTemplate().insert(Magazine.builder().withName("Clean code").build());
 
         EdgeEntity likes = getGraphTemplate().edge(otavio, "likes", dog);
         EdgeEntity reads = getGraphTemplate().edge(otavio, "reads", cleanCode);

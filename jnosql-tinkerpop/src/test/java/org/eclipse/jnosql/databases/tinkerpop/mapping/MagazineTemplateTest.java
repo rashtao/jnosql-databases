@@ -18,9 +18,9 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Transaction.Status;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.BookTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
-class BookTemplateTest {
+class MagazineTemplateTest {
 
     @Inject
     private BookTemplate template;
@@ -55,10 +55,10 @@ class BookTemplateTest {
     void shouldSaveWithTransaction() {
         AtomicReference<Status> status = new AtomicReference<>();
 
-        Book book = Book.builder().withName("The Book").build();
+        Magazine magazine = Magazine.builder().withName("The Book").build();
         Transaction transaction = graph.tx();
         transaction.addTransactionListener(status::set);
-        template.insert(book);
+        template.insert(magazine);
         assertFalse(transaction.isOpen());
         assertEquals(COMMIT, status.get());
     }
@@ -67,11 +67,11 @@ class BookTemplateTest {
     void shouldSaveWithRollback() {
         AtomicReference<Status> status = new AtomicReference<>();
 
-        Book book = Book.builder().withName("The Book").build();
+        Magazine magazine = Magazine.builder().withName("The Book").build();
         Transaction transaction = graph.tx();
         transaction.addTransactionListener(status::set);
         try {
-            template.insertException(book);
+            template.insertException(magazine);
             assert false;
         }catch (Exception ignored){
 
@@ -85,11 +85,11 @@ class BookTemplateTest {
     void shouldUseAutomaticNormalTransaction() {
         AtomicReference<Status> status = new AtomicReference<>();
 
-        Book book = Book.builder().withName("The Book").build();
+        Magazine magazine = Magazine.builder().withName("The Book").build();
         Transaction transaction = graph.tx();
         transaction.addTransactionListener(status::set);
         assertNull(status.get());
-        template.normalInsertion(book);
+        template.normalInsertion(magazine);
         assertEquals(COMMIT, status.get());
         assertFalse(transaction.isOpen());
     }

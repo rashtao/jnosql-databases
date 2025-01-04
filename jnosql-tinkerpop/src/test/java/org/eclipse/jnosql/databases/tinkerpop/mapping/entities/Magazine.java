@@ -21,7 +21,7 @@ import jakarta.nosql.Id;
 import java.util.Objects;
 
 @Entity
-public class Book {
+public class Magazine {
 
     @Id
     private Long id;
@@ -33,10 +33,10 @@ public class Book {
     private Integer age;
 
 
-    Book() {
+    Magazine() {
     }
 
-    Book(Long id, String name, Integer age) {
+    Magazine(Long id, String name, Integer age) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -59,10 +59,10 @@ public class Book {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Book book)) {
+        if (!(o instanceof Magazine magazine)) {
             return false;
         }
-        return Objects.equals(id, book.id);
+        return Objects.equals(id, magazine.id);
     }
 
     @Override
@@ -106,8 +106,8 @@ public class Book {
             return this;
         }
 
-        public Book build() {
-            return new Book(id, name, age);
+        public Magazine build() {
+            return new Magazine(id, name, age);
         }
     }
 }

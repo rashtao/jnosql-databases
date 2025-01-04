@@ -17,10 +17,10 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 import jakarta.data.exceptions.NonUniqueResultException;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
 import org.apache.tinkerpop.gremlin.structure.T;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Animal;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Creature;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -175,9 +175,9 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldHaveLabel() {
-        List<Book> books = graphTemplate.traversalVertex().hasLabel("Book").<Book>result().collect(toList());
-        assertEquals(3, books.size());
-        assertThat(books).contains(shack, license, effectiveJava);
+        List<Magazine> magazines = graphTemplate.traversalVertex().hasLabel("Book").<Magazine>result().collect(toList());
+        assertEquals(3, magazines.size());
+        assertThat(magazines).contains(shack, license, effectiveJava);
     }
 
     @Test
@@ -192,19 +192,19 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnErrorWhenHasLabelHasNull() {
         assertThrows(NullPointerException.class, () -> graphTemplate.traversalVertex().hasLabel((String) null)
-                .<Book>result().toList());
+                .<Magazine>result().toList());
     }
 
     @Test
     void shouldIn() {
-        List<Book> books = graphTemplate.traversalVertex().out(READS).<Book>result().collect(toList());
-        assertEquals(3, books.size());
-        assertThat(books).contains(shack, license, effectiveJava);
+        List<Magazine> magazines = graphTemplate.traversalVertex().out(READS).<Magazine>result().collect(toList());
+        assertEquals(3, magazines.size());
+        assertThat(magazines).contains(shack, license, effectiveJava);
     }
 
     @Test
     void shouldReturnErrorWhenInIsNull() {
-        assertThrows(NullPointerException.class, () -> graphTemplate.traversalVertex().out((String) null).<Book>result().toList());
+        assertThrows(NullPointerException.class, () -> graphTemplate.traversalVertex().out((String) null).<Magazine>result().toList());
     }
 
     @Test
@@ -314,15 +314,15 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatTimesTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
         graphTemplate.edge(mouse, "eats", plant);
-        Optional<Animal> animal = graphTemplate.traversalVertex().repeat().out("eats").times(3).next();
+        Optional<Creature> animal = graphTemplate.traversalVertex().repeat().out("eats").times(3).next();
         assertTrue(animal.isPresent());
         assertEquals(plant, animal.get());
 
@@ -330,15 +330,15 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatTimesTraversal2() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
         graphTemplate.edge(mouse, "eats", plant);
-        Optional<Animal> animal = graphTemplate.traversalVertex().repeat().in("eats").times(3).next();
+        Optional<Creature> animal = graphTemplate.traversalVertex().repeat().in("eats").times(3).next();
         assertTrue(animal.isPresent());
         assertEquals(lion, animal.get());
 
@@ -346,16 +346,16 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatUntilTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake);
         graphTemplate.edge(snake, "eats", mouse);
         graphTemplate.edge(mouse, "eats", plant);
 
-        Optional<Animal> animal = graphTemplate.traversalVertex()
+        Optional<Creature> animal = graphTemplate.traversalVertex()
                 .repeat().out("eats")
                 .until().has("name", "plant").next();
 
@@ -367,16 +367,16 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatUntilTraversal2() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake);
         graphTemplate.edge(snake, "eats", mouse);
         graphTemplate.edge(mouse, "eats", plant);
 
-        Optional<Animal> animal = graphTemplate.traversalVertex()
+        Optional<Creature> animal = graphTemplate.traversalVertex()
                 .repeat().in("eats")
                 .until().has("name", "lion").next();
 
@@ -406,8 +406,8 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
                 .hasLabel("Book")
                 .has(property)
                 .orderBy(property)
-                .asc().<Book>result()
-                .map(Book::getName)
+                .asc().<Magazine>result()
+                .map(Magazine::getName)
                 .collect(toList());
 
         assertThat(properties).contains("Effective Java", "Software License", "The Shack");
@@ -421,8 +421,8 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
                 .hasLabel("Book")
                 .has(property)
                 .orderBy(property)
-                .desc().<Book>result()
-                .map(Book::getName)
+                .desc().<Magazine>result()
+                .map(Magazine::getName)
                 .collect(toList());
 
         assertThat(properties).contains("The Shack", "Software License", "Effective Java");
@@ -446,8 +446,8 @@ class DefaultVertexTraversalTest extends AbstractTraversalTest {
     @Test
     void shouldReturnHasLabel() {
         assertTrue(graphTemplate.traversalVertex().hasLabel("Person").result().allMatch(Person.class::isInstance));
-        assertTrue(graphTemplate.traversalVertex().hasLabel(() -> "Book").result().allMatch(Book.class::isInstance));
-        assertTrue(graphTemplate.traversalVertex().hasLabel(Animal.class).result().allMatch(Animal.class::isInstance));
+        assertTrue(graphTemplate.traversalVertex().hasLabel(() -> "Book").result().allMatch(Magazine.class::isInstance));
+        assertTrue(graphTemplate.traversalVertex().hasLabel(Creature.class).result().allMatch(Creature.class::isInstance));
     }
 
     @Test

@@ -26,17 +26,17 @@ public class BookTemplate {
     private GraphTemplate graphTemplate;
 
     @Transactional
-    public void insert(Book actor) {
+    public void insert(Magazine actor) {
         graphTemplate.insert(actor);
     }
 
     @Transactional
-    public void insertException(Book actor) {
+    public void insertException(Magazine actor) {
         graphTemplate.insert(actor);
         throw new NullPointerException("should get a rollback");
     }
 
-    public void normalInsertion(Book actor) {
+    public void normalInsertion(Magazine actor) {
         graphTemplate.insert(actor);
     }
 
