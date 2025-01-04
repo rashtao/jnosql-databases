@@ -91,7 +91,7 @@ public class Wine {
         return Objects.hashCode(id);
     }
 
-    public static BeerBuilder builder() {
-        return new BeerBuilder();
+    public static WineBuilder builder() {
+        return new WineBuilder();
     }
 }

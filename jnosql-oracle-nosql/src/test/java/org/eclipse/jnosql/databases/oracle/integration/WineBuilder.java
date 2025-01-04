@@ -17,28 +17,28 @@ package org.eclipse.jnosql.databases.oracle.integration;
 import java.util.List;
 import java.util.Map;
 
-public class BeerBuilder {
+public class WineBuilder {
     private String id;
     private List<String> comments;
     private List<Crew> crew;
     private Map<String, Object> data;
 
-    public BeerBuilder id(String id) {
+    public WineBuilder id(String id) {
         this.id = id;
         return this;
     }
 
-    public BeerBuilder comments(List<String> comments) {
+    public WineBuilder comments(List<String> comments) {
         this.comments = comments;
         return this;
     }
 
-    public BeerBuilder crew(List<Crew> crew) {
+    public WineBuilder crew(List<Crew> crew) {
         this.crew = crew;
         return this;
     }
 
-    public BeerBuilder data(Map<String, Object> data) {
+    public WineBuilder data(Map<String, Object> data) {
         this.data = data;
         return this;
     }
