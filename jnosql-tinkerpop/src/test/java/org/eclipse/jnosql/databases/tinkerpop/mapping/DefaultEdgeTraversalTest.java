@@ -18,11 +18,11 @@ import jakarta.data.exceptions.NonUniqueResultException;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.assertj.core.api.SoftAssertions;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Animal;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Creature;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -154,16 +154,16 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnOut() {
-        List<Person> people = graphTemplate.traversalVertex().outE(READS).outV().<Person>result().collect(toList());
+        List<Human> people = graphTemplate.traversalVertex().outE(READS).outV().<Human>result().collect(toList());
         assertEquals(3, people.size());
         assertThat(people).contains(poliana, otavio, paulo);
     }
 
     @Test
     void shouldReturnIn() {
-        List<Book> books = graphTemplate.traversalVertex().outE(READS).inV().<Book>result().collect(toList());
-        assertEquals(3, books.size());
-        assertThat(books).contains(shack, effectiveJava, license);
+        List<Magazine> magazines = graphTemplate.traversalVertex().outE(READS).inV().<Magazine>result().collect(toList());
+        assertEquals(3, magazines.size());
+        assertThat(magazines).contains(shack, effectiveJava, license);
     }
 
 
@@ -330,10 +330,10 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldReturnHas() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
@@ -348,10 +348,10 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatTimesTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
@@ -364,10 +364,10 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatUntilTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
@@ -385,10 +385,10 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatUntilHasValueTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
@@ -406,10 +406,10 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
     @Test
     void shouldRepeatUntilHasPredicateTraversal() {
-        Animal lion = graphTemplate.insert(new Animal("lion"));
-        Animal snake = graphTemplate.insert(new Animal("snake"));
-        Animal mouse = graphTemplate.insert(new Animal("mouse"));
-        Animal plant = graphTemplate.insert(new Animal("plant"));
+        Creature lion = graphTemplate.insert(new Creature("lion"));
+        Creature snake = graphTemplate.insert(new Creature("snake"));
+        Creature mouse = graphTemplate.insert(new Creature("mouse"));
+        Creature plant = graphTemplate.insert(new Creature("plant"));
 
         graphTemplate.edge(lion, "eats", snake).add("when", "night");
         graphTemplate.edge(snake, "eats", mouse);
@@ -420,8 +420,8 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
 
 
         SoftAssertions.assertSoftly(softly -> {
-            Animal incoming = result.incoming();
-            Animal outgoing = result.outgoing();
+            Creature incoming = result.incoming();
+            Creature outgoing = result.outgoing();
             softly.assertThat(incoming).isEqualTo(snake);
             softly.assertThat(outgoing).isEqualTo(lion);
         });
@@ -522,14 +522,14 @@ class DefaultEdgeTraversalTest extends AbstractTraversalTest {
         graphTemplate.edge(paulo, "knows", poliana);
 
         List<EdgeEntity> edges = graphTemplate.traversalVertex()
-                .hasLabel(Person.class)
+                .hasLabel(Human.class)
                 .inE("knows").result()
                 .collect(Collectors.toList());
 
         assertEquals(6, edges.size());
 
         edges = graphTemplate.traversalVertex()
-                .hasLabel(Person.class)
+                .hasLabel(Human.class)
                 .inE("knows")
                 .dedup()
                 .result()

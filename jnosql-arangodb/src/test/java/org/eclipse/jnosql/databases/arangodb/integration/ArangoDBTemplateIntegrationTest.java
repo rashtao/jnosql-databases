@@ -48,7 +48,7 @@ import static org.eclipse.jnosql.databases.arangodb.communication.DocumentDataba
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(ArangoDBTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
@@ -68,84 +68,84 @@ class ArangoDBTemplateIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.template.delete(Book.class).execute();
+        this.template.delete(Magazine.class).execute();
     }
 
     @Test
     void shouldInsert() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.insert(book);
-        Optional<Book> optional = template.find(Book.class, book.id());
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.insert(magazine);
+        Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
         assertThat(optional).isNotNull().isNotEmpty()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     void shouldUpdate() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        Book updated = new Book(book.id(), book.title() + " updated", 2);
+        Magazine updated = new Magazine(magazine.id(), magazine.title() + " updated", 2);
 
         assertThat(template.update(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
-        assertThat(template.find(Book.class, book.id()))
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().get().isEqualTo(updated);
 
     }
 
     @Test
     void shouldFindById() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        assertThat(template.find(Book.class, book.id()))
-                .isNotNull().get().isEqualTo(book);
+        assertThat(template.find(Magazine.class, magazine.id()))
+                .isNotNull().get().isEqualTo(magazine);
     }
 
     @Test
     void shouldDelete() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        template.delete(Book.class, book.id());
-        assertThat(template.find(Book.class, book.id()))
+        template.delete(Magazine.class, magazine.id());
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().isEmpty();
     }
 
     @Test
     void shouldDeleteAll() {
         for (int index = 0; index < 20; index++) {
-            Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-            assertThat(template.insert(book))
+            Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+            assertThat(template.insert(magazine))
                     .isNotNull()
-                    .isEqualTo(book);
+                    .isEqualTo(magazine);
         }
 
-        template.delete(Book.class).execute();
-        assertThat(template.select(Book.class).result()).isEmpty();
+        template.delete(Magazine.class).execute();
+        assertThat(template.select(Magazine.class).result()).isEmpty();
     }
 
 
     @Test
     void shouldUpdateNullValues() {
-        var book = new Book(randomUUID().toString(), "Effective Java", 1);
+        var book = new Magazine(randomUUID().toString(), "Effective Java", 1);
         template.insert(book);
-        template.update(new Book(book.id(), null, 2));
-        Optional<Book> optional = template.select(Book.class).where("id")
+        template.update(new Magazine(book.id(), null, 2));
+        Optional<Magazine> optional = template.select(Magazine.class).where("id")
                 .eq(book.id()).singleResult();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(optional).isPresent();
-            softly.assertThat(optional).get().extracting(Book::title).isNull();
-            softly.assertThat(optional).get().extracting(Book::edition).isEqualTo(2);
+            softly.assertThat(optional).get().extracting(Magazine::title).isNull();
+            softly.assertThat(optional).get().extracting(Magazine::edition).isEqualTo(2);
         });
     }
 
@@ -153,16 +153,16 @@ class ArangoDBTemplateIntegrationTest {
     void shouldExecuteLimit() {
 
         for (int index = 1; index < 10; index++) {
-            var book = new Book(randomUUID().toString(), "Effective Java", index);
+            var book = new Magazine(randomUUID().toString(), "Effective Java", index);
             template.insert(book);
         }
 
-        List<Book> books = template.select(Book.class).orderBy("edition")
+        List<Magazine> magazines = template.select(Magazine.class).orderBy("edition")
                 .asc().limit(4).result();
 
         SoftAssertions.assertSoftly(soft -> {
-            soft.assertThat(books).hasSize(4);
-            var editions = books.stream().map(Book::edition).toList();
+            soft.assertThat(magazines).hasSize(4);
+            var editions = magazines.stream().map(Magazine::edition).toList();
             soft.assertThat(editions).hasSize(4).contains(1, 2, 3, 4);
         });
 
@@ -171,16 +171,16 @@ class ArangoDBTemplateIntegrationTest {
     @Test
     void shouldExecuteSkip() {
         for (int index = 1; index < 10; index++) {
-            var book = new Book(randomUUID().toString(), "Effective Java", index);
+            var book = new Magazine(randomUUID().toString(), "Effective Java", index);
             template.insert(book);
         }
 
-        List<Book> books = template.select(Book.class).orderBy("edition")
+        List<Magazine> magazines = template.select(Magazine.class).orderBy("edition")
                 .asc().skip(4).result();
 
         SoftAssertions.assertSoftly(soft -> {
-            soft.assertThat(books).hasSize(5);
-            var editions = books.stream().map(Book::edition).toList();
+            soft.assertThat(magazines).hasSize(5);
+            var editions = magazines.stream().map(Magazine::edition).toList();
             soft.assertThat(editions).hasSize(5).contains(5, 6, 7, 8, 9);
         });
     }
@@ -188,16 +188,16 @@ class ArangoDBTemplateIntegrationTest {
     @Test
     void shouldExecuteLimitStart() {
         for (int index = 1; index < 10; index++) {
-            var book = new Book(randomUUID().toString(), "Effective Java", index);
+            var book = new Magazine(randomUUID().toString(), "Effective Java", index);
             template.insert(book);
         }
 
-        List<Book> books = template.select(Book.class).orderBy("edition")
+        List<Magazine> magazines = template.select(Magazine.class).orderBy("edition")
                 .asc().skip(4).limit(3).result();
 
         SoftAssertions.assertSoftly(soft -> {
-            soft.assertThat(books).hasSize(3);
-            var editions = books.stream().map(Book::edition).toList();
+            soft.assertThat(magazines).hasSize(3);
+            var editions = magazines.stream().map(Magazine::edition).toList();
             soft.assertThat(editions).hasSize(3).contains(5, 6, 7);
         });
     }
@@ -205,18 +205,18 @@ class ArangoDBTemplateIntegrationTest {
     @Test
     void shouldSelectCursorSize() {
         for (int index = 1; index < 10; index++) {
-            var book = new Book(randomUUID().toString(), "Effective Java", index);
+            var book = new Magazine(randomUUID().toString(), "Effective Java", index);
             template.insert(book);
         }
-        var select = SelectQuery.select().from("Book").orderBy("edition").asc()
+        var select = SelectQuery.select().from("Magazine").orderBy("edition").asc()
                 .skip(4).limit(3).build();
         var pageRequest = PageRequest.ofSize(3);
-        CursoredPage<Book> entities = template.selectCursor(select, pageRequest);
+        CursoredPage<Magazine> entities = template.selectCursor(select, pageRequest);
 
         SoftAssertions.assertSoftly(soft -> {
             var content = entities.content();
             soft.assertThat(content).hasSize(3);
-            var editions = content.stream().map(Book::edition).toList();
+            var editions = content.stream().map(Magazine::edition).toList();
             soft.assertThat(editions).hasSize(3).contains(1, 2, 3);
         });
     }

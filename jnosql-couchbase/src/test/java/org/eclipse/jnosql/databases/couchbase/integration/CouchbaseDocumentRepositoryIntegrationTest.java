@@ -46,7 +46,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(CouchbaseTemplate.class)
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
@@ -71,71 +71,71 @@ class CouchbaseDocumentRepositoryIntegrationTest {
 
     @Test
     public void shouldInsert() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        library.save(book);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        library.save(magazine);
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
-        Optional<Book> optional = library.findById(book.id());
+        Optional<Magazine> optional = library.findById(magazine.id());
         assertThat(optional).isNotNull().isNotEmpty()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldUpdate() throws InterruptedException {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        Book updated = new Book(book.id(), book.title() + " updated", 2);
+        Magazine updated = new Magazine(magazine.id(), magazine.title() + " updated", 2);
 
         assertThat(library.save(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        assertThat(library.findById(book.id()))
+        assertThat(library.findById(magazine.id()))
                 .isNotNull().get().isEqualTo(updated);
 
     }
 
     @Test
     public void shouldFindById() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
-        assertThat(library.findById(book.id()))
-                .isNotNull().get().isEqualTo(book);
+        assertThat(library.findById(magazine.id()))
+                .isNotNull().get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldFindByTitleLike() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        var data = library.findByTitleLike(book.title()).toList();
+        var data = library.findByTitleLike(magazine.title()).toList();
 
         assertSoftly(softly -> {
             softly.assertThat(data).as("query result is a non-null instance").isNotNull();
             softly.assertThat(data.size()).as("query result size is correct").isEqualTo(1);
-            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(book);
+            softly.assertThat(data.get(0)).as("returned data is correct").isEqualTo(magazine);
         });
     }
 
     @Test
     public void shouldFindByEditionLessThan() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
@@ -144,7 +144,7 @@ class CouchbaseDocumentRepositoryIntegrationTest {
         assertSoftly(softly -> {
             softly.assertThat(booksFoundByEditionLessThan).as("query result from findByEditionLessThan() is a non-null instance").isNotNull();
             softly.assertThat(booksFoundByEditionLessThan.size()).as("query result size from findByEditionLessThan() is correct").isEqualTo(1);
-            softly.assertThat(booksFoundByEditionLessThan.get(0)).as("returned books from findByEditionLessThan() are correct").isEqualTo(book);
+            softly.assertThat(booksFoundByEditionLessThan.get(0)).as("returned books from findByEditionLessThan() are correct").isEqualTo(magazine);
         });
 
         var booksFoundByEditionLessThanZero = library.findByEditionLessThan(0).toList();
@@ -159,7 +159,7 @@ class CouchbaseDocumentRepositoryIntegrationTest {
         assertSoftly(softly -> {
             softly.assertThat(booksFoundByEditionGreaterThan).as("query result from findByEditionGreaterThan() is a non-null instance").isNotNull();
             softly.assertThat(booksFoundByEditionGreaterThan.size()).as("query result size from findByEditionGreaterThan() is correct").isEqualTo(1);
-            softly.assertThat(booksFoundByEditionGreaterThan.get(0)).as("returned books from findByEditionGreaterThan() are correct").isEqualTo(book);
+            softly.assertThat(booksFoundByEditionGreaterThan.get(0)).as("returned books from findByEditionGreaterThan() are correct").isEqualTo(magazine);
         });
 
 
@@ -173,10 +173,10 @@ class CouchbaseDocumentRepositoryIntegrationTest {
 
     @Test
     public void shouldFindByEditionGreaterThan() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
@@ -185,7 +185,7 @@ class CouchbaseDocumentRepositoryIntegrationTest {
         assertSoftly(softly -> {
             softly.assertThat(booksFoundByEditionGreaterThanZero).as("query result from findByEditionGreaterThan() is a non-null instance").isNotNull();
             softly.assertThat(booksFoundByEditionGreaterThanZero.size()).as("query result size from findByEditionGreaterThan() is correct").isEqualTo(1);
-            softly.assertThat(booksFoundByEditionGreaterThanZero.get(0)).as("returned books from findByEditionGreaterThan() are correct").isEqualTo(book);
+            softly.assertThat(booksFoundByEditionGreaterThanZero.get(0)).as("returned books from findByEditionGreaterThan() are correct").isEqualTo(magazine);
         });
 
 
@@ -199,18 +199,18 @@ class CouchbaseDocumentRepositoryIntegrationTest {
 
     @Test
     public void shouldDeleteById() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(library.save(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(library.save(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        library.deleteById(book.id());
+        library.deleteById(magazine.id());
 
         await().atLeast(TimeoutConfig.DEFAULT_KV_DURABLE_TIMEOUT);
 
-        assertThat(library.findById(book.id()))
+        assertThat(library.findById(magazine.id()))
                 .isNotNull().isEmpty();
     }
 

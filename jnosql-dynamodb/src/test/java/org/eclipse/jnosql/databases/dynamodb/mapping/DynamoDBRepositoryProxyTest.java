@@ -57,7 +57,7 @@ class DynamoDBRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonNoSQLRepository personRepository;
+    private HumanNoSQLRepository personRepository;
 
     @SuppressWarnings("rawtypes")
     @BeforeEach
@@ -65,14 +65,14 @@ class DynamoDBRepositoryProxyTest {
         this.template = Mockito.mock(DynamoDBTemplate.class);
 
         DynamoDBRepositoryProxy handler = new DynamoDBRepositoryProxy<>(template,
-                PersonNoSQLRepository.class, converters, entitiesMetadata);
+                HumanNoSQLRepository.class, converters, entitiesMetadata);
 
-        when(template.insert(any(Person.class))).thenReturn(new Person());
-        when(template.insert(any(Person.class), any(Duration.class))).thenReturn(new Person());
-        when(template.update(any(Person.class))).thenReturn(new Person());
+        when(template.insert(any(Human.class))).thenReturn(new Human());
+        when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
+        when(template.update(any(Human.class))).thenReturn(new Human());
 
-        this.personRepository = (PersonNoSQLRepository) Proxy.newProxyInstance(PersonNoSQLRepository.class.getClassLoader(),
-                new Class[]{PersonNoSQLRepository.class},
+        this.personRepository = (HumanNoSQLRepository) Proxy.newProxyInstance(HumanNoSQLRepository.class.getClassLoader(),
+                new Class[]{HumanNoSQLRepository.class},
                 handler);
     }
 
@@ -94,32 +94,32 @@ class DynamoDBRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingInsert() {
-        Person person = Person.of("Ada", 10);
-        personRepository.save(person);
-        verify(template).insert(eq(person));
+        Human human = Human.of("Ada", 10);
+        personRepository.save(human);
+        verify(template).insert(eq(human));
     }
 
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Person person = Person.of("Ada-2", 10);
-        when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
-        personRepository.save(person);
-        verify(template).update(eq(person));
+        Human human = Human.of("Ada-2", 10);
+        when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
+        personRepository.save(human);
+        verify(template).update(eq(human));
     }
 
     @Test
     public void shouldDelete(){
         personRepository.deleteById("id");
-        verify(template).delete(Person.class, "id");
+        verify(template).delete(Human.class, "id");
     }
 
 
     @Test
     public void shouldDeleteEntity(){
-        Person person = Person.of("Ada", 10);
-        personRepository.delete(person);
-        verify(template).delete(Person.class, person.getName());
+        Human human = Human.of("Ada", 10);
+        personRepository.delete(human);
+        verify(template).delete(Human.class, human.getName());
     }
 
     @Test
@@ -130,16 +130,16 @@ class DynamoDBRepositoryProxyTest {
         verify(template).deleteAll(queryCaptor.capture());
 
         Class<?> query = queryCaptor.getValue();
-        Assertions.assertThat(query).isEqualTo(Person.class);
+        Assertions.assertThat(query).isEqualTo(Human.class);
     }
 
-    interface PersonNoSQLRepository extends DynamoDBRepository<Person, String> {
+    interface HumanNoSQLRepository extends DynamoDBRepository<Human, String> {
 
         @PartiQL("select * from Person")
-        List<Person> findAllQuery();
+        List<Human> findAllQuery();
 
         @PartiQL("select * from Person where name= ?")
-        List<Person> findByName(@Param("") String name);
+        List<Human> findByName(@Param("") String name);
     }
 
 }

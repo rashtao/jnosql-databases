@@ -23,7 +23,7 @@ import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.People;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -55,23 +55,23 @@ class GraphCustomExtensionTest {
     @Test
     void shouldInitiate() {
         assertNotNull(people);
-        Person person = people.insert(Person.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(person).isNotNull());
+        Human human = people.insert(Human.builder().build());
+        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
     }
 
     @Test
     void shouldUseMock(){
         assertNotNull(pepoleMock);
 
-        Person person = pepoleMock.insert(Person.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(person).isNotNull());
+        Human human = pepoleMock.insert(Human.builder().build());
+        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
     }
 
     @Test
     void shouldUseDefault(){
         assertNotNull(repository);
 
-        Person person = repository.insert(Person.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(person).isNotNull());
+        Human human = repository.insert(Human.builder().build());
+        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
     }
 }

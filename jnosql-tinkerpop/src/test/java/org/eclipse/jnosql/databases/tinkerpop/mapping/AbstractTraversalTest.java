@@ -20,8 +20,8 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Book;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -36,13 +36,13 @@ public abstract class AbstractTraversalTest {
     protected Graph graph;
 
 
-    protected Person otavio;
-    protected Person poliana;
-    protected Person paulo;
+    protected Human otavio;
+    protected Human poliana;
+    protected Human paulo;
 
-    protected Book shack;
-    protected Book license;
-    protected Book effectiveJava;
+    protected Magazine shack;
+    protected Magazine license;
+    protected Magazine effectiveJava;
 
     protected EdgeEntity reads;
     protected EdgeEntity reads2;
@@ -54,16 +54,16 @@ public abstract class AbstractTraversalTest {
         graph.traversal().V().toList().forEach(Vertex::remove);
         graph.traversal().E().toList().forEach(Edge::remove);
 
-        otavio = graphTemplate.insert(Person.builder().withAge(27)
+        otavio = graphTemplate.insert(Human.builder().withAge(27)
                 .withName("Otavio").build());
-        poliana = graphTemplate.insert(Person.builder().withAge(26)
+        poliana = graphTemplate.insert(Human.builder().withAge(26)
                 .withName("Poliana").build());
-        paulo = graphTemplate.insert(Person.builder().withAge(50)
+        paulo = graphTemplate.insert(Human.builder().withAge(50)
                 .withName("Paulo").build());
 
-        shack = graphTemplate.insert(Book.builder().withAge(2007).withName("The Shack").build());
-        license = graphTemplate.insert(Book.builder().withAge(2013).withName("Software License").build());
-        effectiveJava = graphTemplate.insert(Book.builder().withAge(2001).withName("Effective Java").build());
+        shack = graphTemplate.insert(Magazine.builder().withAge(2007).withName("The Shack").build());
+        license = graphTemplate.insert(Magazine.builder().withAge(2013).withName("Software License").build());
+        effectiveJava = graphTemplate.insert(Magazine.builder().withAge(2001).withName("Effective Java").build());
 
 
         reads = graphTemplate.edge(otavio, READS, effectiveJava);

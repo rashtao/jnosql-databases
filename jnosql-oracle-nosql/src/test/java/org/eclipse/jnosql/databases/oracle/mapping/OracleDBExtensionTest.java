@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class OracleDBExtensionTest {
 
     @Inject
-    private PersonNoSQLRepository repository;
+    private HumanNoSQLRepository repository;
 
     @Test
     public void shouldSave() {

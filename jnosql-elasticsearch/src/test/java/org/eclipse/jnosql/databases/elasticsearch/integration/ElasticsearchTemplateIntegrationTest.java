@@ -49,7 +49,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, Converters.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(ElasticsearchTemplate.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
@@ -82,35 +82,35 @@ class ElasticsearchTemplateIntegrationTest {
     @Test
     public void shouldInsert() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        template.insert(book);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        template.insert(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = template.find(Book.class, book.id());
+            Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
-        assertThat(reference.get()).isNotNull().isEqualTo(book);
+        assertThat(reference.get()).isNotNull().isEqualTo(magazine);
     }
 
     @Test
     public void shouldUpdate() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        Book updated = book.updateEdition(book.edition() + 1);
+        Magazine updated = magazine.updateEdition(magazine.edition() + 1);
 
         assertThat(template.update(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = template.find(Book.class, book.id());
+            Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
@@ -121,32 +121,32 @@ class ElasticsearchTemplateIntegrationTest {
     @Test
     public void shouldFindById() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
 
-        assertThat(template.insert(book))
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        AtomicReference<Book> reference = new AtomicReference<>();
+        AtomicReference<Magazine> reference = new AtomicReference<>();
         await().until(() -> {
-            Optional<Book> optional = template.find(Book.class, book.id());
+            Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
             optional.ifPresent(reference::set);
             return optional.isPresent();
         });
 
-        assertThat(reference.get()).isNotNull().isEqualTo(book);
+        assertThat(reference.get()).isNotNull().isEqualTo(magazine);
     }
 
     @Test
     public void shouldDelete() {
         Author joshuaBloch = new Author("Joshua Bloch");
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        template.delete(Book.class, book.id());
-        assertThat(template.find(Book.class, book.id()))
+        template.delete(Magazine.class, magazine.id());
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().isEmpty();
     }
 

@@ -21,8 +21,8 @@ import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Person;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.PersonRepository;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.HumanRepository;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -44,11 +44,11 @@ class GraphExtensionTest {
 
     @Inject
     @Database(value = DatabaseType.GRAPH)
-    private PersonRepository repository;
+    private HumanRepository repository;
 
     @Inject
     @Database(value = DatabaseType.GRAPH, provider = "graphRepositoryMock")
-    private PersonRepository repositoryMock;
+    private HumanRepository repositoryMock;
 
     @Inject
     @Database(value = DatabaseType.GRAPH, provider = "graphRepositoryMock")
@@ -61,8 +61,8 @@ class GraphExtensionTest {
     @Test
     void shouldInitiate() {
         assertNotNull(repository);
-        Person person = repository.save(Person.builder().build());
-        assertNull(person.getName());
+        Human human = repository.save(Human.builder().build());
+        assertNull(human.getName());
     }
 
     @Test

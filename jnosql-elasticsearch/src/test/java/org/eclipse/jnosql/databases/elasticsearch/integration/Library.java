@@ -24,11 +24,11 @@ import jakarta.data.repository.Repository;
 import java.util.stream.Stream;
 
 @Repository
-public interface Library extends CrudRepository<Book, String> {
+public interface Library extends CrudRepository<Magazine, String> {
 
     @Query("select * from Book where author.name = @name")
-    Stream<Book> findByAuthorName(@Param("name") String name);
+    Stream<Magazine> findByAuthorName(@Param("name") String name);
 
-    Stream<Book> findByTitleLike( String title);
+    Stream<Magazine> findByTitleLike(String title);
 
 }

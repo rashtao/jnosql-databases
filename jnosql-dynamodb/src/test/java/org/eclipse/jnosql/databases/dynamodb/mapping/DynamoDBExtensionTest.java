@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class DynamoDBExtensionTest {
 
     @Inject
-    private PersonNoSQLRepository repository;
+    private HumanNoSQLRepository repository;
 
     @Test
     public void shouldSave() {

@@ -22,14 +22,14 @@ import java.util.Objects;
 public class LineBank implements Serializable {
 
 
-    private final Person person;
+    private final Human human;
 
-    public Person getPerson() {
-        return person;
+    public Human getPerson() {
+        return human;
     }
 
     public LineBank(String name, Integer age) {
-        this.person = new Person(name, age);
+        this.human = new Human(name, age);
 
     }
 
@@ -38,18 +38,18 @@ public class LineBank implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LineBank lineBank = (LineBank) o;
-        return Objects.equals(person, lineBank.person);
+        return Objects.equals(human, lineBank.human);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(person);
+        return Objects.hash(human);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("LineBank{");
-        sb.append("person=").append(person);
+        sb.append("person=").append(human);
         sb.append('}');
         return sb.toString();
     }

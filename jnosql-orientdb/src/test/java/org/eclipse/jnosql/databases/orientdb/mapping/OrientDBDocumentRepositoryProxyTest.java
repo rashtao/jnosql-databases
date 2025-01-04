@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
 import jakarta.inject.Inject;
+import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
@@ -60,38 +61,38 @@ public class OrientDBDocumentRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonRepository personRepository;
+    private HumanRepository humanRepository;
 
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(OrientDBTemplate.class);
         OrientDBDocumentRepositoryProxy handler = new OrientDBDocumentRepositoryProxy(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Person.class))).thenReturn(new Person());
         when(template.insert(any(Person.class), any(Duration.class))).thenReturn(new Person());
         when(template.update(any(Person.class))).thenReturn(new Person());
-        this.personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        this.humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).sql("select * from Person");
     }
 
     @Test
     public void shouldFindByNameSQL() {
-        personRepository.findByName("Ada");
+        humanRepository.findByName("Ada");
         verify(template).sql(Mockito.eq("select * from Person where name = ?"), Mockito.any(Object.class));
     }
 
     @Test
     public void shouldFindByNameSQL2() {
-        personRepository.findByAge(10);
+        humanRepository.findByAge(10);
         ArgumentCaptor<Map> argumentCaptor = ArgumentCaptor.forClass(Map.class);
         verify(template).sql(Mockito.eq("select * from Person where age = :age"), argumentCaptor.capture());
         Map value = argumentCaptor.getValue();
@@ -100,35 +101,44 @@ public class OrientDBDocumentRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingInsert() {
-        Person person = Person.of("Ada", 10);
-        personRepository.save(person);
+        var person = new Person();
+        person.setName("Ada");
+        person.setAge(10);
+        humanRepository.save(person);
         verify(template).insert(eq(person));
     }
 
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Person person = Person.of("Ada-2", 10);
-        when(template.find(Person.class, "Ada-2")).thenReturn(Optional.of(person));
-        personRepository.save(person);
+        var person = new Person();
+        person.setName("Ada-2");
+        person.setAge(10);
+        person.setId(10L);
+        when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
+        humanRepository.save(person);
         verify(template).update(eq(person));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(Person.class, "id");
     }
 
 
     @Test
     public void shouldDeleteEntity(){
-        Person person = Person.of("Ada", 10);
-        personRepository.delete(person);
-        verify(template).delete(Person.class, person.getName());
+
+        var person = new Person();
+        person.setName("Ada");
+        person.setAge(10);
+        person.setId(10L);
+        humanRepository.delete(person);
+        verify(template).delete(Person.class, person.getId());
     }
 
-    interface PersonRepository extends OrientDBCrudRepository<Person, String> {
+    interface HumanRepository extends OrientDBCrudRepository<Person, String> {
 
         @SQL("select * from Person")
         List<Person> findAllQuery();

@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 @AddPackages(Reflections.class)
 public class CouchbaseExtensionTest {
     @Inject
-    private PersonRepository repository;
+    private HumanRepository repository;
 
     @Test
     public void shouldSaveOrientDB() {

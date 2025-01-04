@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class,
         EntityConverter.class, DocumentTemplate.class, ElasticsearchTemplate.class})
-@AddPackages(Person.class)
+@AddPackages(Human.class)
 @AddPackages(Reflections.class)
 @AddExtensions({EntityMetadataExtension.class,
         DocumentExtension.class})
@@ -81,7 +81,7 @@ public class DefaultElasticsearchTemplateTest {
         when(instance.get()).thenReturn(manager);
         template = new DefaultElasticsearchTemplate(instance, converter, persistManager, entities, converters);
 
-        CommunicationEntity entity = CommunicationEntity.of("Person");
+        CommunicationEntity entity = CommunicationEntity.of("Human");
         entity.add(Element.of("name", "Ada"));
         entity.add(Element.of("age", 10));
         when(manager.search(Mockito.any(SearchRequest.class)))
@@ -94,9 +94,9 @@ public class DefaultElasticsearchTemplateTest {
         Function<SearchRequest.Builder, ObjectBuilder<SearchRequest>> fn  =
                 q -> q.query(t -> t.match(MatchQuery.of(m -> m.field("field").query(2))));
         SearchRequest request = fn.apply(new SearchRequest.Builder()).build();
-        List<Person> people = template.<Person>search(request).collect(Collectors.toList());
+        List<Human> people = template.<Human>search(request).collect(Collectors.toList());
 
-        assertThat(people).contains(new Person("Ada", 10));
+        assertThat(people).contains(new Human("Ada", 10));
         Mockito.verify(manager).search(Mockito.eq(request));
     }
 

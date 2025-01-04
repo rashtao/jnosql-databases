@@ -42,7 +42,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, DocumentTemplate.class})
-@AddPackages(Book.class)
+@AddPackages(Magazine.class)
 @AddPackages(OrientDBTemplate.class)
 @AddPackages(Reflections.class)
 @AddExtensions({EntityMetadataExtension.class,
@@ -63,50 +63,50 @@ class OrientDBTemplateIntegrationTest {
     }
     @Test
     public void shouldInsert() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        template.insert(book);
-        Optional<Book> optional = template.find(Book.class, book.id());
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        template.insert(magazine);
+        Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
         assertThat(optional).isNotNull().isNotEmpty()
-                .get().isEqualTo(book);
+                .get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldUpdate() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        Book updated = new Book(book.id(), book.title() + " updated", 2);
+        Magazine updated = new Magazine(magazine.id(), magazine.title() + " updated", 2);
 
         assertThat(template.update(updated))
                 .isNotNull()
-                .isNotEqualTo(book);
+                .isNotEqualTo(magazine);
 
-        assertThat(template.find(Book.class, book.id()))
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().get().isEqualTo(updated);
 
     }
 
     @Test
     public void shouldFindById() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
+                .isEqualTo(magazine);
 
-        assertThat(template.find(Book.class, book.id()))
-                .isNotNull().get().isEqualTo(book);
+        assertThat(template.find(Magazine.class, magazine.id()))
+                .isNotNull().get().isEqualTo(magazine);
     }
 
     @Test
     public void shouldDelete() {
-        Book book = new Book(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(book))
+        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
+        assertThat(template.insert(magazine))
                 .isNotNull()
-                .isEqualTo(book);
-        template.delete(Book.class, book.id());
-        assertThat(template.find(Book.class, book.id()))
+                .isEqualTo(magazine);
+        template.delete(Magazine.class, magazine.id());
+        assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().isEmpty();
     }
 
