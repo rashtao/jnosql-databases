@@ -60,33 +60,33 @@ public class SolrRepositoryProxyTest {
     @Inject
     private EntitiesMetadata entitiesMetadata;
 
-    private PersonRepository personRepository;
+    private HumanRepository humanRepository;
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(SolrTemplate.class);
 
         SolrRepositoryProxy handler = new SolrRepositoryProxy(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).solr("_entity:person");
     }
 
     @Test
     public void shouldFindByNameN1ql() {
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-        personRepository.findByName("Ada");
+        humanRepository.findByName("Ada");
         verify(template).solr(Mockito.eq("name:@name AND _entity:person"), captor.capture());
 
         Map<String, Object> value = captor.getValue();
@@ -97,7 +97,7 @@ public class SolrRepositoryProxyTest {
     @Test
     public void shouldSaveUsingInsert() {
         Human human = Human.of("Ada", 10);
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).insert(eq(human));
     }
 
@@ -106,13 +106,13 @@ public class SolrRepositoryProxyTest {
     public void shouldSaveUsingUpdate() {
         Human human = Human.of("Ada-2", 10);
         when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).update(eq(human));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(Human.class, "id");
     }
 
@@ -120,11 +120,11 @@ public class SolrRepositoryProxyTest {
     @Test
     public void shouldDeleteEntity(){
         Human human = Human.of("Ada", 10);
-        personRepository.delete(human);
+        humanRepository.delete(human);
         verify(template).delete(Human.class, human.getName());
     }
 
-    interface PersonRepository extends SolrRepository<Human, String> {
+    interface HumanRepository extends SolrRepository<Human, String> {
 
         @Solr("_entity:person")
         List<Human> findAllQuery();

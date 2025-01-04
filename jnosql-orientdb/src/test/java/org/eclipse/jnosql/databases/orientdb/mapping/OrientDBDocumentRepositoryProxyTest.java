@@ -61,38 +61,38 @@ public class OrientDBDocumentRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonRepository personRepository;
+    private HumanRepository humanRepository;
 
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(OrientDBTemplate.class);
         OrientDBDocumentRepositoryProxy handler = new OrientDBDocumentRepositoryProxy(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Person.class))).thenReturn(new Person());
         when(template.insert(any(Person.class), any(Duration.class))).thenReturn(new Person());
         when(template.update(any(Person.class))).thenReturn(new Person());
-        this.personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        this.humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).sql("select * from Person");
     }
 
     @Test
     public void shouldFindByNameSQL() {
-        personRepository.findByName("Ada");
+        humanRepository.findByName("Ada");
         verify(template).sql(Mockito.eq("select * from Person where name = ?"), Mockito.any(Object.class));
     }
 
     @Test
     public void shouldFindByNameSQL2() {
-        personRepository.findByAge(10);
+        humanRepository.findByAge(10);
         ArgumentCaptor<Map> argumentCaptor = ArgumentCaptor.forClass(Map.class);
         verify(template).sql(Mockito.eq("select * from Person where age = :age"), argumentCaptor.capture());
         Map value = argumentCaptor.getValue();
@@ -104,7 +104,7 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada");
         person.setAge(10);
-        personRepository.save(person);
+        humanRepository.save(person);
         verify(template).insert(eq(person));
     }
 
@@ -116,13 +116,13 @@ public class OrientDBDocumentRepositoryProxyTest {
         person.setAge(10);
         person.setId(10L);
         when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
-        personRepository.save(person);
+        humanRepository.save(person);
         verify(template).update(eq(person));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(Person.class, "id");
     }
 
@@ -134,11 +134,11 @@ public class OrientDBDocumentRepositoryProxyTest {
         person.setName("Ada");
         person.setAge(10);
         person.setId(10L);
-        personRepository.delete(person);
+        humanRepository.delete(person);
         verify(template).delete(Person.class, person.getId());
     }
 
-    interface PersonRepository extends OrientDBCrudRepository<Person, String> {
+    interface HumanRepository extends OrientDBCrudRepository<Person, String> {
 
         @SQL("select * from Person")
         List<Person> findAllQuery();

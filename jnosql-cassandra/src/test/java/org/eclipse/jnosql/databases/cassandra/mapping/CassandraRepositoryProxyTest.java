@@ -60,19 +60,19 @@ public class CassandraRepositoryProxyTest {
     @Inject
     private EntitiesMetadata entitiesMetadata;
 
-    private PersonRepository personRepository;
+    private HumanRepository personRepository;
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(CassandraTemplate.class);
         CassandraRepositoryProxy handler = new CassandraRepositoryProxy(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Contact.class))).thenReturn(new Contact());
         when(template.insert(any(Contact.class), any(Duration.class))).thenReturn(new Contact());
         when(template.update(any(Contact.class))).thenReturn(new Contact());
-        this.personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        this.personRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
@@ -140,7 +140,7 @@ public class CassandraRepositoryProxyTest {
         verify(template).delete(Contact.class, contact.getName());
     }
 
-    interface PersonRepository extends CassandraRepository<Contact, String> {
+    interface HumanRepository extends CassandraRepository<Contact, String> {
 
         void deleteByName(String namel);
 

@@ -59,7 +59,7 @@ public class OracleDocumentRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonNoSQLRepository personRepository;
+    private HumanNoSQLRepository personRepository;
 
     @SuppressWarnings("rawtypes")
     @BeforeEach
@@ -67,13 +67,13 @@ public class OracleDocumentRepositoryProxyTest {
         this.template = Mockito.mock(OracleNoSQLTemplate.class);
 
         OracleDocumentRepositoryProxy handler = new OracleDocumentRepositoryProxy<>(template,
-                PersonNoSQLRepository.class, converters, entitiesMetadata);
+                HumanNoSQLRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        this.personRepository = (PersonNoSQLRepository) Proxy.newProxyInstance(PersonNoSQLRepository.class.getClassLoader(),
-                new Class[]{PersonNoSQLRepository.class},
+        this.personRepository = (HumanNoSQLRepository) Proxy.newProxyInstance(HumanNoSQLRepository.class.getClassLoader(),
+                new Class[]{HumanNoSQLRepository.class},
                 handler);
     }
 
@@ -136,7 +136,7 @@ public class OracleDocumentRepositoryProxyTest {
     }
 
 
-    interface PersonNoSQLRepository extends OracleNoSQLRepository<Human, String> {
+    interface HumanNoSQLRepository extends OracleNoSQLRepository<Human, String> {
 
         @SQL("select * from Person")
         List<Human> findAllQuery();

@@ -61,7 +61,7 @@ public class ArangoDBDocumentRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonRepository personRepository;
+    private HumanRepository humanRepository;
 
     @SuppressWarnings("rawtypes")
     @BeforeEach
@@ -69,27 +69,27 @@ public class ArangoDBDocumentRepositoryProxyTest {
         this.template = Mockito.mock(ArangoDBTemplate.class);
 
         ArangoDBDocumentRepositoryProxy handler = new ArangoDBDocumentRepositoryProxy<>(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        this.personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        this.humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).aql("FOR p IN Person RETURN p", emptyMap());
     }
 
     @Test
     public void shouldFindByNameAQL() {
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-        personRepository.findByName("Ada");
+        humanRepository.findByName("Ada");
         verify(template).aql(eq("FOR p IN Person FILTER p.name = @name RETURN p"), captor.capture());
 
         Map value = captor.getValue();
@@ -99,7 +99,7 @@ public class ArangoDBDocumentRepositoryProxyTest {
     @Test
     public void shouldSaveUsingInsert() {
         Human human = Human.of("Ada", 10);
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).insert(eq(human));
     }
 
@@ -108,13 +108,13 @@ public class ArangoDBDocumentRepositoryProxyTest {
     public void shouldSaveUsingUpdate() {
         Human human = Human.of("Ada-2", 10);
         when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).update(eq(human));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(Human.class, "id");
     }
 
@@ -122,7 +122,7 @@ public class ArangoDBDocumentRepositoryProxyTest {
     @Test
     public void shouldDeleteEntity(){
         Human human = Human.of("Ada", 10);
-        personRepository.delete(human);
+        humanRepository.delete(human);
         verify(template).delete(Human.class, human.getName());
     }
 
@@ -130,7 +130,7 @@ public class ArangoDBDocumentRepositoryProxyTest {
     public void shouldDeleteAll() {
         ArgumentCaptor<Class<?>> queryCaptor = ArgumentCaptor.forClass(Class.class);
 
-        personRepository.deleteAll();
+        humanRepository.deleteAll();
         verify(template).deleteAll(queryCaptor.capture());
 
         Class<?> query = queryCaptor.getValue();
@@ -138,7 +138,7 @@ public class ArangoDBDocumentRepositoryProxyTest {
     }
 
 
-    interface PersonRepository extends ArangoDBRepository<Human, String> {
+    interface HumanRepository extends ArangoDBRepository<Human, String> {
 
         @AQL("FOR p IN Person RETURN p")
         List<Human> findAllQuery();

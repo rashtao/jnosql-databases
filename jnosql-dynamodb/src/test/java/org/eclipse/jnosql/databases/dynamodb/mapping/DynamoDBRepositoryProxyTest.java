@@ -57,7 +57,7 @@ class DynamoDBRepositoryProxyTest {
     @Inject
     private Converters converters;
 
-    private PersonNoSQLRepository personRepository;
+    private HumanNoSQLRepository personRepository;
 
     @SuppressWarnings("rawtypes")
     @BeforeEach
@@ -65,14 +65,14 @@ class DynamoDBRepositoryProxyTest {
         this.template = Mockito.mock(DynamoDBTemplate.class);
 
         DynamoDBRepositoryProxy handler = new DynamoDBRepositoryProxy<>(template,
-                PersonNoSQLRepository.class, converters, entitiesMetadata);
+                HumanNoSQLRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
 
-        this.personRepository = (PersonNoSQLRepository) Proxy.newProxyInstance(PersonNoSQLRepository.class.getClassLoader(),
-                new Class[]{PersonNoSQLRepository.class},
+        this.personRepository = (HumanNoSQLRepository) Proxy.newProxyInstance(HumanNoSQLRepository.class.getClassLoader(),
+                new Class[]{HumanNoSQLRepository.class},
                 handler);
     }
 
@@ -133,7 +133,7 @@ class DynamoDBRepositoryProxyTest {
         Assertions.assertThat(query).isEqualTo(Human.class);
     }
 
-    interface PersonNoSQLRepository extends DynamoDBRepository<Human, String> {
+    interface HumanNoSQLRepository extends DynamoDBRepository<Human, String> {
 
         @PartiQL("select * from Person")
         List<Human> findAllQuery();

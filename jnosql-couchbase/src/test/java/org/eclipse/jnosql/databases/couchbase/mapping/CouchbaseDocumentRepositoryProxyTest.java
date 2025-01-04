@@ -61,7 +61,7 @@ public class CouchbaseDocumentRepositoryProxyTest {
     @Inject
     private EntitiesMetadata entitiesMetadata;
 
-    private PersonRepository personRepository;
+    private HumanRepository humanRepository;
 
 
     @BeforeEach
@@ -69,27 +69,27 @@ public class CouchbaseDocumentRepositoryProxyTest {
         this.template = Mockito.mock(CouchbaseTemplate.class);
 
         CouchbaseDocumentRepositoryProxy handler = new CouchbaseDocumentRepositoryProxy(template,
-                PersonRepository.class, converters, entitiesMetadata);
+                HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        personRepository = (PersonRepository) Proxy.newProxyInstance(PersonRepository.class.getClassLoader(),
-                new Class[]{PersonRepository.class},
+        humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
+                new Class[]{HumanRepository.class},
                 handler);
     }
 
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).n1qlQuery("select * from Person");
     }
 
     @Test
     public void shouldFindByNameN1ql() {
         ArgumentCaptor<JsonObject> captor = ArgumentCaptor.forClass(JsonObject.class);
-        personRepository.findByName("Ada");
+        humanRepository.findByName("Ada");
         verify(template).n1qlQuery(Mockito.eq("select * from Person where name = $name"), captor.capture());
 
         JsonObject value = captor.getValue();
@@ -100,7 +100,7 @@ public class CouchbaseDocumentRepositoryProxyTest {
     @Test
     public void shouldSaveUsingInsert() {
         Human human = Human.of("Ada", 10);
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).insert(eq(human));
     }
 
@@ -109,13 +109,13 @@ public class CouchbaseDocumentRepositoryProxyTest {
     public void shouldSaveUsingUpdate() {
         Human human = Human.of("Ada-2", 10);
         when(template.find(Human.class, "Ada-2")).thenReturn(Optional.of(human));
-        personRepository.save(human);
+        humanRepository.save(human);
         verify(template).update(eq(human));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(Human.class, "id");
     }
 
@@ -123,11 +123,11 @@ public class CouchbaseDocumentRepositoryProxyTest {
     @Test
     public void shouldDeleteEntity(){
         Human human = Human.of("Ada", 10);
-        personRepository.delete(human);
+        humanRepository.delete(human);
         verify(template).delete(Human.class, human.getName());
     }
 
-    interface PersonRepository extends CouchbaseRepository<Human, String> {
+    interface HumanRepository extends CouchbaseRepository<Human, String> {
 
         @N1QL("select * from Person")
         List<Human> findAllQuery();
