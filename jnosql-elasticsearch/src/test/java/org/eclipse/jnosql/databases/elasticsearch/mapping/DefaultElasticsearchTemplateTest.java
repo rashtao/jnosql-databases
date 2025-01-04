@@ -81,7 +81,7 @@ public class DefaultElasticsearchTemplateTest {
         when(instance.get()).thenReturn(manager);
         template = new DefaultElasticsearchTemplate(instance, converter, persistManager, entities, converters);
 
-        CommunicationEntity entity = CommunicationEntity.of("Person");
+        CommunicationEntity entity = CommunicationEntity.of("Human");
         entity.add(Element.of("name", "Ada"));
         entity.add(Element.of("age", 10));
         when(manager.search(Mockito.any(SearchRequest.class)))
