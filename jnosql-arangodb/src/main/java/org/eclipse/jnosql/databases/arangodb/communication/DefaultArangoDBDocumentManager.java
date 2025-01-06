@@ -80,7 +80,7 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
         Optional<String> keyElement = entity.find(KEY, String.class);
         Optional<String> idElement = entity.find(ID, String.class);
         if (keyElement.isEmpty() && idElement.isEmpty()) {
-            throw new IllegalArgumentException("The entity requires either key or id");
+            throw new IllegalArgumentException("To update an entity is necessary to have either " + KEY + " or " + ID);
         }
         var key = keyElement.orElseGet(() -> {
             String id = idElement.orElseThrow();
