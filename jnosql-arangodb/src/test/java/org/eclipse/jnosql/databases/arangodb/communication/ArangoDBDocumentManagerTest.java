@@ -179,6 +179,28 @@ public class ArangoDBDocumentManagerTest {
     }
 
     @Test
+    void shouldConvertFromListSubdocumentListNotUsingKey() {
+        CommunicationEntity entity = createDocumentListNotHavingId();
+        entityManager.insert(entity);
+
+    }
+
+    @Test
+    void shouldRetrieveListSubdocumentListNotUsingKey() {
+        CommunicationEntity entity = entityManager.insert(createDocumentListNotHavingId());
+        Element key = entity.find(KEY_NAME).get();
+        SelectQuery query = select().from("AppointmentBook").where(key.name()).eq(key.get()).build();
+
+        CommunicationEntity documentEntity = entityManager.singleResult(query).get();
+        assertNotNull(documentEntity);
+
+        List<List<Element>> contacts = (List<List<Element>>) documentEntity.find("contacts").get().get();
+
+        assertEquals(3, contacts.size());
+        assertTrue(contacts.stream().allMatch(d -> d.size() == 3));
+    }
+
+    @Test
     void shouldRunAQL() {
         CommunicationEntity entity = getEntity();
         CommunicationEntity entitySaved = entityManager.insert(entity);
@@ -397,6 +419,25 @@ public class ArangoDBDocumentManagerTest {
         String id = UUID.randomUUID().toString();
         CommunicationEntity entity = CommunicationEntity.of("AppointmentBook");
         entity.add(Element.of("_key", id));
+        List<List<Element>> documents = new ArrayList<>();
+
+        documents.add(asList(Element.of("name", "Ada"), Element.of("type", ContactType.EMAIL),
+                Element.of("information", "ada@lovelace.com")));
+
+        documents.add(asList(Element.of("name", "Ada"), Element.of("type", ContactType.MOBILE),
+                Element.of("information", "11 1231231 123")));
+
+        documents.add(asList(Element.of("name", "Ada"), Element.of("type", ContactType.PHONE),
+                Element.of("information", "phone")));
+
+        entity.add(Element.of("contacts", documents));
+        return entity;
+    }
+
+    private CommunicationEntity createDocumentListNotHavingId() {
+        String id = UUID.randomUUID().toString();
+        CommunicationEntity entity = CommunicationEntity.of("AppointmentBook");
+        entity.add(Element.of("_id", "ids"));
         List<List<Element>> documents = new ArrayList<>();
 
         documents.add(asList(Element.of("name", "Ada"), Element.of("type", ContactType.EMAIL),
