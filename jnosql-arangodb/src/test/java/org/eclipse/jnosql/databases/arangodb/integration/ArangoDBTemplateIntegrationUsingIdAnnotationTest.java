@@ -55,7 +55,7 @@ import static org.eclipse.jnosql.databases.arangodb.communication.DocumentDataba
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
-class ArangoDBTemplateIntegrationArticleTest {
+class ArangoDBTemplateIntegrationUsingIdAnnotationTest {
 
     @Inject
     private ArangoDBTemplate template;
