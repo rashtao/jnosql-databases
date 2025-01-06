@@ -18,6 +18,10 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Couchbase client 3.7.6
 - Update DynamoDB driver 2.29.45
 
+=== Fixed
+
+- Add compatibility with query at ArangoDB to also work with _id and not only with _key
+
 == [1.1.4] - 2024-10-24
 
 == Changes
