@@ -27,6 +27,7 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -76,12 +77,23 @@ class DefaultArangoDBDocumentManager implements ArangoDBDocumentManager {
         requireNonNull(entity, "entity is required");
         String collectionName = entity.name();
         checkCollection(collectionName);
-        entity.find(KEY, String.class)
-                .orElseThrow(() -> new IllegalArgumentException("The document does not provide" +
-                        " the _key column"));
+        Optional<String> keyElement = entity.find(KEY, String.class);
+        Optional<String> idElement = entity.find(ID, String.class);
+        if (keyElement.isEmpty() && idElement.isEmpty()) {
+            throw new IllegalArgumentException("The entity requires either key or id");
+        }
+        var key = keyElement.orElseGet(() -> {
+            String id = idElement.orElseThrow();
+            var elements = id.split("/");
+            if (elements.length == 2) {
+                return elements[1];
+            } else {
+                return elements[0];
+            }
+        });
         JsonObject jsonObject = ArangoDBUtil.toJsonObject(entity);
         DocumentUpdateEntity<Void> arangoDocument = arangoDB.db(database)
-                .collection(collectionName).updateDocument(jsonObject.getString(KEY), jsonObject);
+                .collection(collectionName).updateDocument(key, jsonObject);
         updateEntity(entity, arangoDocument.getKey(), arangoDocument.getId(), arangoDocument.getRev());
         return entity;
     }
