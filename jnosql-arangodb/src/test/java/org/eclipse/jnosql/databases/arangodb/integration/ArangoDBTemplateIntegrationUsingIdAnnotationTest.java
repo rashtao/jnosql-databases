@@ -87,7 +87,7 @@ class ArangoDBTemplateIntegrationUsingIdAnnotationTest {
                 .isNotNull()
                 .isEqualTo(article);
 
-        Article updated = new Article(article.id(), article.title() + " updated", 2);
+         Article updated = new Article(article.id(), article.title() + " updated", 2);
 
         assertThat(template.update(updated))
                 .isNotNull()
