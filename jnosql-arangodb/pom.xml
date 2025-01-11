@@ -29,7 +29,9 @@
 
     <properties>
         <arango.driver>7.15.0</arango.driver>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jnosql.mapping</groupId>

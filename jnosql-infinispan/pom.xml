@@ -27,6 +27,7 @@
 
     <properties>
         <infinispan.version>15.1.1.Final</infinispan.version>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
     <dependencies>
         <dependency>

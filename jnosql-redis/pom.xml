@@ -25,6 +25,10 @@
 
     <artifactId>jnosql-redis</artifactId>
     <description>The Eclipse JNoSQL layer implementation Redis</description>
+
+    <properties>
+        <tck.nosql.skip>false</tck.nosql.skip>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jnosql.mapping</groupId>

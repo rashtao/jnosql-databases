@@ -23,6 +23,10 @@
         <version>1.1.5-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <tck.nosql.skip>false</tck.nosql.skip>
+    </properties>
+
     <artifactId>jnosql-oracle-nosql</artifactId>
     <description>The Eclipse JNoSQL layer implementation Oracle NoSQL</description>
     <dependencies>

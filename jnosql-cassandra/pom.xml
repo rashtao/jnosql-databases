@@ -29,6 +29,7 @@
 
     <properties>
         <casandra.driver.version>4.17.0</casandra.driver.version>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
     <dependencies>
         <dependency>

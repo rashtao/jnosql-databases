@@ -29,6 +29,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
     <dependencies>
         <dependency>

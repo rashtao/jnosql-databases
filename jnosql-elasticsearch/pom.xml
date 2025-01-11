@@ -29,6 +29,7 @@
 
     <properties>
         <elasticsearch-java.version>8.14.3</elasticsearch-java.version>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
     <dependencies>
         <dependency>

@@ -24,6 +24,10 @@
         <version>1.1.5-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <tck.nosql.skip>false</tck.nosql.skip>
+    </properties>
+
     <artifactId>jnosql-couchdb</artifactId>
     <description>The Eclipse JNoSQL layer to Couchdb</description>
 

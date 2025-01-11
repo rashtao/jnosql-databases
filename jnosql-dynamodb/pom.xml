@@ -23,6 +23,7 @@
 
     <properties>
         <dynamodb.version>2.29.45</dynamodb.version>
+        <tck.nosql.skip>false</tck.nosql.skip>
     </properties>
 
     <dependencies>
