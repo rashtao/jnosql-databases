@@ -20,16 +20,16 @@ import jakarta.enterprise.inject.se.SeContainerInitializer;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.nosql.Template;
 import jakarta.nosql.tck.TemplateSupplier;
-import org.eclipse.jnosql.databases.mongodb.communication.MongoDBDocumentConfigurations;
+import org.eclipse.jnosql.databases.redis.communication.KeyValueDatabase;
+import org.eclipse.jnosql.databases.redis.communication.RedisConfigurations;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
 
-import static org.eclipse.jnosql.databases.mongodb.communication.DocumentDatabase.INSTANCE;
 
 public class RedisDBTemplateSupplier implements TemplateSupplier {
 
     static {
-        System.setProperty(MongoDBDocumentConfigurations.HOST.get() + ".1", INSTANCE.host());
-        System.setProperty(MappingConfigurations.DOCUMENT_DATABASE.get(), "jakarta-nosql-tck");
+        System.setProperty(RedisConfigurations.HOST.get() + ".1", KeyValueDatabase.INSTANCE.host());
+        System.setProperty(MappingConfigurations.KEY_VALUE_DATABASE.get(), "jakarta-nosql-tck");
         SeContainerInitializer.newInstance().initialize();
     }
 
