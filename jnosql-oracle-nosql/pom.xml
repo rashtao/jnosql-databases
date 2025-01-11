@@ -24,7 +24,7 @@
     </parent>
 
     <properties>
-        <tck.nosql.skip>false</tck.nosql.skip>
+
     </properties>
 
     <artifactId>jnosql-oracle-nosql</artifactId>

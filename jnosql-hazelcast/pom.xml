@@ -27,7 +27,7 @@
     <description>The Eclipse JNoSQL layer to Hazelcast</description>
 
     <properties>
-        <tck.nosql.skip>false</tck.nosql.skip>
+
     </properties>
 
     <dependencies>

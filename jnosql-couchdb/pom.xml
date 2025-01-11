@@ -25,7 +25,7 @@
     </parent>
 
     <properties>
-        <tck.nosql.skip>false</tck.nosql.skip>
+
     </properties>
 
     <artifactId>jnosql-couchdb</artifactId>
