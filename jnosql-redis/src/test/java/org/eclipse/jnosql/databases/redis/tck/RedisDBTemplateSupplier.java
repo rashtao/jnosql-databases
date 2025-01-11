@@ -29,7 +29,7 @@ public class RedisDBTemplateSupplier implements TemplateSupplier {
 
     static {
         System.setProperty(RedisConfigurations.HOST.get(), KeyValueDatabase.INSTANCE.host());
-        System.setProperty((RedisConfigurations.PORT.get(), KeyValueDatabase.INSTANCE.port());
+        System.setProperty(RedisConfigurations.PORT.get(), KeyValueDatabase.INSTANCE.port());
         System.setProperty(MappingConfigurations.KEY_VALUE_DATABASE.get(), "jakarta-nosql-tck");
         SeContainerInitializer.newInstance().initialize();
     }
