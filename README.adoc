@@ -1964,10 +1964,6 @@ class IntegrationSampleTest {
 
 To perform the Jakarta NoSQL TCK you should activate the `tck` profile. This profile will download the TCK and run it.
 
-[IMPORTANT]
-====
-By default, the TCK will run in all modules that have the `tck.nosql.skip` property defined as `false`.
-====
 
 [source,bash]
 ----
