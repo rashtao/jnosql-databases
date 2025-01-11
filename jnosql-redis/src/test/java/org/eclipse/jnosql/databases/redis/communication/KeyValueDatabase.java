@@ -39,6 +39,10 @@ public enum KeyValueDatabase implements Supplier<RedisBucketManagerFactory> {
         return redis.getHost();
     }
 
+    public int port() {
+        return redis.getFirstMappedPort();
+    }
+
     @Override
     public RedisBucketManagerFactory get() {
         RedisConfiguration configuration = new RedisConfiguration();
