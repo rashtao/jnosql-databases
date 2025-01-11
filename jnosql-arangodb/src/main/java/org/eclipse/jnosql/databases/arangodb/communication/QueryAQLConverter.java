@@ -203,7 +203,7 @@ final class QueryAQLConverter {
         if (IN.equals(condition)) {
             params.put(nameParam, ValueUtil.convertToList(document.value(), ArangoDBValueWriteDecorator.ARANGO_DB_VALUE_WRITER));
         } else {
-            params.put(nameParam, document.get());
+            params.put(nameParam, ValueUtil.convert(document.value(), ArangoDBValueWriteDecorator.ARANGO_DB_VALUE_WRITER));
         }
     }
 
