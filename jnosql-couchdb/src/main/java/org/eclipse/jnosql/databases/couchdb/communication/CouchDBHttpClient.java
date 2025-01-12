@@ -43,7 +43,6 @@ final class CouchDBHttpClient {
         if (!databases.contains(database)) {
             httpExecute.createDatabase(database);
         }
-        return;
     }
 
     public CommunicationEntity insert(CommunicationEntity entity) {
