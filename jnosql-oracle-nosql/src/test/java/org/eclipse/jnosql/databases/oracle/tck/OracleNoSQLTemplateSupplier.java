@@ -29,8 +29,8 @@ import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 public class OracleNoSQLTemplateSupplier implements TemplateSupplier {
 
     static {
-        System.setProperty(OracleNoSQLConfigurations.HOST.get() + ".1", Database.INSTANCE.host());
-        System.setProperty(MappingConfigurations.DOCUMENT_DATABASE.get(), "jakarta-nosql-tck");
+        System.setProperty(OracleNoSQLConfigurations.HOST.get(), Database.INSTANCE.host());
+        System.setProperty(MappingConfigurations.DOCUMENT_DATABASE.get(), "jakartanosqltck");
         SeContainerInitializer.newInstance().initialize();
     }
 
