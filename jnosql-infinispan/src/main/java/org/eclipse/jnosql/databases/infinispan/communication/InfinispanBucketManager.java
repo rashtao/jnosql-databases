@@ -78,7 +78,7 @@ public class InfinispanBucketManager implements BucketManager {
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(Value.of(value));
+        return Optional.of(Value.of(value));
     }
 
     @Override

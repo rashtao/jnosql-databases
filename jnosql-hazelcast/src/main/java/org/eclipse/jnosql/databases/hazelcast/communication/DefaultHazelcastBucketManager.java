@@ -82,7 +82,7 @@ class DefaultHazelcastBucketManager implements HazelcastBucketManager {
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(Value.of(value));
+        return Optional.of(Value.of(value));
     }
 
     @Override
