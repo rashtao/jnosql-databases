@@ -64,9 +64,9 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
             case GREATER_EQUALS_THAN:
                 predicate(query, " >= ", document, params);
                 return;
-            case LIKE:
+/*            case LIKE:
                 predicate(query, " LIKE ", document, params);
-                return;
+                return;*/
             case NOT:
                 query.append(" NOT ");
                 condition(document.get(CriteriaCondition.class), query, params, ids);
@@ -88,13 +88,12 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
     }
 
     protected void predicateBetween(StringBuilder query,List<FieldValue> params, Element document) {
-        query.append(" BETWEEN ");
         String name = identifierOf(document.name());
 
         List<Object> values = new ArrayList<>();
         ((Iterable<?>) document.get()).forEach(values::add);
 
-        query.append(name).append(" ? AND  ? ");
+        query.append(name).append(" BETWEEN ? AND ? ");
         FieldValue fieldValue = FieldValueConverter.INSTANCE.of(values.get(ORIGIN));
         FieldValue fieldValue2 = FieldValueConverter.INSTANCE.of(values.get(1));
         params.add(fieldValue);
