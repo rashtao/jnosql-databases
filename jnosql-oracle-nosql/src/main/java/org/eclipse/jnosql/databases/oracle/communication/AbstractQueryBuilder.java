@@ -88,13 +88,12 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
     }
 
     protected void predicateBetween(StringBuilder query,List<FieldValue> params, Element document) {
-        query.append(" BETWEEN ");
         String name = identifierOf(document.name());
 
         List<Object> values = new ArrayList<>();
         ((Iterable<?>) document.get()).forEach(values::add);
 
-        query.append(name).append(" ? AND  ? ");
+        query.append(name).append(" BETWEEN ? AND ? ");
         FieldValue fieldValue = FieldValueConverter.INSTANCE.of(values.get(ORIGIN));
         FieldValue fieldValue2 = FieldValueConverter.INSTANCE.of(values.get(1));
         params.add(fieldValue);
