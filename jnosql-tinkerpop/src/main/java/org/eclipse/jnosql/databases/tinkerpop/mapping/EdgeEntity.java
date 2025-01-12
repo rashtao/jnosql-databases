@@ -16,8 +16,8 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.eclipse.jnosql.communication.Value;
-import org.eclipse.jnosql.databases.tinkerpop.communication.CommunicationEntityConverter;
 import org.eclipse.jnosql.communication.semistructured.Element;
+import org.eclipse.jnosql.databases.tinkerpop.communication.CommunicationEntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 
 import java.util.List;

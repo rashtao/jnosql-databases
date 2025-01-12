@@ -16,14 +16,14 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping.spi;
 
 import jakarta.inject.Inject;
 import org.assertj.core.api.SoftAssertions;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.People;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.People;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;

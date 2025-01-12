@@ -17,8 +17,8 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Typed;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.oracle.communication.OracleDocumentConfiguration;
-import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLDocumentManager;
 import org.eclipse.jnosql.databases.oracle.communication.OracleDocumentManagerFactory;
+import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLDocumentManager;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 
 import java.util.Optional;

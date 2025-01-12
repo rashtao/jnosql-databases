@@ -15,13 +15,13 @@
 
 package org.eclipse.jnosql.databases.mongodb.mapping;
 
+import org.bson.BsonValue;
 import org.bson.conversions.Bson;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.bson.BsonValue;
 
 /**
  * A MongoDB extension of {@link DocumentTemplate}

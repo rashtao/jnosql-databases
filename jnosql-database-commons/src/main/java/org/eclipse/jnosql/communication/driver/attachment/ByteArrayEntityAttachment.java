@@ -15,7 +15,6 @@
 package org.eclipse.jnosql.communication.driver.attachment;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 

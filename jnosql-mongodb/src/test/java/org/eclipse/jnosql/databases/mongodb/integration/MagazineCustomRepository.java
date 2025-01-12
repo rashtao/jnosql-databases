@@ -17,7 +17,12 @@ package org.eclipse.jnosql.databases.mongodb.integration;
 import jakarta.data.Order;
 import jakarta.data.page.Page;
 import jakarta.data.page.PageRequest;
-import jakarta.data.repository.*;
+import jakarta.data.repository.By;
+import jakarta.data.repository.Delete;
+import jakarta.data.repository.Find;
+import jakarta.data.repository.Query;
+import jakarta.data.repository.Repository;
+import jakarta.data.repository.Save;
 
 import java.util.Optional;
 import java.util.stream.Stream;

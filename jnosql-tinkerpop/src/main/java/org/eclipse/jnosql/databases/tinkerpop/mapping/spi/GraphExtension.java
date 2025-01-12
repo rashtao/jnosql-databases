@@ -19,9 +19,9 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessProducer;
 import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.query.RepositoryGraphBean;
 import org.eclipse.jnosql.mapping.DatabaseMetadata;
 import org.eclipse.jnosql.mapping.Databases;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.query.RepositoryGraphBean;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 
 import java.util.HashSet;

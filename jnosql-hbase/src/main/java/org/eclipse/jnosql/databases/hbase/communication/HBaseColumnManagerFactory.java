@@ -30,7 +30,6 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The HBase implementation of {@link DatabaseManagerFactory} that returns {@link HBaseColumnManager}.

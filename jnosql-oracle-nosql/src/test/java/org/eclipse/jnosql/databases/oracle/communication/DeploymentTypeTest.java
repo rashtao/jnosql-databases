@@ -20,7 +20,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeploymentTypeTest {
 

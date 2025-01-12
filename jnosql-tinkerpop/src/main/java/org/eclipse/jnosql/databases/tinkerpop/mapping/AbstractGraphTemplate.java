@@ -16,7 +16,6 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.data.exceptions.EmptyResultException;
 import jakarta.data.exceptions.NonUniqueResultException;
-import org.eclipse.jnosql.mapping.PreparedStatement;
 import org.apache.tinkerpop.gremlin.process.traversal.Traverser;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -29,6 +28,7 @@ import org.eclipse.jnosql.databases.tinkerpop.communication.CommunicationEntityC
 import org.eclipse.jnosql.databases.tinkerpop.communication.GraphDatabaseManager;
 import org.eclipse.jnosql.databases.tinkerpop.communication.GraphTransactionUtil;
 import org.eclipse.jnosql.mapping.IdNotFoundException;
+import org.eclipse.jnosql.mapping.PreparedStatement;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
 import org.eclipse.jnosql.mapping.semistructured.AbstractSemiStructuredTemplate;

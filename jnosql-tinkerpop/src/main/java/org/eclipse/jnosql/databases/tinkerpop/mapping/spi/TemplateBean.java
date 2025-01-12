@@ -14,15 +14,15 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping.spi;
 
+import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.nosql.Template;
 import org.apache.tinkerpop.gremlin.structure.Graph;
-import org.eclipse.jnosql.mapping.DatabaseQualifier;
-import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplateProducer;
+import org.eclipse.jnosql.mapping.DatabaseQualifier;
+import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 
-import jakarta.enterprise.context.spi.CreationalContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;

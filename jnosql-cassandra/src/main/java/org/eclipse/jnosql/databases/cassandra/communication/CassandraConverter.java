@@ -34,8 +34,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import static java.util.stream.Collectors.toList;
-
 final class CassandraConverter {
 
     private CassandraConverter() {

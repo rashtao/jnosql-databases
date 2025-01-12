@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 
 import jakarta.interceptor.InterceptorBinding;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 

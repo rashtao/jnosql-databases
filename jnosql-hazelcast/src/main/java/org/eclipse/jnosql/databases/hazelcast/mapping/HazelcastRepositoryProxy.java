@@ -14,10 +14,10 @@
  */
 package org.eclipse.jnosql.databases.hazelcast.mapping;
 
-import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
-import org.eclipse.jnosql.mapping.keyvalue.query.AbstractKeyValueRepositoryProxy;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
+import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
+import org.eclipse.jnosql.mapping.keyvalue.query.AbstractKeyValueRepositoryProxy;
 import org.eclipse.jnosql.mapping.keyvalue.query.DefaultKeyValueRepository;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;

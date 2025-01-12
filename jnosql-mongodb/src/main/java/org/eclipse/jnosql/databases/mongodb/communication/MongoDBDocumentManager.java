@@ -24,8 +24,15 @@ import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
 import jakarta.data.Sort;
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
+import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
+import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
+import org.eclipse.jnosql.communication.semistructured.Element;
+import org.eclipse.jnosql.communication.semistructured.Elements;
+import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -36,14 +43,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.StreamSupport.stream;
-import org.bson.BsonValue;
-import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
-import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
-import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
-import org.eclipse.jnosql.communication.semistructured.Element;
-import org.eclipse.jnosql.communication.semistructured.Elements;
-import org.eclipse.jnosql.communication.semistructured.SelectQuery;
-
 import static org.eclipse.jnosql.databases.mongodb.communication.MongoDBUtils.ID_FIELD;
 import static org.eclipse.jnosql.databases.mongodb.communication.MongoDBUtils.getDocument;
 

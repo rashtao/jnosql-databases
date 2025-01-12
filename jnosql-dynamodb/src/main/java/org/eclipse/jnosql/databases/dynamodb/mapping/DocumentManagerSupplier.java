@@ -21,8 +21,8 @@ import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Typed;
 import org.eclipse.jnosql.communication.Settings;
-import org.eclipse.jnosql.databases.dynamodb.communication.DynamoDBDocumentConfiguration;
 import org.eclipse.jnosql.databases.dynamodb.communication.DynamoDBDatabaseManager;
+import org.eclipse.jnosql.databases.dynamodb.communication.DynamoDBDocumentConfiguration;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 
 import java.util.Optional;

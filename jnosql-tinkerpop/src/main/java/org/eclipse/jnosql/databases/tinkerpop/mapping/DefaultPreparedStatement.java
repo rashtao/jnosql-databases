@@ -15,8 +15,8 @@
 package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.data.exceptions.NonUniqueResultException;
-import org.eclipse.jnosql.mapping.PreparedStatement;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.eclipse.jnosql.mapping.PreparedStatement;
 
 import java.util.HashMap;
 import java.util.Iterator;

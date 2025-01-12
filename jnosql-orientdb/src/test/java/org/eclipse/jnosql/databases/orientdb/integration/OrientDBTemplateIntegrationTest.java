@@ -21,10 +21,10 @@ import org.eclipse.jnosql.databases.orientdb.communication.OrientDBDocumentConfi
 import org.eclipse.jnosql.databases.orientdb.mapping.OrientDBTemplate;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
+import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;

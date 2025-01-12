@@ -17,7 +17,6 @@ package org.eclipse.jnosql.databases.oracle.communication;
 import org.eclipse.jnosql.communication.semistructured.DatabaseConfiguration;
 import org.junit.jupiter.api.Test;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

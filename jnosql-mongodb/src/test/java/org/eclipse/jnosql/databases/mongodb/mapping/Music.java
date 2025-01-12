@@ -17,9 +17,9 @@ package org.eclipse.jnosql.databases.mongodb.mapping;
 
 
 import jakarta.nosql.Column;
+import jakarta.nosql.Convert;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
-import jakarta.nosql.Convert;
 
 @Entity
 public class Music {

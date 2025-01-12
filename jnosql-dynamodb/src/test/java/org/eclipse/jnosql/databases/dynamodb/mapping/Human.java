@@ -15,9 +15,9 @@
 
 package org.eclipse.jnosql.databases.dynamodb.mapping;
 
+import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
-import jakarta.nosql.Column;
 
 import java.util.Objects;
 
