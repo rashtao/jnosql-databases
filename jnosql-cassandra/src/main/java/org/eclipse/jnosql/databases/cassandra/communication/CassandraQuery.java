@@ -136,11 +136,9 @@ public final class CassandraQuery implements SelectQuery {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CouchDBDocumentQuery{");
-        sb.append("query=").append(query);
-        sb.append(", pagingState='").append(pagingState).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "CouchDBDocumentQuery{" + "query=" + query +
+                ", pagingState='" + pagingState + '\'' +
+                '}';
     }
 
     /**

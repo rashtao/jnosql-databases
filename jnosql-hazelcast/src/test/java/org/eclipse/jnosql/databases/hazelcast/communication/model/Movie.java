@@ -59,11 +59,9 @@ public class Movie implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Movie{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", year=").append(year);
-        sb.append(", active=").append(active);
-        sb.append('}');
-        return sb.toString();
+        return "Movie{" + "name='" + name + '\'' +
+                ", year=" + year +
+                ", active=" + active +
+                '}';
     }
 }

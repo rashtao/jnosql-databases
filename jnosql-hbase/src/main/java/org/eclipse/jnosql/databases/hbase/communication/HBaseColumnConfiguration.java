@@ -106,9 +106,7 @@ public class HBaseColumnConfiguration implements DatabaseConfiguration {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("HBaseColumnConfiguration{");
-        sb.append("configuration=").append(configuration);
-        sb.append('}');
-        return sb.toString();
+        return "HBaseColumnConfiguration{" + "configuration=" + configuration +
+                '}';
     }
 }

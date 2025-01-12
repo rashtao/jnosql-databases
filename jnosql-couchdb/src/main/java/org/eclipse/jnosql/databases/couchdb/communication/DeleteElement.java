@@ -56,10 +56,8 @@ final class DeleteElement {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("DeleteElement{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", rev='").append(rev).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "DeleteElement{" + "id='" + id + '\'' +
+                ", rev='" + rev + '\'' +
+                '}';
     }
 }

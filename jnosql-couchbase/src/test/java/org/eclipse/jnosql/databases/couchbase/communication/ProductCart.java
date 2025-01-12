@@ -72,10 +72,8 @@ public class ProductCart implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ProductCart{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", price=").append(price);
-        sb.append('}');
-        return sb.toString();
+        return "ProductCart{" + "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

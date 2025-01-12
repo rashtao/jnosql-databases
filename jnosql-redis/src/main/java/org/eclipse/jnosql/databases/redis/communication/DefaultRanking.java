@@ -57,10 +57,8 @@ class DefaultRanking implements Ranking {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("DefaultRanking{");
-        sb.append("point=").append(point);
-        sb.append(", member='").append(member).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "DefaultRanking{" + "point=" + point +
+                ", member='" + member + '\'' +
+                '}';
     }
 }

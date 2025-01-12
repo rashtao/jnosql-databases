@@ -45,10 +45,8 @@ public record LineBank(String name, Integer age) {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("LineBank{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", age=").append(age);
-        sb.append('}');
-        return sb.toString();
+        return "LineBank{" + "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

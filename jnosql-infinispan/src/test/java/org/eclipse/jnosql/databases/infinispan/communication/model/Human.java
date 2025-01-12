@@ -25,10 +25,8 @@ public record Human(String name, Integer age) implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Person{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", age=").append(age);
-        sb.append('}');
-        return sb.toString();
+        return "Person{" + "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

@@ -208,14 +208,12 @@ class RedisMap<K, V> implements Map<K, V> {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RedisMap{");
-        sb.append("keyClass=").append(keyClass);
-        sb.append(", valueClass=").append(valueClass);
-        sb.append(", nameSpace='").append(nameSpace).append('\'');
-        sb.append(", jedis=").append(jedis);
-        sb.append(", JsonB=").append(JSONB);
-        sb.append('}');
-        return sb.toString();
+        return "RedisMap{" + "keyClass=" + keyClass +
+                ", valueClass=" + valueClass +
+                ", nameSpace='" + nameSpace + '\'' +
+                ", jedis=" + jedis +
+                ", JsonB=" + JSONB +
+                '}';
     }
 
     @Override

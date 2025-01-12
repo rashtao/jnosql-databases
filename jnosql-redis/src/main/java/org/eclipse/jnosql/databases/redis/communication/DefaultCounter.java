@@ -103,9 +103,7 @@ class DefaultCounter implements Counter {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Counter{");
-        sb.append("key='").append(key).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Counter{" + "key='" + key + '\'' +
+                '}';
     }
 }

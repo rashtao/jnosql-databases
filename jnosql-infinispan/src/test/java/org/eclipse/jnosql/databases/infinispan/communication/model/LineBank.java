@@ -48,9 +48,7 @@ public class LineBank implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("LineBank{");
-        sb.append("person=").append(human);
-        sb.append('}');
-        return sb.toString();
+        return "LineBank{" + "person=" + human +
+                '}';
     }
 }

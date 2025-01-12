@@ -56,9 +56,7 @@ public class CassandraColumnManagerFactory implements DatabaseManagerFactory {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CassandraColumnManagerFactory{");
-        sb.append("cluster=").append(sessionBuilder);
-        sb.append('}');
-        return sb.toString();
+        return "CassandraColumnManagerFactory{" + "cluster=" + sessionBuilder +
+                '}';
     }
 }

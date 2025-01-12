@@ -48,11 +48,9 @@ final class ElasticsearchAddress {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ElasticsearchAddress{");
-        sb.append("host='").append(host.getHostName()).append('\'');
-        sb.append(", port=").append(host.getPort());
-        sb.append('}');
-        return sb.toString();
+        return "ElasticsearchAddress{" + "host='" + host.getHostName() + '\'' +
+                ", port=" + host.getPort() +
+                '}';
     }
 
     static ElasticsearchAddress of(String address, int defaultPort) {

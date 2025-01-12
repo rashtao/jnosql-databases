@@ -53,9 +53,7 @@ public class Species implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Species{");
-        sb.append("animals=").append(animals);
-        sb.append('}');
-        return sb.toString();
+        return "Species{" + "animals=" + animals +
+                '}';
     }
 }

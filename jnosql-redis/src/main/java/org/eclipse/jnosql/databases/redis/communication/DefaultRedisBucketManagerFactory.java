@@ -91,9 +91,7 @@ class DefaultRedisBucketManagerFactory implements RedisBucketManagerFactory {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RedisBucketManagerFactory{");
-        sb.append("jedisPool=").append(jedis);
-        sb.append('}');
-        return sb.toString();
+        return "RedisBucketManagerFactory{" + "jedisPool=" + jedis +
+                '}';
     }
 }

@@ -148,9 +148,7 @@ class DefaultSortedSet implements SortedSet {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("SortedSet{");
-        sb.append("key='").append(key).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "SortedSet{" + "key='" + key + '\'' +
+                '}';
     }
 }

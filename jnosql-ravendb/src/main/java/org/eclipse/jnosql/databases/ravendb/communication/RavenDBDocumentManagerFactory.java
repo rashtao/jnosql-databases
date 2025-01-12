@@ -51,9 +51,7 @@ public class RavenDBDocumentManagerFactory implements DatabaseManagerFactory {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RavenDBDocumentManagerFactory{");
-        sb.append("hosts=").append(Arrays.toString(hosts));
-        sb.append('}');
-        return sb.toString();
+        return "RavenDBDocumentManagerFactory{" + "hosts=" + Arrays.toString(hosts) +
+                '}';
     }
 }
