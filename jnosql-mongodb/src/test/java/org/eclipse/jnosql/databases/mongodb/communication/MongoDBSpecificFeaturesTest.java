@@ -53,7 +53,7 @@ class MongoDBSpecificFeaturesTest {
     private static MongoDBDocumentManager entityManager;
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void setUp() {
         entityManager = DocumentDatabase.INSTANCE.get("database");
     }
 

@@ -58,7 +58,7 @@ class OracleNoSQLDocumentManagerTest {
     private static OracleNoSQLDocumentManager entityManager;
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void setUp() {
         entityManager = (OracleNoSQLDocumentManager) Database.INSTANCE.managerFactory().apply("database");
     }
 

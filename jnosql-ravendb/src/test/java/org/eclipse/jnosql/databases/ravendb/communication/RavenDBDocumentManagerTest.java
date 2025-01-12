@@ -57,7 +57,7 @@ public class RavenDBDocumentManagerTest {
     private static DatabaseManager manager;
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void setUp() {
         manager = DocumentConfigurationUtils.INSTANCE.get().apply("database");
     }
 
@@ -102,7 +102,7 @@ public class RavenDBDocumentManagerTest {
     }
 
     @Test
-    public void shouldRemoveEntity() throws InterruptedException {
+    public void shouldRemoveEntity() {
         var entity = getEntity();
         var documentEntity = manager.insert(entity);
 

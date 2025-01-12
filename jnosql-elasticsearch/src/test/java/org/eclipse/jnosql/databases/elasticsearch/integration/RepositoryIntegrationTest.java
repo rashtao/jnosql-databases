@@ -155,7 +155,7 @@ class RepositoryIntegrationTest {
 
 
     @Test
-    public void shouldFindByAuthorName() throws InterruptedException {
+    public void shouldFindByAuthorName() {
         Author joshuaBloch = new Author("Joshua Bloch");
         Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
 
@@ -174,7 +174,7 @@ class RepositoryIntegrationTest {
     }
 
     @Test
-    public void shouldFindByTitleLike() throws InterruptedException {
+    public void shouldFindByTitleLike() {
         Author joshuaBloch = new Author("Joshua Bloch");
 
         Magazine effectiveJava1stEdition = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);

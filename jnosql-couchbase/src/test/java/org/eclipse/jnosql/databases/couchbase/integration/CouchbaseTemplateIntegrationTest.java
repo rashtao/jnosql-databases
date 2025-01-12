@@ -79,7 +79,7 @@ class CouchbaseTemplateIntegrationTest {
     }
 
     @Test
-    public void shouldUpdate() throws InterruptedException {
+    public void shouldUpdate() {
         Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
         assertThat(template.insert(magazine))
                 .isNotNull()

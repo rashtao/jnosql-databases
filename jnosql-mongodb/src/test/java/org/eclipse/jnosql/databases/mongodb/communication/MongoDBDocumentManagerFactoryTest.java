@@ -31,7 +31,7 @@ class MongoDBDocumentManagerFactoryTest {
     private static MongoDBDocumentConfiguration configuration;
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void setUp() {
         configuration = new MongoDBDocumentConfiguration();
     }
 

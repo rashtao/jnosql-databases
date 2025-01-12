@@ -42,8 +42,7 @@ class GraphSupplier implements Supplier<Graph> {
         GraphConfiguration configuration = settings.get(GRAPH_PROVIDER, Class.class)
                 .filter(GraphConfiguration.class::isAssignableFrom)
                 .map(c -> {
-                    final Reflections reflections = CDI.current().select(Reflections.class).get();
-                    return (GraphConfiguration) reflections.newInstance(c);
+                    return (GraphConfiguration) Reflections.newInstance(c);
                 }).orElseGet(GraphConfiguration::getConfiguration);
 
         return configuration.apply(settings);

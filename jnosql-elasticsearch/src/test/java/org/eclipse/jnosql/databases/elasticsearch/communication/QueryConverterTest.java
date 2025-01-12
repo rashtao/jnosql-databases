@@ -65,7 +65,7 @@ class QueryConverterTest {
     }
 
     @AfterEach
-    void clearDatabase() throws IOException {
+    void clearDatabase() {
         DocumentDatabase.clearDatabase(INDEX);
     }
 
@@ -282,7 +282,7 @@ class QueryConverterTest {
         DocumentDatabase.updateMapping(INDEX, fn);
     }
 
-    private void insertData(Map<String, Object> map) throws IOException {
+    private void insertData(Map<String, Object> map) {
         DocumentDatabase.insertData(INDEX, map);
     }
 }

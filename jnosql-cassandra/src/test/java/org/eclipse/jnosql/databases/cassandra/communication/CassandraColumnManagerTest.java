@@ -81,7 +81,7 @@ public class CassandraColumnManagerTest {
     }
 
     @Test
-    void shouldClose() throws Exception {
+    void shouldClose() {
         entityManager.close();
         DefaultCassandraColumnManager manager = DefaultCassandraColumnManager.class.cast(entityManager);
         CqlSession session = manager.getSession();

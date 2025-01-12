@@ -54,7 +54,7 @@ public class ByteArrayEntityAttachment implements EntityAttachment {
     }
 
     @Override
-    public InputStream getData() throws IOException {
+    public InputStream getData() {
         return new ByteArrayInputStream(data);
     }
     

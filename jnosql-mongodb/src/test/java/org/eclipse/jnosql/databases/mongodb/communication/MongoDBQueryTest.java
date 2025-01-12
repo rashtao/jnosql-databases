@@ -44,7 +44,7 @@ class MongoDBQueryTest {
     private static DatabaseManager entityManager;
 
     @BeforeAll
-    static void setUp() throws IOException {
+    static void setUp() {
         entityManager = DocumentDatabase.INSTANCE.get("database");
     }
 

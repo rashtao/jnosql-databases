@@ -76,7 +76,7 @@ public class OracleNoSQLBucketManagerTest {
     }
 
     @Test
-    public void shouldPutTimeToLive() throws InterruptedException {
+    public void shouldPutTimeToLive() {
         keyValueEntityManager.put(entityOtavio, Duration.ofSeconds(1L));
     }
 

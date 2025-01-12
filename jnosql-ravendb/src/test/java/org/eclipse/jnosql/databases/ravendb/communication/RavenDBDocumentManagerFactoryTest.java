@@ -28,7 +28,7 @@ public class RavenDBDocumentManagerFactoryTest {
     private static RavenDBDocumentConfiguration configuration;
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void setUp() {
         configuration = new RavenDBDocumentConfiguration();
     }
 
