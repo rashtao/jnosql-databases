@@ -32,7 +32,6 @@ final class DeleteQueryConverter {
             deleteSelection = deleteSelection.column(QueryUtils.getName(column));
         }
 
-        final Delete delete = deleteSelection.where(Relations.createClause(query.condition().orElse(null)));
-        return delete;
+        return deleteSelection.where(Relations.createClause(query.condition().orElse(null)));
     }
 }

@@ -181,8 +181,7 @@ class RedisMap<K, V> implements Map<K, V> {
     }
 
     private Map<String, String> createRedisMap() {
-        Map<String, String> map = jedis.hgetAll(nameSpace);
-        return map;
+        return jedis.hgetAll(nameSpace);
     }
 
     private Map<K, V> createHashMap() {

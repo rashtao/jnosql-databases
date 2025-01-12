@@ -64,9 +64,8 @@ public class Contact {
 
     @Override
     public String toString() {
-        String sb = "Contact{" + "name='" + name + '\'' +
+        return "Contact{" + "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-        return sb;
     }
 }

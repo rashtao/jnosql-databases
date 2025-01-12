@@ -63,9 +63,8 @@ public class Birthday {
 
     @Override
     public String toString() {
-        String sb = "Person{" + "name='" + name + '\'' +
+        return "Person{" + "name='" + name + '\'' +
                 ", age=" + age +
                 '}';
-        return sb;
     }
 }

@@ -59,9 +59,8 @@ public class Address {
 
     @Override
     public String toString() {
-        String sb = "Address{" + "city='" + city + '\'' +
+        return "Address{" + "city='" + city + '\'' +
                 ", street='" + street + '\'' +
                 '}';
-        return sb;
     }
 }

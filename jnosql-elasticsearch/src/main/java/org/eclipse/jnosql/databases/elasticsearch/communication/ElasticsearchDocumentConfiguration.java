@@ -120,8 +120,7 @@ public class ElasticsearchDocumentConfiguration implements DatabaseConfiguration
 
         var transport = new RestClientTransport(httpClient, new JsonbJsonpMapper());
 
-        var elasticsearchClient = new ElasticsearchClient(transport);
-        return elasticsearchClient;
+        return new ElasticsearchClient(transport);
     }
 
 }
