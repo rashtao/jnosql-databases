@@ -47,11 +47,11 @@ final class MongoAuthentication {
                 .map(Object::toString)
                 .map(AuthenticationMechanism::fromMechanismName);
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             return Optional.empty();
         }
 
-        if (!mechanism.isPresent()) {
+        if (mechanism.isEmpty()) {
             return Optional.of(MongoCredential.createCredential(user.orElseThrow(missingExceptionUser()),
                     source.orElseThrow(missingExceptionSource()), password.orElseThrow(missingExceptionPassword())));
         }
