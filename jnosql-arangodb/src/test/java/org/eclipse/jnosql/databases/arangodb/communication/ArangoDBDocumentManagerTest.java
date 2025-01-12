@@ -133,7 +133,7 @@ public class ArangoDBDocumentManagerTest {
         CommunicationEntity entitySaved = entityManager.insert(entity);
         Element id = entitySaved.find(KEY_NAME).get();
         SelectQuery query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
-        CommunicationEntity entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        CommunicationEntity entityFound = entityManager.select(query).toList().get(0);
         Element subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -147,7 +147,7 @@ public class ArangoDBDocumentManagerTest {
         CommunicationEntity entitySaved = entityManager.insert(entity);
         Element id = entitySaved.find(KEY_NAME).get();
         SelectQuery query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
-        CommunicationEntity entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        CommunicationEntity entityFound = entityManager.select(query).toList().get(0);
         Element subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -226,7 +226,7 @@ public class ArangoDBDocumentManagerTest {
         ArangoDB arangoDB = DefaultArangoDBDocumentManager.class.cast(entityManager).getArangoDB();
         arangoDB.db(DATABASE).collection(COLLECTION_NAME).insertDocument(new Human());
         SelectQuery select = select().from(COLLECTION_NAME).build();
-        List<CommunicationEntity> entities = entityManager.select(select).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(select).toList();
         assertFalse(entities.isEmpty());
     }
 
@@ -239,7 +239,7 @@ public class ArangoDBDocumentManagerTest {
         map.put("city", "Salvador");
         arangoDB.db(DATABASE).collection(COLLECTION_NAME).insertDocument(map);
         SelectQuery select = select().from(COLLECTION_NAME).build();
-        List<CommunicationEntity> entities = entityManager.select(select).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(select).toList();
         assertFalse(entities.isEmpty());
     }
 
@@ -248,7 +248,7 @@ public class ArangoDBDocumentManagerTest {
         entityManager.insert(getEntity());
         String aql = "FOR a IN person FILTER a.name == @name RETURN a.name";
         List<String> entities = entityManager.aql(aql,
-                singletonMap("name", "Poliana"), String.class).collect(Collectors.toList());
+                singletonMap("name", "Poliana"), String.class).toList();
 
         assertFalse(entities.isEmpty());
     }
@@ -257,7 +257,7 @@ public class ArangoDBDocumentManagerTest {
     void shouldExecuteAQLWithType() {
         entityManager.insert(getEntity());
         String aql = "FOR a IN person RETURN a.name";
-        List<String> entities = entityManager.aql(aql, String.class).collect(Collectors.toList());
+        List<String> entities = entityManager.aql(aql, String.class).toList();
         assertFalse(entities.isEmpty());
     }
 

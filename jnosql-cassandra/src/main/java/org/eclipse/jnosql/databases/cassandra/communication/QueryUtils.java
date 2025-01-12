@@ -66,7 +66,7 @@ final class QueryUtils {
 
         Map<String, Term> values = new HashMap<>();
         InsertInto insert = QueryBuilder.insertInto(keyspace, entity.name());
-        entity.elements().stream()
+        entity.elements()
                 .forEach(c -> {
                     if (UDT.class.isInstance(c)) {
                         insertUDT(UDT.class.cast(c), keyspace, entity.name(), session, values);
@@ -131,7 +131,7 @@ final class QueryUtils {
 
         UdtValue udtValue = userType.newValue();
         final List<String> udtNames = userType.getFieldNames().stream().map(CqlIdentifier::asInternal)
-                .collect(Collectors.toList());
+                .toList();
         for (Object object : elements) {
             if (Element.class.isInstance(object)) {
                 Element column = Element.class.cast(object);

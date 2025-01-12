@@ -416,7 +416,7 @@ class MongoDBDocumentManagerTest {
         assertFalse(entities.isEmpty());
         DeleteQuery deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
-        entities = entityManager.select(query).collect(Collectors.toList());
+        entities = entityManager.select(query).toList();
         assertTrue(entities.isEmpty());
     }
 

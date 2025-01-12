@@ -96,7 +96,7 @@ public class ElasticsearchDocumentConfiguration implements DatabaseConfiguration
                 .forEach(httpHosts::add);
 
         RestClientBuilder builder = RestClient.builder(httpHosts.toArray(new HttpHost[0]));
-        builder.setDefaultHeaders(headers.stream().toArray(Header[]::new));
+        builder.setDefaultHeaders(headers.toArray(Header[]::new));
 
         final Optional<String> username = settings
                 .getSupplier(asList(Configurations.USER,

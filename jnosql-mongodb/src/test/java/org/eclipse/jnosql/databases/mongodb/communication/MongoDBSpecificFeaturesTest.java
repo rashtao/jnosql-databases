@@ -105,7 +105,7 @@ class MongoDBSpecificFeaturesTest {
 
         Assertions.assertEquals(1L, result);
         List<CommunicationEntity> entities = entityManager.select(COLLECTION_NAME,
-                eq("name", "Poliana")).collect(Collectors.toList());
+                eq("name", "Poliana")).toList();
         Assertions.assertTrue(entities.isEmpty());
     }
 

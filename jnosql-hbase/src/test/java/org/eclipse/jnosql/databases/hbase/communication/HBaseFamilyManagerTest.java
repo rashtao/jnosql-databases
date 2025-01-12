@@ -96,7 +96,7 @@ public class HBaseFamilyManagerTest {
         var query = select().from(FAMILY).where(ID_FIELD).eq("otaviojava")
                 .or(ID_FIELD).eq("poliana").build();
 
-        List<CommunicationEntity> entities = manager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = manager.select(query).toList();
         assertEquals(Integer.valueOf(2), Integer.valueOf(entities.size()));
 
     }
@@ -123,7 +123,7 @@ public class HBaseFamilyManagerTest {
                 .or(ID_FIELD).eq("poliana").build();
 
         manager.delete(deleteQuery);
-        List<CommunicationEntity> entities = manager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = manager.select(query).toList();
         assertTrue(entities.isEmpty());
     }
 

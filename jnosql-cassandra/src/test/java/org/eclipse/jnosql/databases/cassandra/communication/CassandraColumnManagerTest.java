@@ -111,7 +111,7 @@ public class CassandraColumnManagerTest {
         sleep(2_000L);
 
         List<CommunicationEntity> entities = entityManager.select(select().from(Constants.COLUMN_FAMILY).where("id").eq(10L).build())
-                .collect(toList());
+                .toList();
         assertTrue(entities.isEmpty());
     }
 
@@ -122,7 +122,7 @@ public class CassandraColumnManagerTest {
         sleep(2_000L);
 
         List<CommunicationEntity> entities = entityManager.select(select().from(Constants.COLUMN_FAMILY).build())
-                .collect(toList());
+                .toList();
         assertTrue(entities.isEmpty());
     }
 
@@ -201,7 +201,7 @@ public class CassandraColumnManagerTest {
         entityManager.insert(columnEntity);
 
         var query = select().from(columnEntity.name()).build();
-        List<CommunicationEntity> entities = entityManager.select(query).collect(toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
     }
 
@@ -239,7 +239,7 @@ public class CassandraColumnManagerTest {
         entityManager.insert(getColumnFamily());
 
         var query = select().from(Constants.COLUMN_FAMILY).where("id").eq(10L).build();
-        List<CommunicationEntity> columnEntity = entityManager.select(query).collect(toList());
+        List<CommunicationEntity> columnEntity = entityManager.select(query).toList();
         assertFalse(columnEntity.isEmpty());
         List<Element> columns = columnEntity.get(0).elements();
         assertThat(columns.stream().map(Element::name).collect(toList()))
@@ -254,7 +254,7 @@ public class CassandraColumnManagerTest {
 
         entityManager.insert(getColumnFamily());
         var query = select().from(Constants.COLUMN_FAMILY).where("id").eq(10L).build();
-        List<CommunicationEntity> columnEntity = entityManager.select(query, CONSISTENCY_LEVEL).collect(toList());
+        List<CommunicationEntity> columnEntity = entityManager.select(query, CONSISTENCY_LEVEL).toList();
         assertFalse(columnEntity.isEmpty());
         List<Element> columns = columnEntity.get(0).elements();
         assertThat(columns.stream().map(Element::name).collect(toList())).contains("name", "version", "options", "id");
@@ -279,7 +279,7 @@ public class CassandraColumnManagerTest {
     void shouldRunNativeQuery2() {
         entityManager.insert(getColumnFamily());
         String query = "select * from newKeySpace.newColumnFamily where id = :id;";
-        List<CommunicationEntity> entities = entityManager.cql(query, singletonMap("id", 10L)).collect(toList());
+        List<CommunicationEntity> entities = entityManager.cql(query, singletonMap("id", 10L)).toList();
         assertFalse(entities.isEmpty());
         List<Element> columns = entities.get(0).elements();
         assertThat(columns.stream().map(Element::name).collect(toList()))
@@ -293,7 +293,7 @@ public class CassandraColumnManagerTest {
         entityManager.insert(getColumnFamily());
         CassandraPreparedStatement preparedStatement = entityManager.nativeQueryPrepare("select * from newKeySpace.newColumnFamily where id=?");
         preparedStatement.bind(10L);
-        List<CommunicationEntity> entities = preparedStatement.executeQuery().collect(toList());
+        List<CommunicationEntity> entities = preparedStatement.executeQuery().toList();
         List<Element> columns = entities.get(0).elements();
         assertThat(columns.stream().map(Element::name).collect(toList()))
                 .contains("name", "version", "options", "id");
@@ -339,7 +339,7 @@ public class CassandraColumnManagerTest {
         getEntities().forEach(entityManager::insert);
         var query = select().from(Constants.COLUMN_FAMILY).where("id").in(Arrays.asList(1L, 2L, 3L))
                 .limit(2).build();
-        List<CommunicationEntity> columnFamilyEntities = entityManager.select(query).collect(toList());
+        List<CommunicationEntity> columnFamilyEntities = entityManager.select(query).toList();
         assertEquals(Integer.valueOf(2), Integer.valueOf(columnFamilyEntities.size()));
     }
 
@@ -464,7 +464,7 @@ public class CassandraColumnManagerTest {
 
         assertFalse(cassandraQuery.getPagingState().isPresent());
 
-        List<CommunicationEntity> entities = entityManager.select(cassandraQuery).collect(toList());
+        List<CommunicationEntity> entities = entityManager.select(cassandraQuery).toList();
         assertEquals(10, entities.size());
         assertTrue(cassandraQuery.getPagingState().isPresent());
     }

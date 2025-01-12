@@ -86,7 +86,7 @@ final class CassandraConverter {
         String name = definition.getName().asInternal();
         final UserDefinedType type = udtValue.getType();
         List<Element> columns = new ArrayList<>();
-        List<String> names = type.getFieldNames().stream().map(CqlIdentifier::asInternal).collect(toList());
+        List<String> names = type.getFieldNames().stream().map(CqlIdentifier::asInternal).toList();
         for (CqlIdentifier fieldName : type.getFieldNames()) {
             final int index = names.indexOf(fieldName.asInternal());
             DataType fieldType = type.getFieldTypes().get(index);

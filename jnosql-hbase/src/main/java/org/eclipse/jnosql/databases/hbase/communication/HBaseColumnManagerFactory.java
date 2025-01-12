@@ -71,7 +71,7 @@ public class HBaseColumnManagerFactory implements DatabaseManagerFactory {
         TableDescriptor tableDescriptor = admin.getDescriptor(tableName);
         ColumnFamilyDescriptor[] columnFamilies = tableDescriptor.getColumnFamilies();
         final TableDescriptorBuilder builder = TableDescriptorBuilder.newBuilder(tableName);
-        List<String> familiesExist = Arrays.stream(columnFamilies).map(ColumnFamilyDescriptor::getName).map(String::new).collect(Collectors.toList());
+        List<String> familiesExist = Arrays.stream(columnFamilies).map(ColumnFamilyDescriptor::getName).map(String::new).toList();
         if (familiesExist.size() != families.size()) {
             families.stream().filter(s -> !familiesExist.contains(s))
                     .forEach(s -> builder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder(s.getBytes())
@@ -84,7 +84,7 @@ public class HBaseColumnManagerFactory implements DatabaseManagerFactory {
 
     private void createTable(Admin admin, TableName tableName) throws IOException {
         final TableDescriptorBuilder builder = TableDescriptorBuilder.newBuilder(tableName);
-        families.stream().forEach(s -> builder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder(s.getBytes())
+        families.forEach(s -> builder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder(s.getBytes())
                 .build()));
         final TableDescriptor descriptor = builder.build();
         admin.createTable(descriptor);

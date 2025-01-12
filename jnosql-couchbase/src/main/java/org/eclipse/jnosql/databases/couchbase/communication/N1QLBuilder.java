@@ -181,8 +181,7 @@ final class N1QLBuilder implements Supplier<N1QLQuery> {
     }
 
     private String select() {
-        String documents = query.columns().stream()
-                .collect(Collectors.joining(", "));
+        String documents = String.join(", ", query.columns());
         if (documents.isBlank()) {
             return "*";
         }

@@ -77,7 +77,7 @@ public class HazelcastKeyValueConfiguration implements KeyValueConfiguration {
         List<String> servers = settings.prefixSupplier(Arrays.asList(
                 HazelcastConfigurations.HOST, Configurations.HOST))
                 .stream().map(Object::toString)
-                .collect(Collectors.toList());
+                .toList();
         String instance = settings.get(HazelcastConfigurations.INSTANCE).map(Object::toString)
                 .orElse(DEFAULT_INSTANCE);
         Config config = new Config(instance);

@@ -95,7 +95,7 @@ public class DefaultSolrDocumentManagerTest {
                 .build();
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class DefaultSolrDocumentManagerTest {
                 .where(ID).eq(id.get().get())
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
         final CommunicationEntity result = entities.get(0);
 
@@ -127,7 +127,7 @@ public class DefaultSolrDocumentManagerTest {
                 .and("city").eq("Salvador").and(ID).eq(id.get().get())
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
         final CommunicationEntity result = entities.get(0);
 
@@ -145,7 +145,7 @@ public class DefaultSolrDocumentManagerTest {
                 .and(id.get().name()).eq(id.get().get())
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
         final CommunicationEntity result = entities.get(0);
         assertEquals(entity.find("name").get(), result.find("name").get());
@@ -157,14 +157,14 @@ public class DefaultSolrDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").gt(22)
                 .and("type").eq("V")
                 .build();
 
-        List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesFound = entityManager.select(query).toList();
         assertEquals(3, entitiesFound.size());
     }
 
@@ -175,7 +175,7 @@ public class DefaultSolrDocumentManagerTest {
         entityManager.insert(getEntitiesWithValues());
         var query = select().from(COLLECTION_NAME)
                 .where("name").not().eq("Lucas").build();
-        List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesFound = entityManager.select(query).toList();
         assertEquals(2, entitiesFound.size());
     }
 
@@ -184,7 +184,7 @@ public class DefaultSolrDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").gte(23)
@@ -216,14 +216,14 @@ public class DefaultSolrDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").lte(23)
                 .and("type").eq("V")
                 .build();
 
-        List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesFound = entityManager.select(query).toList();
         assertEquals(2, entitiesFound.size());
     }
 
@@ -238,7 +238,7 @@ public class DefaultSolrDocumentManagerTest {
                 .and("type").eq("V")
                 .build();
 
-        List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesFound = entityManager.select(query).toList();
         assertEquals(2, entitiesFound.size());
     }
 
@@ -247,14 +247,14 @@ public class DefaultSolrDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("location").in(asList("BR", "US"))
                 .and("type").eq("V")
                 .build();
 
-        assertEquals(3, entityManager.select(query).collect(Collectors.toList()).size());
+        assertEquals(3, (int) entityManager.select(query).count());
     }
 
     @Test
@@ -262,7 +262,7 @@ public class DefaultSolrDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).build();
         entityManager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").gt(22)
@@ -339,7 +339,7 @@ public class DefaultSolrDocumentManagerTest {
                 .orderBy("age").desc()
                 .build();
 
-        entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        entitiesFound = entityManager.select(query).toList();
         ages = entitiesFound.stream()
                 .map(e -> e.find("age").get().get(Integer.class))
                 .collect(Collectors.toList());
@@ -427,7 +427,7 @@ public class DefaultSolrDocumentManagerTest {
         entityManager.insert(entity);
 
         List<CommunicationEntity> entities = entityManager.select(select().from("download")
-                .where(ID).eq(id).build()).collect(Collectors.toList());
+                .where(ID).eq(id).build()).toList();
 
         assertEquals(1, entities.size());
         var documentEntity = entities.get(0);

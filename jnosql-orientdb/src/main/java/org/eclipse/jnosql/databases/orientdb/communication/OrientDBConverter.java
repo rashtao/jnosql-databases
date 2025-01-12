@@ -99,7 +99,7 @@ final class OrientDBConverter {
                     .map(k -> Element.of(k.toString(), map.get(k)))
                     .collect(toList());
         } else if (List.class.isInstance(object)) {
-            return StreamSupport.stream(List.class.cast(object).spliterator(), false)
+            return List.class.cast(object).stream()
                     .map(OrientDBConverter::convert).collect(toList());
         }
         return object;

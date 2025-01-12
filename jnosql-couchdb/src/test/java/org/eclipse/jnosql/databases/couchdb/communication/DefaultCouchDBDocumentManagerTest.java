@@ -128,7 +128,7 @@ class DefaultCouchDBDocumentManagerTest {
     @Test
     void shouldSelectEmptyResult() {
         var query = select().from(COLLECTION_NAME).where("no_field").eq("not_found").build();
-        var entities = entityManager.select(query).collect(Collectors.toList());
+        var entities = entityManager.select(query).toList();
         assertTrue(entities.isEmpty());
     }
 
@@ -143,7 +143,7 @@ class DefaultCouchDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME)
                 .where(name.name()).eq(name.get()).build();
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -192,7 +192,7 @@ class DefaultCouchDBDocumentManagerTest {
         }
         CouchDBDocumentQuery query = CouchDBDocumentQuery.of(select().from(COLLECTION_NAME)
                 .where("name").in(Arrays.asList("Poliana", "Poliana")).build());
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertEquals(4, entities.size());
     }
 
@@ -226,7 +226,7 @@ class DefaultCouchDBDocumentManagerTest {
                 .where("_id").eq(id.get())
                 .build();
 
-        var entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = entityManager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -244,7 +244,7 @@ class DefaultCouchDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where(id.name()).eq(id.get())
                 .build();
-        var entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = entityManager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });

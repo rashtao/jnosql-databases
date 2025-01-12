@@ -31,6 +31,7 @@ import redis.clients.jedis.RedisProtocol;
 import redis.clients.jedis.UnifiedJedis;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -108,7 +109,7 @@ public final class RedisConfiguration implements KeyValueConfiguration {
         Set<HostAndPort> clusterNodes = settings.get(RedisClusterConfigurations.CLUSTER_HOSTS)
                 .map(Object::toString)
                 .map(h -> h.split(","))
-                .map(h -> asList(h).stream().map(HostAndPort::from).collect(Collectors.toSet()))
+                .map(h -> Arrays.stream(h).map(HostAndPort::from).collect(Collectors.toSet()))
                 .orElseThrow(() -> new IllegalArgumentException("The cluster nodes are required"));
 
         JedisClientConfig clientConfig = getJedisClientConfig(
@@ -143,7 +144,7 @@ public final class RedisConfiguration implements KeyValueConfiguration {
         Set<HostAndPort> hostAndPorts = settings.get(RedisSentinelConfigurations.SENTINEL_HOSTS)
                 .map(Object::toString)
                 .map(h -> h.split(","))
-                .map(h -> asList(h).stream().map(HostAndPort::from).collect(Collectors.toSet()))
+                .map(h -> Arrays.stream(h).map(HostAndPort::from).collect(Collectors.toSet()))
                 .orElseThrow(() -> new IllegalArgumentException("The sentinel hosts are required"));
 
         ConnectionPoolConfig connectionPoolConfig = getConnectionPoolConfig(settings);

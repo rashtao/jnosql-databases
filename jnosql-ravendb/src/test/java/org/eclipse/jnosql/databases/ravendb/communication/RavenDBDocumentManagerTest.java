@@ -115,7 +115,7 @@ public class RavenDBDocumentManagerTest {
                 .build();
 
         manager.delete(deleteQuery);
-        assertTrue(manager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(manager.select(query).count() == 0);
     }
 
     @Test
@@ -183,7 +183,7 @@ public class RavenDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
         manager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = manager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").gt(22)
@@ -200,7 +200,7 @@ public class RavenDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
         manager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = manager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").gte(23)
@@ -218,7 +218,7 @@ public class RavenDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
         manager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = manager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").lt(23)
@@ -234,7 +234,7 @@ public class RavenDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
         manager.delete(deleteQuery);
         Iterable<CommunicationEntity> entitiesSaved = manager.insert(getEntitiesWithValues());
-        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("age").lte(23)
@@ -269,7 +269,7 @@ public class RavenDBDocumentManagerTest {
     public void shouldFindAll() {
         manager.insert(getEntity());
         var query = select().from(COLLECTION_NAME).build();
-        List<CommunicationEntity> entities = manager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = manager.select(query).toList();
         assertFalse(entities.isEmpty());
     }
 
@@ -284,7 +284,7 @@ public class RavenDBDocumentManagerTest {
                 .where("_id").eq(id.get())
                 .build();
 
-        var entityFound = manager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = manager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -301,7 +301,7 @@ public class RavenDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where(id.name()).eq(id.get())
                 .build();
-        var entityFound = manager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = manager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });

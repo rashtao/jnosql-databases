@@ -408,7 +408,7 @@ class OracleNoSQLDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where(id.name()).eq(id.get())
                 .build();
-        var entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = entityManager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").orElseThrow();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -429,7 +429,7 @@ class OracleNoSQLDocumentManagerTest {
         entityManager.insert(entity);
 
         List<CommunicationEntity> entities = entityManager.select(select().from("download")
-                .where("_id").eq(id).build()).collect(Collectors.toList());
+                .where("_id").eq(id).build()).toList();
 
         assertEquals(1, entities.size());
         var documentEntity = entities.get(0);
@@ -451,7 +451,7 @@ class OracleNoSQLDocumentManagerTest {
         entityManager.insert(entity);
 
         List<CommunicationEntity> entities = entityManager.select(select().from("download")
-                .where("_id").eq(id).build()).collect(Collectors.toList());
+                .where("_id").eq(id).build()).toList();
 
         assertEquals(1, entities.size());
         var documentEntity = entities.get(0);

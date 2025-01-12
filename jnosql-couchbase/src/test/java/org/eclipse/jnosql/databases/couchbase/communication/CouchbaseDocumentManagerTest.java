@@ -129,7 +129,7 @@ public class CouchbaseDocumentManagerTest {
                 .where(name.name()).eq(name.get()).build();
         entityManager.delete(deleteQuery);
         Thread.sleep(1_000L);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class CouchbaseDocumentManagerTest {
         CommunicationEntity entitySaved = entityManager.insert(entity);
         Element id = entitySaved.find("_id").get();
         SelectQuery query = select().from(COLLECTION_PERSON_NAME).where(id.name()).eq(id.get()).build();
-        CommunicationEntity entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        CommunicationEntity entityFound = entityManager.select(query).toList().get(0);
         Element subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -154,7 +154,7 @@ public class CouchbaseDocumentManagerTest {
         Thread.sleep(1_00L);
         Element id = entitySaved.find("_id").get();
         var query = select().from(COLLECTION_PERSON_NAME).where(id.name()).eq(id.get()).build();
-        CommunicationEntity entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        CommunicationEntity entityFound = entityManager.select(query).toList().get(0);
         Element subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -235,9 +235,8 @@ public class CouchbaseDocumentManagerTest {
         CommunicationEntity entity = getEntity();
         entityManager.insert(entity);
         await().until(() ->
-                !entityManager
-                        .n1qlQuery("select * from `jnosql`._default.person")
-                        .collect(Collectors.toList()).isEmpty()
+                !(entityManager
+                        .n1qlQuery("select * from `jnosql`._default.person").count() == 0)
         );
     }
 
@@ -249,9 +248,8 @@ public class CouchbaseDocumentManagerTest {
         JsonObject params = JsonObject.create().put("name", entity.find("name", String.class).orElse(null));
 
         await().until(() ->
-                !entityManager
-                        .n1qlQuery("select * from `jnosql`._default.person where name = $name", params)
-                        .collect(Collectors.toList()).isEmpty()
+                !(entityManager
+                        .n1qlQuery("select * from `jnosql`._default.person where name = $name", params).count() == 0)
         );
     }
 

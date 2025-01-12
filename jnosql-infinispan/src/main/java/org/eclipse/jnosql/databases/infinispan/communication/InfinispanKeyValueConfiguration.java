@@ -72,7 +72,7 @@ public class InfinispanKeyValueConfiguration implements KeyValueConfiguration {
         requireNonNull(settings, "settings is required");
 
         List<String> servers = settings.prefixSupplier(Arrays.asList(InfinispanConfigurations.HOST, Configurations.HOST))
-                .stream().map(Object::toString).collect(Collectors.toList());
+                .stream().map(Object::toString).toList();
 
         Optional<String> config = settings.get(InfinispanConfigurations.CONFIG)
                 .map(Object::toString);

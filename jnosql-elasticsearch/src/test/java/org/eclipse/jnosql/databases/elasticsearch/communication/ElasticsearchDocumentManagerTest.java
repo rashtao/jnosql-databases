@@ -235,7 +235,7 @@ public class ElasticsearchDocumentManagerTest {
         // it's required in order to avoid an eventual inconsistency
         await().until(numberOfEntitiesFrom(query), equalTo(1L));
 
-        var entities = entityManager.select(query).collect(Collectors.toList());
+        var entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
         var names = entities.stream().map(e -> e.find("name").get())
                 .distinct().collect(Collectors.toList());
@@ -367,7 +367,7 @@ public class ElasticsearchDocumentManagerTest {
         await().until(numberOfEntitiesFrom(query), equalTo(1L));
 
         var entityFound = entityManager.select(query)
-                .collect(Collectors.toList())
+                .toList()
                 .get(0);
 
         var subDocument = entityFound.find("phones").get();

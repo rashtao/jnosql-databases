@@ -126,7 +126,7 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
         var deleteQuery = delete().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -170,7 +170,7 @@ public class OrientDBDocumentManagerTest {
         var entitySaved = entityManager.insert(entity);
         var id = entitySaved.find("name").get();
         var query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
-        var entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = entityManager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -184,7 +184,7 @@ public class OrientDBDocumentManagerTest {
         var entitySaved = entityManager.insert(entity);
         Element id = entitySaved.find("name").get();
         var query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
-        var entityFound = entityManager.select(query).collect(Collectors.toList()).get(0);
+        var entityFound = entityManager.select(query).toList().get(0);
         var subDocument = entityFound.find("phones").get();
         List<Element> documents = subDocument.get(new TypeReference<>() {
         });
@@ -204,10 +204,10 @@ public class OrientDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("name").eq("Poliana")
                 .and("age").gte(10).build();
 
-        assertFalse(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertFalse(entityManager.select(query).count() == 0);
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -223,10 +223,10 @@ public class OrientDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("name").eq("Poliana")
                 .or("age").gte(10).build();
 
-        assertFalse(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertFalse(entityManager.select(query).count() == 0);
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
@@ -238,12 +238,12 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").gt(25)
                 .build();
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").gt(24)
                 .build();
-        assertEquals(1, entityManager.select(query2).collect(Collectors.toList()).size());
+        assertEquals(1, (int) entityManager.select(query2).count());
     }
 
     @Test
@@ -255,12 +255,12 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").lt(25)
                 .build();
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").lt(26)
                 .build();
-        assertEquals(1, entityManager.select(query2).collect(Collectors.toList()).size());
+        assertEquals(1, (int) entityManager.select(query2).count());
     }
 
     @Test
@@ -272,17 +272,17 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").lte(24)
                 .build();
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").lte(25)
                 .build();
-        assertEquals(1, entityManager.select(query2).collect(Collectors.toList()).size());
+        assertEquals(1, (int) entityManager.select(query2).count());
 
         var query3 = select().from(COLLECTION_NAME)
                 .where("age").lte(26)
                 .build();
-        assertEquals(1, entityManager.select(query3).collect(Collectors.toList()).size());
+        assertEquals(1, (int) entityManager.select(query3).count());
     }
 
     @Test
@@ -292,20 +292,20 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("city").in(asList("Salvador", "Assis"))
                 .build();
-        assertEquals(2, entityManager.select(query).collect(Collectors.toList()).size());
+        assertEquals(2, (int) entityManager.select(query).count());
 
         var deleteQuery = delete().from(COLLECTION_NAME)
                 .where("city").in(asList("Salvador", "Assis", "Sao Paulo"))
                 .build();
         entityManager.delete(deleteQuery);
 
-        assertTrue(entityManager.select(query).collect(Collectors.toList()).isEmpty());
+        assertTrue(entityManager.select(query).count() == 0);
     }
 
     @Test
     void shouldQueryLike() {
         List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(getEntities()).spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("city").like("Sa%")
@@ -318,7 +318,7 @@ public class OrientDBDocumentManagerTest {
 
     @Test
     void shouldQueryNot() {
-        List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(getEntities()).spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(getEntities()).spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
                 .where("city").not().eq("Assis")
@@ -337,7 +337,7 @@ public class OrientDBDocumentManagerTest {
                 .skip(1)
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertEquals(2, entities.size());
     }
 
@@ -349,13 +349,13 @@ public class OrientDBDocumentManagerTest {
                 .limit(2)
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertEquals(2, entities.size());
     }
 
     @Test
     void shouldQueryOrderBy() {
-        List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(getEntities()).spliterator(), false).collect(Collectors.toList());
+        List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(getEntities()).spliterator(), false).toList();
 
         var queryAsc = select().from(COLLECTION_NAME)
                 .orderBy("name").asc()
@@ -381,7 +381,7 @@ public class OrientDBDocumentManagerTest {
         entities.add(bruno);
 
         List<CommunicationEntity> entitiesSaved = StreamSupport.stream(entityManager.insert(entities).spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
 
         var query = select().from(COLLECTION_NAME)
                 .orderBy("city").desc()

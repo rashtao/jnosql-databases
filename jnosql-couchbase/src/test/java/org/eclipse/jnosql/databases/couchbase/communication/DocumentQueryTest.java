@@ -101,7 +101,7 @@ public class DocumentQueryTest {
                 .limit(2L)
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertEquals(2, entities.size());
 
     }
@@ -112,7 +112,7 @@ public class DocumentQueryTest {
                 .where("name").eq("name")
                 .skip(1L)
                 .build();
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertEquals(2, entities.size());
 
     }
@@ -129,7 +129,7 @@ public class DocumentQueryTest {
                 .limit(2L)
                 .build();
 
-        entities = entityManager.select(query).collect(Collectors.toList());
+        entities = entityManager.select(query).toList();
         assertEquals(2, entities.size());
 
     }
@@ -151,7 +151,7 @@ public class DocumentQueryTest {
                 .where("name")
                 .eq("name")
                 .build();
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
     }
 
@@ -162,7 +162,7 @@ public class DocumentQueryTest {
                 .orderBy("name").asc()
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         List<String> result = entities.stream()
                 .flatMap(e -> e.elements().stream())
                 .filter(d -> "name".equals(d.name()))
@@ -180,7 +180,7 @@ public class DocumentQueryTest {
                 .orderBy("name").desc()
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
 
         List<String> result = entities.stream().flatMap(e -> e.elements().stream())
                 .filter(d -> "name".equals(d.name()))
@@ -198,7 +198,7 @@ public class DocumentQueryTest {
                 .where("_id").eq("id")
                 .build();
 
-        List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
+        List<CommunicationEntity> entities = entityManager.select(query).toList();
         assertFalse(entities.isEmpty());
 
     }
