@@ -143,7 +143,7 @@ final class DefaultOracleNoSQLDocumentManager implements OracleNoSQLDocumentMana
             }
         }
         if (!oracleQuery.hasOnlyIds()) {
-            LOGGER.finest("Executing delete query at Oracle NoSQL: " +oracleQuery.query());
+            LOGGER.finest("Executing delete query at Oracle NoSQL: " + oracleQuery.query());
             var prepReq = new PrepareRequest().setStatement(oracleQuery.query());
             var prepRes = serviceHandle.prepare(prepReq);
             PreparedStatement preparedStatement = prepRes.getPreparedStatement();
