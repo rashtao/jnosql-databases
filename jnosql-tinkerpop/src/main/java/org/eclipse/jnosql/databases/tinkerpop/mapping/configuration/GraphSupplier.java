@@ -24,6 +24,7 @@ import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH_PROVIDER;
 
@@ -31,21 +32,24 @@ import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH
 @ApplicationScoped
 class GraphSupplier implements Supplier<Graph> {
 
+    public static Logger LOGGER = Logger.getLogger(GraphSupplier.class.getName());
+
     @SuppressWarnings("unchecked")
     @Override
     @Produces
     @ApplicationScoped
     public Graph get(){
         var settings = MicroProfileSettings.INSTANCE;
-
-        GraphConfiguration configuration = settings.get(GRAPH_PROVIDER, Class.class)
+        LOGGER.fine("Loading the Graph configuration");
+        var configuration = settings.get(GRAPH_PROVIDER, Class.class)
                 .filter(GraphConfiguration.class::isAssignableFrom)
                 .map(c -> (GraphConfiguration) Reflections.newInstance(c)).orElseGet(GraphConfiguration::getConfiguration);
-
+        LOGGER.fine("The Graph configuration loaded successfully with: " + configuration.getClass());
         return configuration.apply(settings);
     }
 
     public void close(@Disposes Graph graph) throws Exception {
+        LOGGER.fine("Closing the Graph");
         graph.close();
     }
 }
