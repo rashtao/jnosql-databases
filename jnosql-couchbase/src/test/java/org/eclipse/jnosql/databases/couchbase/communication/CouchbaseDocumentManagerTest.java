@@ -128,7 +128,7 @@ public class CouchbaseDocumentManagerTest {
                 .where(name.name()).eq(name.get()).build();
         entityManager.delete(deleteQuery);
         Thread.sleep(1_000L);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test
@@ -235,7 +235,7 @@ public class CouchbaseDocumentManagerTest {
         entityManager.insert(entity);
         await().until(() ->
                 !(entityManager
-                        .n1qlQuery("select * from `jnosql`._default.person").count() == 0)
+                        .n1qlQuery("select * from `jnosql`._default.person").findAny().isEmpty())
         );
     }
 
@@ -248,7 +248,7 @@ public class CouchbaseDocumentManagerTest {
 
         await().until(() ->
                 !(entityManager
-                        .n1qlQuery("select * from `jnosql`._default.person where name = $name", params).count() == 0)
+                        .n1qlQuery("select * from `jnosql`._default.person where name = $name", params).findAny().isEmpty())
         );
     }
 

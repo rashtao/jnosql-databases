@@ -143,7 +143,7 @@ class DefaultCouchDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME)
                 .where(name.name()).eq(name.get()).build();
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test

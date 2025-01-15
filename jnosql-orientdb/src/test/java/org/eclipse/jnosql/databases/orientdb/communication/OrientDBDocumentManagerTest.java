@@ -126,7 +126,7 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
         var deleteQuery = delete().from(COLLECTION_NAME).where(id.name()).eq(id.get()).build();
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test
@@ -204,10 +204,10 @@ public class OrientDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("name").eq("Poliana")
                 .and("age").gte(10).build();
 
-        assertFalse(entityManager.select(query).count() == 0);
+        assertFalse(entityManager.select(query).findAny().isEmpty());
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test
@@ -223,10 +223,10 @@ public class OrientDBDocumentManagerTest {
         var deleteQuery = delete().from(COLLECTION_NAME).where("name").eq("Poliana")
                 .or("age").gte(10).build();
 
-        assertFalse(entityManager.select(query).count() == 0);
+        assertFalse(entityManager.select(query).findAny().isEmpty());
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test
@@ -238,7 +238,7 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").gt(25)
                 .build();
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").gt(24)
@@ -255,7 +255,7 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").lt(25)
                 .build();
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").lt(26)
@@ -272,7 +272,7 @@ public class OrientDBDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("age").lte(24)
                 .build();
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
 
         var query2 = select().from(COLLECTION_NAME)
                 .where("age").lte(25)
@@ -299,7 +299,7 @@ public class OrientDBDocumentManagerTest {
                 .build();
         entityManager.delete(deleteQuery);
 
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test

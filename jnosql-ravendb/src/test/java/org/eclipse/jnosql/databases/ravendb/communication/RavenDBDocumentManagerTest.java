@@ -114,7 +114,7 @@ public class RavenDBDocumentManagerTest {
                 .build();
 
         manager.delete(deleteQuery);
-        assertTrue(manager.select(query).count() == 0);
+        assertTrue(manager.select(query).findAny().isEmpty());
     }
 
     @Test

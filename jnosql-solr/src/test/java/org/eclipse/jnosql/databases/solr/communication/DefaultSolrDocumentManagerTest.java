@@ -95,7 +95,7 @@ public class DefaultSolrDocumentManagerTest {
                 .build();
 
         entityManager.delete(deleteQuery);
-        assertTrue(entityManager.select(query).count() == 0);
+        assertTrue(entityManager.select(query).findAny().isEmpty());
     }
 
     @Test
