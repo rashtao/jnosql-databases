@@ -59,7 +59,7 @@ class QueryConverterTest {
     private DocumentDatabase.ElasticsearchClientAutoClosable elasticsearch;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         this.elasticsearch = DocumentDatabase.INSTANCE.newElasticsearchClient();
         clearDatabase();
     }
@@ -155,7 +155,7 @@ class QueryConverterTest {
     }
 
     @Test
-    void testSelect() throws Exception {
+    void testSelect() {
 
         Map<String, Object> map = new HashMap<>();
         map.put("_id", effectiveJava.id());
