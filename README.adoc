@@ -163,6 +163,29 @@ private ArangoDBTemplate template;
 List<Person> people = template.aql("FOR p IN Person FILTER p.name = @name RETURN p", params);
 ----
 
+=== How @Id Works in ArangoDB
+
+In ArangoDB, the `_id` field is a read-only, auto-generated value created by the database. It is a combination of the collection name and the `_key` field in the format `<collection-name>/<_key>`. The `_id` is automatically managed by the database, meaning any value set by the client will be ignored.
+
+To map the `_id` and `_key` fields in your entities, you can use the `@Id` annotation and specify the `_key` field explicitly. This allows you to manage the `_key` value directly in your code while letting the database handle the `_id` generation.
+
+For example:
+
+[source,java]
+----
+@Entity
+public class User {
+
+    @Id("_key")
+    private String key;
+
+    private String name;
+
+}
+----
+
+In this example, the `_key` field is annotated with `@Id("_key")`, allowing the application to control the `_key` value while the database auto-generates the corresponding `_id` field. This approach is useful for scenarios where you need to set or manage the `_key` value explicitly in your application logic.
+
 
 == Cassandra
 
