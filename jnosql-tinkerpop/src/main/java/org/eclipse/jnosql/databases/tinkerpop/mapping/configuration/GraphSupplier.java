@@ -36,7 +36,7 @@ class GraphSupplier implements Supplier<Graph> {
     @Produces
     @ApplicationScoped
     public Graph get(){
-        Settings settings = MicroProfileSettings.INSTANCE;
+        var settings = MicroProfileSettings.INSTANCE;
 
         GraphConfiguration configuration = settings.get(GRAPH_PROVIDER, Class.class)
                 .filter(GraphConfiguration.class::isAssignableFrom)
