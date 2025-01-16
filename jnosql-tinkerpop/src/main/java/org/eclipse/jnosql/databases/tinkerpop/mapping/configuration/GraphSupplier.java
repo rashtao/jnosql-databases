@@ -18,7 +18,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import org.apache.tinkerpop.gremlin.structure.Graph;
-import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.tinkerpop.communication.GraphConfiguration;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
