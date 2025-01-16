@@ -32,7 +32,7 @@ import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH
 @ApplicationScoped
 class GraphSupplier implements Supplier<Graph> {
 
-    public static Logger LOGGER = Logger.getLogger(GraphSupplier.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(GraphSupplier.class.getName());
 
     @SuppressWarnings("unchecked")
     @Override
