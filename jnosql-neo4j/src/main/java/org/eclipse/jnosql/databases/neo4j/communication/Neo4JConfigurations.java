@@ -37,10 +37,10 @@ import java.util.function.Supplier;
  * String password = Neo4JConfigurations.PASSWORD.get(); // Returns "jnosql.neo4j.password"
  *
  * // Example of configuring a connection:
- * Map<String, String> config = new HashMap<>();
- * config.put(Neo4JConfigurations.URI.get(), "bolt://localhost:7687");
- * config.put(Neo4JConfigurations.USERNAME.get(), "neo4j");
- * config.put(Neo4JConfigurations.PASSWORD.get(), "password123");
+ * Settings settings = Settings.builder().put(Neo4JConfigurations.URI, "bolt://localhost:7687")
+ * .put(Neo4JConfigurations.USERNAME, "neo4j")
+ * .put(Neo4JConfigurations.PASSWORD, "password123")
+ * .build();
  * </pre>
  */
 public enum Neo4JConfigurations implements Supplier<String> {
