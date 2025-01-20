@@ -16,5 +16,20 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
-public enum Neo4JConfigurations {
+import java.util.function.Supplier;
+
+public enum Neo4JConfigurations implements Supplier<String> {
+
+    URI("jnosql.neo4j.uri"), USERNAME("jnosql.neo4j.username"), PASSWORD("jnosql.neo4j.password");
+
+    private final String value;
+
+    Neo4JConfigurations(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String get() {
+        return value;
+    }
 }
