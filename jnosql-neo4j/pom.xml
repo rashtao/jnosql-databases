@@ -26,6 +26,7 @@
     <artifactId>jnosql-neo4j</artifactId>
 
     <properties>
+        <neo4j.driver>5.27.0</neo4j.driver>
     </properties>
 
     <dependencies>
@@ -34,6 +35,11 @@
             <artifactId>jnosql-mapping-semistructured</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+    <groupId>org.neo4j.driver</groupId>
+    <artifactId>neo4j-java-driver</artifactId>
+    <version>${neo4j.driver}</version>
+</dependency>
     </dependencies>
    
 </project>
