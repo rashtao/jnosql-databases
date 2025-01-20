@@ -21,7 +21,7 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseConfiguration;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
 import java.util.logging.Logger;
 
-public class Neo4JConfiguration implements DatabaseConfiguration {
+public final class Neo4JConfiguration implements DatabaseConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(Neo4JConfiguration.class.getName());
 
