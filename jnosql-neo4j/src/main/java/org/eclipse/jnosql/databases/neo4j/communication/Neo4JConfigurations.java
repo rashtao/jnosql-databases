@@ -18,9 +18,50 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 
 import java.util.function.Supplier;
 
+/**
+ * Enum Neo4JConfigurations
+ * This enum defines the configuration keys used in the Eclipse jNoSQL driver for Neo4j.
+ * Each configuration key is associated with a specific property required to connect to a Neo4j database.
+ *
+ * <ul>
+ *   <li>URI: The connection URI for the Neo4j database (e.g., bolt://localhost:7687).</li>
+ *   <li>USERNAME: The username used for authentication (e.g., "neo4j").</li>
+ *   <li>PASSWORD: The password used for authentication (e.g., "password123").</li>
+ * </ul>
+ * <p>
+ * This enum implements the Supplier interface, providing a method to retrieve the configuration key as a string.
+ * Usage example:
+ * <pre>
+ * String uri = Neo4JConfigurations.URI.get(); // Returns "jnosql.neo4j.uri"
+ * String username = Neo4JConfigurations.USERNAME.get(); // Returns "jnosql.neo4j.username"
+ * String password = Neo4JConfigurations.PASSWORD.get(); // Returns "jnosql.neo4j.password"
+ *
+ * // Example of configuring a connection:
+ * Map<String, String> config = new HashMap<>();
+ * config.put(Neo4JConfigurations.URI.get(), "bolt://localhost:7687");
+ * config.put(Neo4JConfigurations.USERNAME.get(), "neo4j");
+ * config.put(Neo4JConfigurations.PASSWORD.get(), "password123");
+ * </pre>
+ */
 public enum Neo4JConfigurations implements Supplier<String> {
 
-    URI("jnosql.neo4j.uri"), USERNAME("jnosql.neo4j.username"), PASSWORD("jnosql.neo4j.password");
+    /**
+     * The URI of the Neo4j database.
+     * Example: bolt://localhost:7687
+     */
+    URI("jnosql.neo4j.uri"),
+
+    /**
+     * The username for authentication.
+     * Example: "neo4j"
+     */
+    USERNAME("jnosql.neo4j.username"),
+
+    /**
+     * The password for authentication.
+     * Example: "password123"
+     */
+    PASSWORD("jnosql.neo4j.password");
 
     private final String value;
 
