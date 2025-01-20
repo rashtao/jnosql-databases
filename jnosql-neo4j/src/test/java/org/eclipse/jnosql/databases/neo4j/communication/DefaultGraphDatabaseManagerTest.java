@@ -12,7 +12,7 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.tinkerpop.communication;
+package org.eclipse.jnosql.databases.neo4j.communication;
 
 import net.datafaker.Faker;
 import org.apache.tinkerpop.gremlin.structure.Graph;
