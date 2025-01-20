@@ -28,6 +28,7 @@ public class Neo4JConfiguration implements DatabaseConfiguration {
 
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
+        Settings settings = Settings.builder().put("url", "bolt://localhost:7687").build();
         return null;
     }
 }
