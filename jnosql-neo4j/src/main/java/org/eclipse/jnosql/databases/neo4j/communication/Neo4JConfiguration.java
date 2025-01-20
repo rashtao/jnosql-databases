@@ -19,16 +19,20 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.communication.semistructured.DatabaseConfiguration;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
-
 import java.util.logging.Logger;
 
 public class Neo4JConfiguration implements DatabaseConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(Neo4JConfiguration.class.getName());
 
+    private static final String DEFAULT_BOLT = "bolt://localhost:7687";
+
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
-        Settings settings = Settings.builder().put("url", "bolt://localhost:7687").build();
+        var uri = settings.getOrDefault(Neo4JConfigurations.URI, DEFAULT_BOLT);
+        var user = settings.get(Neo4JConfigurations.USERNAME).or(null);
+        var password = settings.get(Neo4JConfigurations.PASSWORD).or(null);
+        LOGGER.info("Starting configuration to Neo4J database, the uri: " + uri);
         return null;
     }
 }
