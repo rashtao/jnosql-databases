@@ -30,9 +30,10 @@ public final class Neo4JConfiguration implements DatabaseConfiguration {
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
         var uri = settings.getOrDefault(Neo4JConfigurations.URI, DEFAULT_BOLT);
-        var user = settings.get(Neo4JConfigurations.USERNAME).or(null);
-        var password = settings.get(Neo4JConfigurations.PASSWORD).or(null);
+        var user = settings.get(Neo4JConfigurations.USERNAME, String.class).orElse(null);
+        var password = settings.get(Neo4JConfigurations.PASSWORD, String.class).orElse(null);
         LOGGER.info("Starting configuration to Neo4J database, the uri: " + uri);
+        var neo4Property = new Neo4Property(uri, user, password);
         return null;
     }
 }
