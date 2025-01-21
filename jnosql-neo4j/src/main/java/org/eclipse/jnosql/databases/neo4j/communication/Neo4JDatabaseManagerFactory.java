@@ -26,6 +26,25 @@ import org.neo4j.driver.SessionConfig;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * This class provides a factory for creating and managing instances of {@link Neo4JDatabaseManager},
+ * enabling communication with a Neo4j database. It implements the {@link DatabaseManagerFactory} interface
+ * and handles the lifecycle of the Neo4j {@link Driver}.
+ *
+ * <p>Main Responsibilities:</p>
+ * <ul>
+ *     <li>Establishing a connection to a Neo4j database using the provided URI, username, and password.</li>
+ *     <li>Creating new instances of {@link Neo4JDatabaseManager} for a specific database.</li>
+ *     <li>Managing the lifecycle of the Neo4j driver, including proper resource cleanup.</li>
+ * </ul>
+ *
+ *
+ *>Thread Safety:
+ * The factory is thread-safe as long as it is used properly. Ensure to close the factory
+ * when it is no longer needed to release resources.
+ *
+ */
+
 public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
 
     private static final Logger LOGGER = Logger.getLogger(Neo4JDatabaseManagerFactory.class.getName());
