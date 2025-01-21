@@ -18,25 +18,43 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
+import org.neo4j.driver.AuthToken;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.SessionConfig;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
 
-    private final Neo4Property property;
+    private static final Logger LOGGER = Logger.getLogger(Neo4JDatabaseManagerFactory.class.getName());
 
-    Neo4JDatabaseManagerFactory(Neo4Property property) {
-        this.property = property;
+    private final Driver driver;
+
+    private Neo4JDatabaseManagerFactory(Driver driver) {
+        this.driver = driver;
     }
 
     @Override
     public void close() {
-
+        this.driver.close();
     }
 
     @Override
-    public DatabaseManager apply(String database) {
+    public Neo4JDatabaseManager apply(String database) {
         Objects.requireNonNull(database, "database is required");
-        return null;
+        LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManager with the database: " + database);
+        var session = driver.session(SessionConfig.builder().withDatabase(database).build());
+        return new Neo4JDatabaseManager(session);
+    }
+
+    static Neo4JDatabaseManagerFactory of(Neo4Property property) {
+        Objects.requireNonNull(property, "property is required");
+        LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManagerFactory with the uri: " + property.uri());
+        AuthToken basic = AuthTokens.basic(property.user(), property.password());
+        return new Neo4JDatabaseManagerFactory(GraphDatabase.driver(property.uri(), basic));
     }
 }
