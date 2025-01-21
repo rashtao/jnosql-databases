@@ -59,6 +59,6 @@ public final class Neo4JConfiguration implements DatabaseConfiguration {
         var password = settings.get(Neo4JConfigurations.PASSWORD, String.class).orElse(null);
         LOGGER.info("Starting configuration to Neo4J database, the uri: " + uri);
         var neo4Property = new Neo4Property(uri, user, password);
-        return null;
+        return new Neo4JDatabaseManagerFactory(neo4Property);
     }
 }
