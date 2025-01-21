@@ -37,14 +37,11 @@ import java.util.logging.Logger;
  *     <li>Creating new instances of {@link Neo4JDatabaseManager} for a specific database.</li>
  *     <li>Managing the lifecycle of the Neo4j driver, including proper resource cleanup.</li>
  * </ul>
- *
- *
  *>Thread Safety:
  * The factory is thread-safe as long as it is used properly. Ensure to close the factory
  * when it is no longer needed to release resources.
- *
+ * At the close method, the factory closes the Neo4j {@link Driver} and releases resources.
  */
-
 public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
 
     private static final Logger LOGGER = Logger.getLogger(Neo4JDatabaseManagerFactory.class.getName());
@@ -55,6 +52,9 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
         this.driver = driver;
     }
 
+    /**
+     * Closes the Neo4j driver and releases resources.
+     */
     @Override
     public void close() {
         LOGGER.info("Closing the Neo4J driver");
@@ -66,7 +66,7 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
         Objects.requireNonNull(database, "database is required");
         LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManager with the database: " + database);
         var session = driver.session(SessionConfig.builder().withDatabase(database).build());
-        return new Neo4JDatabaseManager(session);
+        return new Neo4JDatabaseManager(session, database);
     }
 
     static Neo4JDatabaseManagerFactory of(Neo4Property property) {
