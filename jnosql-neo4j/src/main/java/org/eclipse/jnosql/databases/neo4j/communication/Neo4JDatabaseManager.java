@@ -16,5 +16,73 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
-public class Neo4JDatabaseManager {
+import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
+import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
+import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
+import org.eclipse.jnosql.communication.semistructured.SelectQuery;
+import org.neo4j.driver.Session;
+
+import java.time.Duration;
+import java.util.stream.Stream;
+
+public class Neo4JDatabaseManager implements DatabaseManager {
+
+    public Neo4JDatabaseManager(Session session) {
+
+    }
+
+    @Override
+    public String name() {
+        return "";
+    }
+
+    @Override
+    public CommunicationEntity insert(CommunicationEntity entity) {
+        return null;
+    }
+
+    @Override
+    public CommunicationEntity insert(CommunicationEntity entity, Duration ttl) {
+        return null;
+    }
+
+    @Override
+    public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities) {
+        return null;
+    }
+
+    @Override
+    public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities, Duration ttl) {
+        return null;
+    }
+
+    @Override
+    public CommunicationEntity update(CommunicationEntity entity) {
+        return null;
+    }
+
+    @Override
+    public Iterable<CommunicationEntity> update(Iterable<CommunicationEntity> entities) {
+        return null;
+    }
+
+    @Override
+    public void delete(DeleteQuery query) {
+
+    }
+
+    @Override
+    public Stream<CommunicationEntity> select(SelectQuery query) {
+        return Stream.empty();
+    }
+
+    @Override
+    public long count(String entity) {
+        return 0;
+    }
+
+    @Override
+    public void close() {
+
+    }
 }
