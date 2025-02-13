@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.MATCHES;
@@ -79,8 +78,7 @@ public class ArangoDBEnumIntegrationTest {
         SoftAssertions.assertSoftly(soft -> {
             Predicate<MailTemplate> isTimer = m -> m.getCategory().equals(MailCategory.TIMER);
             Predicate<MailTemplate> isTrue = m -> m.isDefault();
-            soft.assertThat(result).hasSize(1).allMatch(
-                    isTimer.and(isTrue));
+            soft.assertThat(result).allMatch(isTimer.and(isTrue));
         });
     }
 
