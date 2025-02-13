@@ -25,7 +25,7 @@ import java.util.UUID;
 public class MailTemplate {
 
     @Id
-    private UUID id;
+    private String id;
 
     @Column
     private String to;
@@ -39,7 +39,7 @@ public class MailTemplate {
     @Column
     private boolean isDefault;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -99,29 +99,29 @@ public class MailTemplate {
 
         private boolean isDefault;
 
-        public MailTemplateBuilder setTo(String to) {
+        public MailTemplateBuilder to(String to) {
             this.to = to;
             return this;
         }
 
-        public MailTemplateBuilder setFrom(String from) {
+        public MailTemplateBuilder from(String from) {
             this.from = from;
             return this;
         }
 
-        public MailTemplateBuilder setCategory(MailCategory category) {
+        public MailTemplateBuilder category(MailCategory category) {
             this.category = category;
             return this;
         }
 
-        public MailTemplateBuilder setDefault(boolean aDefault) {
-            isDefault = aDefault;
+        public MailTemplateBuilder isDefault(boolean isDefault) {
+            this.isDefault = isDefault;
             return this;
         }
 
         public MailTemplate build(){
             MailTemplate mailTemplate = new MailTemplate();
-            mailTemplate.id = UUID.randomUUID();
+            mailTemplate.id = UUID.randomUUID().toString();
             mailTemplate.to = this.to;
             mailTemplate.from = this.from;
             mailTemplate.category = this.category;

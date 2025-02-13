@@ -23,7 +23,7 @@ import java.util.Objects;
 @Entity
 public class Magazine {
 
-    @Id("_key")
+    @Id
     private String id;
 
     @Column("title")
