@@ -14,9 +14,11 @@
  */
 package org.eclipse.jnosql.databases.arangodb.integration;
 
+import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -25,9 +27,60 @@ public class MailTemplate {
     @Id
     private UUID id;
 
+    @Column
     private String to;
 
+    @Column
     private String from;
 
+    @Column
     private MailCategory category;
+
+    @Column
+    private boolean isDefault;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public MailCategory getCategory() {
+        return category;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MailTemplate that = (MailTemplate) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "MailTemplate{" +
+                "id=" + id +
+                ", to='" + to + '\'' +
+                ", from='" + from + '\'' +
+                ", category=" + category +
+                ", isDefault=" + isDefault +
+                '}';
+    }
 }
