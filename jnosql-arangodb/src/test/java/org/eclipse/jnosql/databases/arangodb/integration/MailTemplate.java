@@ -83,4 +83,50 @@ public class MailTemplate {
                 ", isDefault=" + isDefault +
                 '}';
     }
+
+    public static MailTemplateBuilder builder(){
+        return new MailTemplateBuilder();
+    }
+
+
+    public static class MailTemplateBuilder{
+
+        private String to;
+
+        private String from;
+
+        private MailCategory category;
+
+        private boolean isDefault;
+
+        public MailTemplateBuilder setTo(String to) {
+            this.to = to;
+            return this;
+        }
+
+        public MailTemplateBuilder setFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public MailTemplateBuilder setCategory(MailCategory category) {
+            this.category = category;
+            return this;
+        }
+
+        public MailTemplateBuilder setDefault(boolean aDefault) {
+            isDefault = aDefault;
+            return this;
+        }
+
+        public MailTemplate build(){
+            MailTemplate mailTemplate = new MailTemplate();
+            mailTemplate.id = UUID.randomUUID();
+            mailTemplate.to = this.to;
+            mailTemplate.from = this.from;
+            mailTemplate.category = this.category;
+            mailTemplate.isDefault = this.isDefault;
+            return mailTemplate;
+        }
+    }
 }
