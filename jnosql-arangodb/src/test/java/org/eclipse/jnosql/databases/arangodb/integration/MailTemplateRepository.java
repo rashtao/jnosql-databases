@@ -18,10 +18,10 @@ import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface MailTemplateRepository extends NoSQLRepository<MailTemplate, String> {
 
-    Optional<MailTemplate> findByCategoryAndIsDefaultTrue(@NotNull MailCategory mailCategory);
+    List<MailTemplate> findByCategoryAndIsDefaultTrue(@NotNull MailCategory mailCategory);
 }

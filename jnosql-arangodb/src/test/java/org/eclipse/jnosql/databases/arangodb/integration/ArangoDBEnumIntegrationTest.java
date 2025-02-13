@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.MATCHES;
@@ -65,7 +66,7 @@ public class ArangoDBEnumIntegrationTest {
 
     @Test
     void shouldCreateAndQueryByEnumAndDefaultTrue() {
-        var emailTemplate = template.insert(MailTemplate.builder()
+        template.insert(MailTemplate.builder()
                 .category(MailCategory.TIMER)
                 .from("otavio@email.com")
                 .to("mateusz@email.com")
@@ -105,6 +106,32 @@ public class ArangoDBEnumIntegrationTest {
             Predicate<MailTemplate> isFalse = m -> !m.isDefault();
             soft.assertThat(result).hasSize(1).allMatch(
                     isAlternative.and(isFalse));
+        });
+    }
+
+    @Test
+    void shouldQueryUsingRepository() {
+        repository.save(MailTemplate.builder()
+                .category(MailCategory.TIMER)
+                .from("otavio@email.com")
+                .to("mateusz@email.com")
+                .isDefault(true)
+                .build());
+
+        repository.save(MailTemplate.builder()
+                .category(MailCategory.TRANSITION_ALTERNATIVE)
+                .from("otavio@email.com")
+                .to("mateusz@email.com")
+                .isDefault(true)
+                .build());
+
+        List<MailTemplate> categoryAndIsDefaultTrue = repository.findByCategoryAndIsDefaultTrue(MailCategory.TIMER);
+
+        SoftAssertions.assertSoftly(soft -> {
+            Predicate<MailTemplate> isTimer = m -> m.getCategory().equals(MailCategory.TIMER);
+            Predicate<MailTemplate> isTrue = m -> m.isDefault();
+            soft.assertThat(categoryAndIsDefaultTrue).hasSize(1).allMatch(
+                    isTimer.and(isTrue));
         });
     }
 }
