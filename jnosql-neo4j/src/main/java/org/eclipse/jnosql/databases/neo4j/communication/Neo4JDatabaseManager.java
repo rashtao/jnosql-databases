@@ -28,6 +28,7 @@ import org.neo4j.driver.Values;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -51,7 +52,13 @@ public class Neo4JDatabaseManager implements DatabaseManager {
     public CommunicationEntity insert(CommunicationEntity entity) {
         Objects.requireNonNull(entity, "entity is required");
 
-        Map<String, Object> entityMap = entity.toMap(); // Get all elements in a structured map
+        if(!entity.contains("_id")) {
+            String generatedId = UUID.randomUUID().toString();
+            LOGGER.fine("The entity does not contain an _id field. Generating one: " + generatedId);
+            entity.add("_id", generatedId);
+        }
+
+        Map<String, Object> entityMap = entity.toMap();
 
         try (Transaction tx = session.beginTransaction()) {
             StringBuilder cypher = new StringBuilder("CREATE (e:");
@@ -64,7 +71,7 @@ public class Neo4JDatabaseManager implements DatabaseManager {
                 cypher.setLength(cypher.length() - 2);
             }
             cypher.append("})");
-
+            LOGGER.fine("Cypher: " + cypher);
             tx.run(cypher.toString(), Values.parameters(entityMap));
             tx.commit();
         }
