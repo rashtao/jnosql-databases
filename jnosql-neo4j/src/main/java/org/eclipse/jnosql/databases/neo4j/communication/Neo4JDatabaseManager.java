@@ -16,13 +16,17 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import org.eclipse.jnosql.communication.ValueUtil;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.neo4j.driver.Session;
+import org.neo4j.driver.Transaction;
+import org.neo4j.driver.Values;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -44,10 +48,29 @@ public class Neo4JDatabaseManager implements DatabaseManager {
         return database;
     }
 
-    @Override
     public CommunicationEntity insert(CommunicationEntity entity) {
         Objects.requireNonNull(entity, "entity is required");
-        return null;
+
+        Map<String, Object> entityMap = entity.toMap(); // Get all elements in a structured map
+
+        try (Transaction tx = session.beginTransaction()) {
+            StringBuilder cypher = new StringBuilder("CREATE (e:");
+            cypher.append(entity.name()).append(" {");
+
+            entityMap.keySet().forEach(key -> cypher.append(key).append(": $").append(key).append(", "));
+
+            // Remove the last comma and space, then close the bracket
+            if (!entityMap.isEmpty()) {
+                cypher.setLength(cypher.length() - 2);
+            }
+            cypher.append("})");
+
+            tx.run(cypher.toString(), Values.parameters(entityMap));
+            tx.commit();
+        }
+
+        LOGGER.info("Inserted entity: " + entity.name());
+        return entity;
     }
 
     @Override
