@@ -33,17 +33,12 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 @Database(GRAPH)
 class DefaultGraphTemplate extends AbstractGraphTemplate {
 
-    private final EntityConverter converter;
-
-    private final GraphDatabaseManager manager;
-
-    private final EventPersistManager eventManager;
-
-    private final EntitiesMetadata entities;
-
-    private final Converters converters;
-    private final Graph graph;
-
+    private EntityConverter converter;
+    private GraphDatabaseManager manager;
+    private EventPersistManager eventManager;
+    private EntitiesMetadata entities;
+    private Converters converters;
+    private Graph graph;
 
     @Inject
     DefaultGraphTemplate(EntityConverter converter, Graph graph,
@@ -57,9 +52,11 @@ class DefaultGraphTemplate extends AbstractGraphTemplate {
         this.manager = GraphDatabaseManager.of(graph);
     }
 
-    DefaultGraphTemplate() {
-        this(null, null, null, null, null);
-    }
+    /**
+     * Constructor for CDI
+     */
+    @Deprecated
+    DefaultGraphTemplate() {}
 
     @Override
     protected EntityConverter converter() {
