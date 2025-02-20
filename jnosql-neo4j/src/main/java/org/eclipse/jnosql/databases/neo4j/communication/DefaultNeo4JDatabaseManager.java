@@ -16,7 +16,6 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
-import org.eclipse.jnosql.communication.ValueUtil;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
@@ -32,14 +31,14 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class Neo4JDatabaseManager implements DatabaseManager {
+public class DefaultNeo4JDatabaseManager implements DatabaseManager {
 
-    private static final Logger LOGGER = Logger.getLogger(Neo4JDatabaseManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JDatabaseManager.class.getName());
 
     private final Session session;
     private final String database;
 
-    public Neo4JDatabaseManager(Session session, String database) {
+    public DefaultNeo4JDatabaseManager(Session session, String database) {
         this.session = session;
         this.database = database;
     }

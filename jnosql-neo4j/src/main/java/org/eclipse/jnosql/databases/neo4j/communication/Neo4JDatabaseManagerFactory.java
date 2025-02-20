@@ -27,14 +27,14 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
- * This class provides a factory for creating and managing instances of {@link Neo4JDatabaseManager},
+ * This class provides a factory for creating and managing instances of {@link DefaultNeo4JDatabaseManager},
  * enabling communication with a Neo4j database. It implements the {@link DatabaseManagerFactory} interface
  * and handles the lifecycle of the Neo4j {@link Driver}.
  *
  * <p>Main Responsibilities:</p>
  * <ul>
  *     <li>Establishing a connection to a Neo4j database using the provided URI, username, and password.</li>
- *     <li>Creating new instances of {@link Neo4JDatabaseManager} for a specific database.</li>
+ *     <li>Creating new instances of {@link DefaultNeo4JDatabaseManager} for a specific database.</li>
  *     <li>Managing the lifecycle of the Neo4j driver, including proper resource cleanup.</li>
  * </ul>
  *>Thread Safety:
@@ -62,11 +62,11 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
     }
 
     @Override
-    public Neo4JDatabaseManager apply(String database) {
+    public DefaultNeo4JDatabaseManager apply(String database) {
         Objects.requireNonNull(database, "database is required");
         LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManager with the database: " + database);
         var session = driver.session(SessionConfig.builder().withDatabase(database).build());
-        return new Neo4JDatabaseManager(session, database);
+        return new DefaultNeo4JDatabaseManager(session, database);
     }
 
     static Neo4JDatabaseManagerFactory of(Neo4Property property) {
