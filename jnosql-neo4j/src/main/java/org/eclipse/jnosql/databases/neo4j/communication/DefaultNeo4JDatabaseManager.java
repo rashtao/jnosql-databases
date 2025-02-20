@@ -31,7 +31,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class DefaultNeo4JDatabaseManager implements DatabaseManager {
+public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JDatabaseManager.class.getName());
 
