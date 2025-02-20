@@ -26,6 +26,10 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
  * accordingly—either by integrating APOC's TTL features or throwing {@link UnsupportedOperationException}
  * if TTL is not supported.</p>
  *
+ * @apiNote All write operations, including {@code insert} and {@code update}, will be executed within a transaction.
+ * When performing batch inserts using an iterable, the entire operation will be executed as a single transaction
+ * to ensure consistency.
+ *
  * <h3>Usage Example:</h3>
  * <pre>
  * Neo4JDatabaseManager manager = ...; // Obtain an instance
@@ -36,9 +40,8 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
  * manager.insert(entity); // Insert into Neo4j
  * </pre>
  *
- * <h3>Implementation Notes:</h3>
- * <p>Ensure proper transaction and session management when implementing this interface.
- * Unsupported TTL operations should result in an {@link UnsupportedOperationException}.</p>
+ * @apiNote Ensure proper transaction and session management when implementing this interface.
+ * Unsupported TTL operations should result in an {@link UnsupportedOperationException}.
  *
  * @see DatabaseManager
  */
