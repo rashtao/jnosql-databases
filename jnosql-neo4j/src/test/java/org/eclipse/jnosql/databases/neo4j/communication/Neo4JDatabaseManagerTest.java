@@ -38,7 +38,7 @@ class Neo4JDatabaseManagerTest {
 
     @BeforeAll
     public static void setUp() {
-        entityManager = DatabaseContainer.INSTANCE.get("database");
+        entityManager = DatabaseContainer.INSTANCE.get("neo4j");
     }
 
     @Test
