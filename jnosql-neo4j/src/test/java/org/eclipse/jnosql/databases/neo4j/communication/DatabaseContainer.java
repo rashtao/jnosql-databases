@@ -15,5 +15,30 @@
 
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import org.eclipse.jnosql.communication.Settings;
+import org.testcontainers.containers.Neo4jContainer;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.Objects;
+
 public enum DatabaseContainer {
+
+    INSTANCE;
+
+    private final Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>(DockerImageName.parse("neo4j:lastest"))
+            .withoutAuthentication();
+
+    {
+        neo4jContainer.start();
+    }
+
+
+    public Neo4JDatabaseManager get(String database) {
+        Objects.requireNonNull(database, "database is required");
+        Settings settings = Settings.builder().put(Neo4JConfigurations.URI, neo4jContainer.getBoltUrl()).build();
+        var configuration = new Neo4JConfiguration();
+        var managerFactory = configuration.apply(settings);
+        return managerFactory.apply(database);
+    }
+
 }
