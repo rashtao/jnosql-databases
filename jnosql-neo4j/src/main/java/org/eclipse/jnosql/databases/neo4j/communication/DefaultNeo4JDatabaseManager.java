@@ -25,6 +25,10 @@ import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Values;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -51,44 +55,23 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     public CommunicationEntity insert(CommunicationEntity entity) {
         Objects.requireNonNull(entity, "entity is required");
-
-        if (!entity.contains(ID)) {
-            String generatedId = UUID.randomUUID().toString();
-            LOGGER.fine("The entity does not contain an _id field. Generating one: " + generatedId);
-            entity.add(ID, generatedId);
-        }
-
-        Map<String, Object> entityMap = entity.toMap();
-
-        try (Transaction tx = session.beginTransaction()) {
-            StringBuilder cypher = new StringBuilder("CREATE (e:");
-            cypher.append(entity.name()).append(" {");
-
-            entityMap.keySet().forEach(key -> cypher.append(key).append(": $").append(key).append(", "));
-
-            if (!entityMap.isEmpty()) {
-                cypher.setLength(cypher.length() - 2);
-            }
-            cypher.append("})");
-            LOGGER.fine("Cypher: " + cypher);
-
-            tx.run(cypher.toString(), Values.parameters(flattenMap(entityMap)));
-            tx.commit();
-        }
-
-        LOGGER.fine("Inserted entity: " + entity.name() + " with _id: " + entity.find(ID));
-        return entity;
+        return insertEntities(Collections.singletonList(entity)).iterator().next();
     }
 
     @Override
     public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities) {
         Objects.requireNonNull(entities, "entities is required");
-        return null;
+        return insertEntities(entities);
     }
 
     @Override
     public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities, Duration ttl) {
        throw new UnsupportedOperationException("This operation is not supported in Neo4J");
+    }
+
+    @Override
+    public CommunicationEntity insert(CommunicationEntity entity, Duration ttl) {
+        throw new UnsupportedOperationException("This operation is not supported in Neo4J");
     }
 
     @Override
@@ -133,8 +116,34 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
                 .toArray();
     }
 
-    @Override
-    public CommunicationEntity insert(CommunicationEntity entity, Duration ttl) {
-        throw new UnsupportedOperationException("This operation is not supported in Neo4J");
+    private Iterable<CommunicationEntity> insertEntities(Iterable<CommunicationEntity> entities) {
+        List<CommunicationEntity> entitiesResult = new ArrayList<>();
+        try (Transaction tx = session.beginTransaction()) {
+            for (CommunicationEntity entity : entities) {
+                if (!entity.contains(ID)) {
+                    String generatedId = UUID.randomUUID().toString();
+                    LOGGER.fine("The entity does not contain an _id field. Generating one: " + generatedId);
+                    entity.add(ID, generatedId);
+                }
+
+                Map<String, Object> properties = entity.toMap();
+                StringBuilder cypher = new StringBuilder("CREATE (e:");
+                cypher.append(entity.name()).append(" {");
+
+                properties.keySet().forEach(key -> cypher.append(key).append(": $").append(key).append(", "));
+
+                if (!properties.isEmpty()) {
+                    cypher.setLength(cypher.length() - 2);
+                }
+                cypher.append("})");
+                LOGGER.fine("Cypher: " + cypher);
+
+                tx.run(cypher.toString(), Values.parameters(flattenMap(properties)));
+                entitiesResult.add(entity);
+            }
+            tx.commit();
+        }
+        LOGGER.fine("Inserted entities: " + entitiesResult.size());
+        return entitiesResult;
     }
 }
