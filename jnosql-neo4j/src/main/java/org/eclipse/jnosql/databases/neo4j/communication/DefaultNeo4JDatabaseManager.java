@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JDatabaseManager.class.getName());
+    public static final String ID = "_id";
 
     private final Session session;
     private final String database;
@@ -51,10 +52,10 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     public CommunicationEntity insert(CommunicationEntity entity) {
         Objects.requireNonNull(entity, "entity is required");
 
-        if(!entity.contains("_id")) {
+        if (!entity.contains(ID)) {
             String generatedId = UUID.randomUUID().toString();
             LOGGER.fine("The entity does not contain an _id field. Generating one: " + generatedId);
-            entity.add("_id", generatedId);
+            entity.add(ID, generatedId);
         }
 
         Map<String, Object> entityMap = entity.toMap();
@@ -65,17 +66,17 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
             entityMap.keySet().forEach(key -> cypher.append(key).append(": $").append(key).append(", "));
 
-            // Remove the last comma and space, then close the bracket
             if (!entityMap.isEmpty()) {
                 cypher.setLength(cypher.length() - 2);
             }
             cypher.append("})");
             LOGGER.fine("Cypher: " + cypher);
-            tx.run(cypher.toString(), Values.parameters(entityMap));
+
+            tx.run(cypher.toString(), Values.parameters(flattenMap(entityMap)));
             tx.commit();
         }
 
-        LOGGER.info("Inserted entity: " + entity.name());
+        LOGGER.fine("Inserted entity: " + entity.name() + " with _id: " + entity.find(ID));
         return entity;
     }
 
@@ -129,5 +130,11 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     public void close() {
         LOGGER.fine("Closing the Neo4J session");
         this.session.close();
+    }
+
+    private Object[] flattenMap(Map<String, Object> map) {
+        return map.entrySet().stream()
+                .flatMap(entry -> java.util.stream.Stream.of(entry.getKey(), entry.getValue()))
+                .toArray();
     }
 }
