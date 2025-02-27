@@ -72,7 +72,11 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
     static Neo4JDatabaseManagerFactory of(Neo4Property property) {
         Objects.requireNonNull(property, "property is required");
         LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManagerFactory with the uri: " + property.uri());
-        AuthToken basic = AuthTokens.basic(property.user(), property.password());
+        if(property.user() == null && property.password() == null) {
+            LOGGER.fine("Creating a new instance of Neo4JDatabaseManagerFactory without authentication");
+            return new Neo4JDatabaseManagerFactory(GraphDatabase.driver(property.uri()));
+        }
+        var basic = AuthTokens.basic(property.user(), property.password());
         return new Neo4JDatabaseManagerFactory(GraphDatabase.driver(property.uri(), basic));
     }
 }
