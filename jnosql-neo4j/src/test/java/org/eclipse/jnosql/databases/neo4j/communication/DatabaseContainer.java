@@ -25,7 +25,7 @@ public enum DatabaseContainer {
 
     INSTANCE;
 
-    private final Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>(DockerImageName.parse("neo4j:lastest"))
+    private final Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>(DockerImageName.parse("neo4j:5.26.3"))
             .withoutAuthentication();
 
     {
