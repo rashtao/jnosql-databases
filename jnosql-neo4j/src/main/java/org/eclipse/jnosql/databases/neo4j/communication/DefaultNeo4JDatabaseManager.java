@@ -81,11 +81,6 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
-    public CommunicationEntity insert(CommunicationEntity entity, Duration ttl) {
-       throw new UnsupportedOperationException("This operation is not supported in Neo4J");
-    }
-
-    @Override
     public Iterable<CommunicationEntity> insert(Iterable<CommunicationEntity> entities) {
         Objects.requireNonNull(entities, "entities is required");
         return null;
@@ -136,5 +131,10 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         return map.entrySet().stream()
                 .flatMap(entry -> java.util.stream.Stream.of(entry.getKey(), entry.getValue()))
                 .toArray();
+    }
+
+    @Override
+    public CommunicationEntity insert(CommunicationEntity entity, Duration ttl) {
+        throw new UnsupportedOperationException("This operation is not supported in Neo4J");
     }
 }
