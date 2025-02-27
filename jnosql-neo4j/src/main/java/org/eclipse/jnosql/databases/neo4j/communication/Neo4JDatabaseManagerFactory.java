@@ -16,11 +16,14 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import org.eclipse.jnosql.communication.CommunicationException;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
 import org.neo4j.driver.AuthToken;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
 import org.neo4j.driver.SessionConfig;
 
 import java.util.Objects;
@@ -65,6 +68,12 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
     public DefaultNeo4JDatabaseManager apply(String database) {
         Objects.requireNonNull(database, "database is required");
         LOGGER.fine(() -> "Creating a new instance of Neo4JDatabaseManager with the database: " + database);
+        boolean databaseExists = databaseExists(database);
+        LOGGER.fine(() -> "Database " + database + " exists: " + databaseExists);
+        if (!databaseExists) {
+            LOGGER.fine(() -> "Database " + database + " does not exist. Creating it...");
+            createDatabase(database);
+        }
         var session = driver.session(SessionConfig.builder().withDatabase(database).build());
         return new DefaultNeo4JDatabaseManager(session, database);
     }
@@ -78,5 +87,29 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
         }
         var basic = AuthTokens.basic(property.user(), property.password());
         return new Neo4JDatabaseManagerFactory(GraphDatabase.driver(property.uri(), basic));
+    }
+
+    private boolean databaseExists(String database) {
+        try (Session session = driver.session()) {
+            Result result = session.run("SHOW DATABASES");
+            while (result.hasNext()) {
+                if (database.equals(result.next().get("name").asString())) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.severe("Failed to check database existence: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private void createDatabase(String database) {
+        try (Session session = driver.session()) {
+            session.run("CREATE DATABASE " + database);
+            LOGGER.info("Database created: " + database);
+        } catch (Exception e) {
+            LOGGER.severe("Failed to create database: " + e.getMessage());
+            throw new CommunicationException("Could not create database: " + database, e);
+        }
     }
 }
