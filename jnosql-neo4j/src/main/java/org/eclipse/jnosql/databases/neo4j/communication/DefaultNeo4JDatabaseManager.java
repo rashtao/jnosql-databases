@@ -78,7 +78,33 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public CommunicationEntity update(CommunicationEntity entity) {
         Objects.requireNonNull(entity, "entity is required");
-        return null;
+        Objects.requireNonNull(entity, "entity is required");
+
+        if (!entity.contains(ID)) {
+            throw new CommunicationException("Cannot update entity without an _id field, entity: " + entity);
+        }
+
+        Map<String, Object> entityMap = entity.toMap();
+        StringBuilder cypher = new StringBuilder("MATCH (e:");
+        cypher.append(entity.name()).append(" { ").append(ID).append(": $").append(ID).append(" }) SET ");
+
+        entityMap.entrySet().stream()
+                .filter(entry -> !ID.equals(entry.getKey()))
+                .forEach(entry -> cypher.append("e.").append(entry.getKey()).append(" = $").append(entry.getKey()).append(", "));
+
+        if (cypher.toString().endsWith(", ")) {
+            cypher.setLength(cypher.length() - 2);
+        }
+
+        LOGGER.fine("Cypher: " + cypher);
+
+        try (Transaction tx = session.beginTransaction()) {
+            tx.run(cypher.toString(), Values.parameters(flattenMap(entityMap)));
+            tx.commit();
+        }
+
+        LOGGER.fine("Updated entity: " + entity.name() + " with _id: " + entity.find(ID).get().get(String.class));
+        return entity;
     }
 
     @Override
