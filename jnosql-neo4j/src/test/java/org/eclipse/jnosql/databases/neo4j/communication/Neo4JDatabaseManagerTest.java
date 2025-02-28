@@ -68,6 +68,23 @@ class Neo4JDatabaseManagerTest {
         assertTrue(count > 0);
     }
 
+    @Test
+    void shouldUpdate() {
+        var entity = getEntity();
+        var communicationEntity = entityManager.insert(entity);
+        var id = communicationEntity.find("_id").orElseThrow().get();
+        var update = CommunicationEntity.of(COLLECTION_NAME);
+        update.add("_id", id);
+        update.add("name", "Lucas");
+
+        var result = entityManager.update(update);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isNotNull();
+            softly.assertThat(result.find("name").orElseThrow().get()).isEqualTo("Lucas");
+        });
+        assertTrue(result.find("name").isPresent());
+    }
+
     @BeforeEach
     void beforeEach() {
         delete().from(COLLECTION_NAME).delete(entityManager);
