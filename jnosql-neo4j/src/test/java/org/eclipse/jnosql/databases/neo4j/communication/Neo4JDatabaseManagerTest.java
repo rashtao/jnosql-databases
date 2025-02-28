@@ -186,6 +186,23 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldOrderDesc() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var query = SelectQuery.select().from(COLLECTION_NAME).orderBy("index").desc().build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(10);
+            softly.assertThat(entities).allMatch(e -> e.find("index").isPresent());
+            softly.assertThat(entities).extracting(e -> e.find("index").orElseThrow().get())
+                    .containsExactly(9L, 8L, 7L, 6L, 5L, 4L, 3L, 2L, 1L, 0L);
+        });
+    }
+
     @BeforeEach
     void beforeEach() {
         delete().from(COLLECTION_NAME).delete(entityManager);
