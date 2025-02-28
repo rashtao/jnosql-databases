@@ -16,6 +16,7 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import org.eclipse.jnosql.communication.CommunicationException;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
@@ -101,9 +102,16 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public long count(String entity) {
         Objects.requireNonNull(entity, "entity is required");
-        return 0;
+        try (Transaction tx = session.beginTransaction()) {
+            String cypher = "MATCH (e:" + entity + ") RETURN count(e) AS count";
+            long count = tx.run(cypher).single().get("count").asLong();
+            tx.commit();
+            return count;
+        } catch (Exception e) {
+            LOGGER.severe("Error executing count query: " + e.getMessage());
+           throw new CommunicationException("Error executing count query", e);
+        }
     }
-
     @Override
     public void close() {
         LOGGER.fine("Closing the Neo4J session");
