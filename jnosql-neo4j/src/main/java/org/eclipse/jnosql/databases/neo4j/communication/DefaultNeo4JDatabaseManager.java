@@ -158,7 +158,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         if (!sorts.isEmpty()) {
             cypher.append(" ORDER BY ");
             cypher.append(sorts.stream()
-                    .map(order -> "n." + order.property() + " " + (order.isAscending() ? "ASC" : "DESC"))
+                    .map(order -> "e." + order.property() + " " + (order.isAscending() ? "ASC" : "DESC"))
                     .collect(Collectors.joining(", ")));
         }
 

@@ -168,6 +168,24 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldTOrderAsc(){
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+
+        var query = SelectQuery.select().from(COLLECTION_NAME).orderBy("index").asc().build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(10);
+            softly.assertThat(entities).allMatch(e -> e.find("index").isPresent());
+            softly.assertThat(entities).extracting(e -> e.find("index").orElseThrow().get())
+                    .containsExactly(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
+        });
+    }
+
     @BeforeEach
     void beforeEach() {
         delete().from(COLLECTION_NAME).delete(entityManager);
