@@ -60,6 +60,14 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldCount() {
+        var entity = getEntity();
+        entityManager.insert(entity);
+        long count = entityManager.count(COLLECTION_NAME);
+        assertTrue(count > 0);
+    }
+
     @BeforeEach
     void beforeEach() {
         delete().from(COLLECTION_NAME).delete(entityManager);
