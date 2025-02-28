@@ -16,6 +16,8 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import net.datafaker.Faker;
+import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.Element;
@@ -44,8 +46,18 @@ class Neo4JDatabaseManagerTest {
     @Test
     void shouldInsert() {
         var entity = getEntity();
-        var documentEntity = entityManager.insert(entity);
-        assertTrue(documentEntity.elements().stream().map(Element::name).anyMatch(s -> s.equals("_id")));
+        var communicationEntity = entityManager.insert(entity);
+        assertTrue(communicationEntity.elements().stream().map(Element::name).anyMatch(s -> s.equals("_id")));
+    }
+
+    @Test
+    void shouldInsertEntities() {
+        var entities = List.of(getEntity(), getEntity());
+        var result = entityManager.insert(entities);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(2);
+            softly.assertThat(result).allMatch(e -> e.elements().stream().map(Element::name).anyMatch(s -> s.equals("_id")));
+        });
     }
 
     @BeforeEach
@@ -57,10 +69,13 @@ class Neo4JDatabaseManagerTest {
 
 
     private CommunicationEntity getEntity() {
+        Faker faker = new Faker();
+
         CommunicationEntity entity = CommunicationEntity.of(COLLECTION_NAME);
         Map<String, Object> map = new HashMap<>();
-        map.put("name", "Poliana");
-        map.put("city", "Salvador");
+        map.put("name", faker.name().fullName());
+        map.put("city", faker.address().city());
+        map.put("age", faker.number().randomNumber());
         List<Element> documents = Elements.of(map);
         documents.forEach(entity::add);
         return entity;
