@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +127,44 @@ class Neo4JDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
             softly.assertThat(entities.get(0).elements()).hasSize(2);
+            softly.assertThat(entities.get(0).contains("name")).isTrue();
+            softly.assertThat(entities.get(0).contains("city")).isTrue();
+        });
+    }
+
+    @Test
+    void shouldLimit() {
+        for (int index = 0; index < 10; index++) {
+            entityManager.insert(getEntity());
+        }
+        var query = SelectQuery.select().from(COLLECTION_NAME).limit(5).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+        });
+    }
+
+    @Test
+    void shouldStart() {
+        for (int index = 0; index < 10; index++) {
+            entityManager.insert(getEntity());
+        }
+        var query = SelectQuery.select().from(COLLECTION_NAME).skip(5).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+        });
+    }
+
+    @Test
+    void shouldStartAndLimit() {
+        for (int index = 0; index < 10; index++) {
+            entityManager.insert(getEntity());
+        }
+        var query = SelectQuery.select().from(COLLECTION_NAME).skip(5).limit(2).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(2);
         });
     }
 
