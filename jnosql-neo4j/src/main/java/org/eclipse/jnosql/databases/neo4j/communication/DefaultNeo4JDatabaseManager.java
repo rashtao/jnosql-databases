@@ -103,13 +103,14 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             tx.commit();
         }
 
-        LOGGER.fine("Updated entity: " + entity.name() + " with _id: " + entity.find(ID).get().get(String.class));
+        LOGGER.fine("Updated entity: " + entity.name() + " with _id: " + entity.find(ID).orElseThrow().get(String.class));
         return entity;
     }
 
     @Override
     public Iterable<CommunicationEntity> update(Iterable<CommunicationEntity> entities) {
         Objects.requireNonNull(entities, "entities is required");
+        entities.forEach(this::update);
         return null;
     }
 
