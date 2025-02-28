@@ -147,11 +147,11 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         } else {
             cypher.append(columns.stream().map(col -> "e." + col).collect(Collectors.joining(", ")));
         }
-        if (query.limit() > 0) {
-            cypher.append(" LIMIT ").append(query.limit());
-        }
         if (query.skip() > 0) {
             cypher.append(" SKIP ").append(query.skip());
+        }
+        if (query.limit() > 0) {
+            cypher.append(" LIMIT ").append(query.limit());
         }
 
         LOGGER.fine("Executing Cypher Query: " + cypher);
