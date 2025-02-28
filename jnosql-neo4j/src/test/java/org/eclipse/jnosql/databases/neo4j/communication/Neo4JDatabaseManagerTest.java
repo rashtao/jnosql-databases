@@ -121,11 +121,11 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         var communicationEntity = entityManager.insert(entity);
         var id = communicationEntity.find("_id").orElseThrow().get();
-        var query = SelectQuery.select("name").from(COLLECTION_NAME).where("_id").eq(id).build();
+        var query = SelectQuery.select("name", "city").from(COLLECTION_NAME).where("_id").eq(id).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
-            softly.assertThat(entities).allMatch(e -> e.find("_id").isPresent());
+            softly.assertThat(entities.get(0).elements()).hasSize(2);
         });
     }
 

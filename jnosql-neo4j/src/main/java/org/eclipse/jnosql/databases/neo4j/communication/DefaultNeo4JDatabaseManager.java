@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
@@ -144,7 +145,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         if (columns.isEmpty()) {
             cypher.append("e ");
         } else {
-            cypher.append(String.join(", ", columns));
+            cypher.append(columns.stream().map(col -> "e." + col).collect(Collectors.joining(", ")));
         }
         if (query.limit() > 0) {
             cypher.append(" LIMIT ").append(query.limit());
@@ -211,20 +212,15 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         List<Element> elements = new ArrayList<>();
 
         for (String key : record.keys()) {
+            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
             if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
                 record.get(key).asNode().asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
             } else {
-                elements.add(Element.of(key, record.get(key).asObject()));
+                elements.add(Element.of(fieldName, record.get(key).asObject()));
             }
         }
-
-        if (elements.isEmpty()) {
-            throw new CommunicationException("No valid entity found in the record");
-        }
-
         return CommunicationEntity.of(entityName, elements);
     }
-
     private String getConditionOperator(Condition condition) {
         return switch (condition) {
             case EQUALS -> "=";
