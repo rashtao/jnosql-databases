@@ -111,7 +111,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     public Iterable<CommunicationEntity> update(Iterable<CommunicationEntity> entities) {
         Objects.requireNonNull(entities, "entities is required");
         entities.forEach(this::update);
-        return null;
+        return entities;
     }
 
     @Override
