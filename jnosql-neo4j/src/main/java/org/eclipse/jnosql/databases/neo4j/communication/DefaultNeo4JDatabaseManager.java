@@ -141,7 +141,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
     @Override
     public void close() {
-        LOGGER.fine("Closing the Neo4J session");
+        LOGGER.fine("Closing the Neo4J session, the database name is: " + database);
         this.session.close();
     }
 
