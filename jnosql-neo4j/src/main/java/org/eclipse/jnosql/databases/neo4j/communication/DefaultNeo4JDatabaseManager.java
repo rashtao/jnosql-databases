@@ -16,6 +16,7 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import jakarta.data.Sort;
 import org.eclipse.jnosql.communication.CommunicationException;
 import org.eclipse.jnosql.communication.Condition;
 import org.eclipse.jnosql.communication.TypeReference;
@@ -152,6 +153,13 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
         if (query.limit() > 0) {
             cypher.append(" LIMIT ").append(query.limit());
+        }
+        List<Sort<?>> sorts = query.sorts();
+        if (!sorts.isEmpty()) {
+            cypher.append(" ORDER BY ");
+            cypher.append(sorts.stream()
+                    .map(order -> "n." + order.property() + " " + (order.isAscending() ? "ASC" : "DESC"))
+                    .collect(Collectors.joining(", ")));
         }
 
         LOGGER.fine("Executing Cypher Query: " + cypher);
