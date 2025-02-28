@@ -22,6 +22,7 @@ import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
+import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.eclipse.jnosql.communication.semistructured.DeleteQuery.delete;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -98,6 +100,19 @@ class Neo4JDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result).allMatch(e -> e.find("name").orElseThrow().get().equals("Lucas"));
+        });
+    }
+
+    @Test
+    void shouldSelectById() {
+        var entity = getEntity();
+        var communicationEntity = entityManager.insert(entity);
+        var id = communicationEntity.find("_id").orElseThrow().get();
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("_id").eq(id).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(1);
+            softly.assertThat(entities).allMatch(e -> e.find("_id").isPresent());
         });
     }
 
