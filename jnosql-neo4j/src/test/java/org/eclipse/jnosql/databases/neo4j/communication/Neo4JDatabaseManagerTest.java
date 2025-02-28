@@ -85,6 +85,22 @@ class Neo4JDatabaseManagerTest {
         assertTrue(result.find("name").isPresent());
     }
 
+    @Test
+    void shouldUpdateEntities() {
+        var entity = getEntity();
+        var communicationEntity = entityManager.insert(entity);
+        var id = communicationEntity.find("_id").orElseThrow().get();
+        var update = CommunicationEntity.of(COLLECTION_NAME);
+        update.add("_id", id);
+        update.add("name", "Lucas");
+
+        var result = entityManager.update(List.of(update));
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(1);
+            softly.assertThat(result).allMatch(e -> e.find("name").orElseThrow().get().equals("Lucas"));
+        });
+    }
+
     @BeforeEach
     void beforeEach() {
         delete().from(COLLECTION_NAME).delete(entityManager);
