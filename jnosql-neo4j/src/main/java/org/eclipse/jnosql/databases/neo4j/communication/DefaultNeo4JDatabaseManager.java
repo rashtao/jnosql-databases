@@ -139,6 +139,13 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             createWhereClause(cypher, c, parameters);
         });
 
+        cypher.append(" RETURN ");
+        List<String> columns = query.columns();
+        if (columns.isEmpty()) {
+            cypher.append("e ");
+        } else {
+            cypher.append(String.join(", ", columns));
+        }
         if (query.limit() > 0) {
             cypher.append(" LIMIT ").append(query.limit());
         }
@@ -148,8 +155,8 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
         LOGGER.fine("Executing Cypher Query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
-            return tx.run(cypher.toString(), Values.parameters(parameters))
-                    .list(record -> CommunicationEntity.of(query.name(), extractRecord(record)))
+            return tx.run(cypher.toString(), Values.parameters(flattenMap(parameters)))
+                    .list(record -> extractEntity(query.name(), record, columns.isEmpty()))
                     .stream();
         }
     }
@@ -200,25 +207,37 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
     }
 
-    private List<Element> extractRecord(org.neo4j.driver.Record record) {
+    private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
         List<Element> elements = new ArrayList<>();
-        record.keys().forEach(key -> elements.add(Element.of(key, record.get(key).asObject())));
-        return elements;
+
+        for (String key : record.keys()) {
+            if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
+                record.get(key).asNode().asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+            } else {
+                elements.add(Element.of(key, record.get(key).asObject()));
+            }
+        }
+
+        if (elements.isEmpty()) {
+            throw new CommunicationException("No valid entity found in the record");
+        }
+
+        return CommunicationEntity.of(entityName, elements);
     }
 
     private String getConditionOperator(Condition condition) {
-        switch (condition) {
-            case EQUALS: return "=";
-            case GREATER_THAN: return ">";
-            case GREATER_EQUALS_THAN: return ">=";
-            case LESSER_THAN: return "<";
-            case LESSER_EQUALS_THAN: return "<=";
-            case LIKE: return "CONTAINS";
-            case IN: return "IN";
-            case AND: return "AND";
-            case OR: return "OR";
-            default: throw new CommunicationException("Unsupported operator: " + condition);
-        }
+        return switch (condition) {
+            case EQUALS -> "=";
+            case GREATER_THAN -> ">";
+            case GREATER_EQUALS_THAN -> ">=";
+            case LESSER_THAN -> "<";
+            case LESSER_EQUALS_THAN -> "<=";
+            case LIKE -> "CONTAINS";
+            case IN -> "IN";
+            case AND -> "AND";
+            case OR -> "OR";
+            default -> throw new CommunicationException("Unsupported operator: " + condition);
+        };
     }
 
 
