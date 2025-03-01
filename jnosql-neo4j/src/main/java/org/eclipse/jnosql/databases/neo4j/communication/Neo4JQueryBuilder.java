@@ -47,7 +47,8 @@ public enum Neo4JQueryBuilder {
         if (!columns.isEmpty()) {
             cypher.append(" SET ");
             cypher.append(columns.stream()
-                    .map(col -> "e." + translateField(col) + " = NULL")
+                    .map(this::translateField)
+                    .map(col -> col + " = NULL")
                     .collect(Collectors.joining(", ")));
         } else {
             cypher.append(" DELETE e");
@@ -95,7 +96,7 @@ public enum Neo4JQueryBuilder {
     private void createWhereClause(StringBuilder cypher, CriteriaCondition condition, Map<String, Object> parameters) {
         Element element = condition.element();
         String fieldName = element.name();
-        String queryField = translateField(fieldName); // Correct field translation
+        String queryField = translateField(fieldName);
 
         switch (condition.condition()) {
             case EQUALS:
@@ -134,8 +135,15 @@ public enum Neo4JQueryBuilder {
     }
 
     private String translateField(String field) {
-        return INTERNAL_ID.equals(field) ? "elementId(e)" : "e." + field;
+        if (INTERNAL_ID.equals(field)) {
+            return "elementId(e)";
+        }
+        if (field.startsWith("e.")) {
+            return field;
+        }
+        return "e." + field;
     }
+
 
     private String getConditionOperator(Condition condition) {
         return switch (condition) {
