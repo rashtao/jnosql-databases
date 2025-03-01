@@ -179,10 +179,12 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(startNodeId, "Start node ID is required");
         Objects.requireNonNull(relationship, "Relationship type is required");
 
-        String cypher = "MATCH (startNode { _id: $_id })-[r:" + relationship + "*1.." + depth + "]-(endNode) RETURN endNode";
+        String cypher = "MATCH (startNode) WHERE elementId(startNode) = $elementId " +
+                "MATCH (startNode)-[r:" + relationship + "*1.." + depth + "]-(endNode) " +
+                "RETURN endNode";
 
         try (Transaction tx = session.beginTransaction()) {
-            Stream<CommunicationEntity> result = tx.run(cypher, Values.parameters("_id", startNodeId))
+            Stream<CommunicationEntity> result = tx.run(cypher, Values.parameters("elementId", startNodeId))
                     .list(record -> extractEntity("TraversalResult", record, false))
                     .stream();
             LOGGER.fine("Executed traversal query: " + cypher);
@@ -197,13 +199,21 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(target, "Target entity is required");
         Objects.requireNonNull(relationshipType, "Relationship type is required");
 
-        String cypher = "MATCH (s { _id: $_id_source }), (t { _id: $_id_target }) CREATE (s)-[:" + relationshipType + "]->(t)";
+        String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
+                "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                "CREATE (s)-[r:" + relationshipType + "]->(t)";
 
         try (Transaction tx = session.beginTransaction()) {
-            var sourceId = source.find(ID).orElseThrow(() -> new EdgeCommunicationException("The source entity should have the " +ID + " property")).get();
-            var targetId = target.find(ID).orElseThrow(() -> new EdgeCommunicationException("The target entity should have the " +ID + " property")).get();
-            tx.run(cypher, Values.parameters("_id_source", sourceId,
-                    "_id_target", targetId));
+            var sourceId = source.find(ID).orElseThrow(() ->
+                    new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
+            var targetId = target.find(ID).orElseThrow(() ->
+                    new EdgeCommunicationException("The target entity should have the " + ID + " property")).get();
+
+            tx.run(cypher, Values.parameters(
+                    "sourceElementId", sourceId,
+                    "targetElementId", targetId
+            ));
+
             LOGGER.fine("Created edge: " + cypher);
             tx.commit();
         }
@@ -215,17 +225,25 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(target, "Target entity is required");
         Objects.requireNonNull(relationshipType, "Relationship type is required");
 
-        String cypher = "MATCH (s { _id: $_id_source })-[r:" + relationshipType + "]-(t { _id: $_id_target }) DELETE r";
+        String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
+                "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                "MATCH (s)-[r:" + relationshipType + "]-(t) DELETE r";
 
-        var sourceId = source.find(ID).orElseThrow(() -> new EdgeCommunicationException("The source entity should have the " +ID + " property")).get();
-        var targetId = target.find(ID).orElseThrow(() -> new EdgeCommunicationException("The target entity should have the " +ID + " property")).get();
+        var sourceId = source.find(ID).orElseThrow(() ->
+                new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
+        var targetId = target.find(ID).orElseThrow(() ->
+                new EdgeCommunicationException("The target entity should have the " + ID + " property")).get();
 
         try (Transaction tx = session.beginTransaction()) {
-            tx.run(cypher, Values.parameters("_id_source", sourceId, "_id_target", targetId));
+            tx.run(cypher, Values.parameters(
+                    "sourceElementId", sourceId,
+                    "targetElementId", targetId
+            ));
             LOGGER.fine("Removed edge: " + cypher);
             tx.commit();
         }
     }
+
 
 
     @Override
