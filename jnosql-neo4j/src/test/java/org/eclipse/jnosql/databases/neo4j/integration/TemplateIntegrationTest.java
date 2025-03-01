@@ -19,7 +19,6 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.Optional;
 
-import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.MATCHES;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
