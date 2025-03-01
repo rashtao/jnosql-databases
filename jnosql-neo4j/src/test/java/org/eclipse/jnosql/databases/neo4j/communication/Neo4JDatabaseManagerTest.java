@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Neo4JDatabaseManagerTest {
 
     public static final String COLLECTION_NAME = "person";
-    private static DatabaseManager entityManager;
+    private static Neo4JDatabaseManager entityManager;
 
     @BeforeAll
     public static void setUp() {
@@ -48,6 +48,7 @@ class Neo4JDatabaseManagerTest {
 
     @BeforeEach
     void beforeEach() {
+        removeAllEdges();
         delete().from(COLLECTION_NAME).delete(entityManager);
     }
 
@@ -174,7 +175,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldSelectOrderAsc(){
+    void shouldSelectOrderAsc() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -221,7 +222,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldSelectFindNotEquals(){
+    void shouldSelectFindNotEquals() {
         var entity = getEntity();
         entityManager.insert(entity);
         entityManager.insert(getEntity());
@@ -247,7 +248,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)> index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) > index);
         });
     }
 
@@ -263,7 +264,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(6);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)>= index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) >= index);
         });
     }
 
@@ -295,7 +296,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) <= index);
         });
     }
 
@@ -346,7 +347,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) <= index);
         });
     }
 
@@ -403,7 +404,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) <= index);
         });
     }
 
@@ -421,7 +422,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(4);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)< index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) < index);
         });
     }
 
@@ -439,7 +440,7 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(6);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)>= index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) >= index);
         });
     }
 
@@ -457,7 +458,90 @@ class Neo4JDatabaseManagerTest {
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
-            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)> index);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) > index);
+        });
+    }
+
+    @Test
+    void shouldExecuteCustomQuery() {
+        var entity = getEntity();
+        entityManager.insert(entity);
+
+        String cypher = "MATCH (e:person) RETURN e";
+        var result = entityManager.executeQuery(cypher, new HashMap<>()).toList();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isNotEmpty();
+            softly.assertThat(result.get(0).find("name")).isPresent();
+        });
+    }
+
+    @Test
+    void shouldTraverseGraph() {
+        var person1 = getEntity();
+        var person2 = getEntity();
+        var person3 = getEntity();
+
+        entityManager.insert(person1);
+        entityManager.insert(person2);
+        entityManager.insert(person3);
+
+        entityManager.edge(person1, "FRIEND", person2);
+        entityManager.edge(person2, "FRIEND", person3);
+
+        var startNodeId = person1.find("_id").orElseThrow().get();
+        var result = entityManager.traverse(startNodeId.toString(), "FRIEND", 2).toList();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(2);
+            softly.assertThat(result).allMatch(e -> e.find("_id").isPresent());
+        });
+        entityManager.remove(person1, "FRIEND", person2);
+        entityManager.remove(person2, "FRIEND", person3);
+    }
+
+    @Test
+    void shouldCreateEdge() {
+        var person1 = getEntity();
+        var person2 = getEntity();
+
+        entityManager.insert(person1);
+        entityManager.insert(person2);
+
+        entityManager.edge(person1, "FRIEND", person2);
+
+        String cypher = "MATCH (p1:person { _id: $_id1 })-[r:FRIEND]-(p2:person { _id: $_id2 }) RETURN r";
+        Map<String, Object> parameters = Map.of(
+                "_id1", person1.find("_id").orElseThrow().get(),
+                "_id2", person2.find("_id").orElseThrow().get()
+        );
+
+        var result = entityManager.executeQuery(cypher, parameters).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isNotEmpty();
+        });
+        entityManager.remove(person1, "FRIEND", person2);
+    }
+
+    @Test
+    void shouldRemoveEdge() {
+        var person1 = getEntity();
+        var person2 = getEntity();
+
+        entityManager.insert(person1);
+        entityManager.insert(person2);
+
+        entityManager.edge(person1, "FRIEND", person2);
+
+        var startNodeId = person1.find("_id").orElseThrow().get();
+        var targetNodeId = person2.find("_id").orElseThrow().get();
+
+        String cypher = "MATCH (p1:person { _id: $_id1 })-[r:FRIEND]-(p2:person { _id: $_id2 }) RETURN r";
+        Map<String, Object> parameters = Map.of("_id1", startNodeId, "_id2", targetNodeId);
+
+        var result = entityManager.executeQuery(cypher, parameters).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isEmpty();
         });
     }
 
@@ -473,5 +557,15 @@ class Neo4JDatabaseManagerTest {
         List<Element> documents = Elements.of(map);
         documents.forEach(entity::add);
         return entity;
+    }
+
+    private void removeAllEdges() {
+        String cypher = "MATCH ()-[r]-() DELETE r";
+
+        try {
+            entityManager.executeQuery(cypher, new HashMap<>()).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to remove edges before node deletion", e);
+        }
     }
 }

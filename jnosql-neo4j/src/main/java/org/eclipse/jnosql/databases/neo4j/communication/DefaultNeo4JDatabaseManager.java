@@ -199,8 +199,10 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         String cypher = "MATCH (s { _id: $_id_source }), (t { _id: $_id_target }) CREATE (s)-[:" + relationshipType + "]->(t)";
 
         try (Transaction tx = session.beginTransaction()) {
-            tx.run(cypher, Values.parameters("_id_source", source.find("_id").orElseThrow(),
-                    "_id_target", target.find("_id").orElseThrow()));
+            var sourceId = source.find(ID).orElseThrow(() -> new EdgeCommunicationException("The source entity should have the " +ID + " property")).get();
+            var targetId = target.find(ID).orElseThrow(() -> new EdgeCommunicationException("The target entity should have the " +ID + " property")).get();
+            tx.run(cypher, Values.parameters("_id_source", sourceId,
+                    "_id_target", targetId));
             LOGGER.fine("Created edge: " + cypher);
             tx.commit();
         }
@@ -214,9 +216,11 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
         String cypher = "MATCH (s { _id: $_id_source })-[r:" + relationshipType + "]-(t { _id: $_id_target }) DELETE r";
 
+        var sourceId = source.find(ID).orElseThrow(() -> new EdgeCommunicationException("The source entity should have the " +ID + " property")).get();
+        var targetId = target.find(ID).orElseThrow(() -> new EdgeCommunicationException("The target entity should have the " +ID + " property")).get();
+
         try (Transaction tx = session.beginTransaction()) {
-            tx.run(cypher, Values.parameters("_id_source", source.find("_id").orElseThrow(),
-                    "_id_target", target.find("_id").orElseThrow()));
+            tx.run(cypher, Values.parameters("_id_source", sourceId, "_id_target", targetId));
             LOGGER.fine("Removed edge: " + cypher);
             tx.commit();
         }
