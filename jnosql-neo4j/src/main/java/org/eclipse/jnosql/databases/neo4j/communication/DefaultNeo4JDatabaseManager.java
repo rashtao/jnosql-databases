@@ -297,15 +297,17 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         List<Element> elements = new ArrayList<>();
 
         for (String key : record.keys()) {
-            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
-            if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
-                var node = record.get(key).asNode();
+            var value = record.get(key);
+
+            if (value.hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
+                var node = value.asNode();
                 node.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
-                elements.add(Element.of(ID, node.elementId()));
+                elements.add(Element.of("_id", node.elementId()));  // Ensuring correct ID retrieval
             } else {
-                elements.add(Element.of(fieldName, record.get(key).asObject()));
+                elements.add(Element.of(key, value.asObject())); // Handle normal properties
             }
         }
+
         return CommunicationEntity.of(entityName, elements);
     }
 }

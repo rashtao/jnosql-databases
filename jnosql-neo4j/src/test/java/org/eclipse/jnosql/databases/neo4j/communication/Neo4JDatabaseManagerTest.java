@@ -473,6 +473,8 @@ class Neo4JDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(result).isNotEmpty();
             softly.assertThat(result.get(0).find("name")).isPresent();
+            softly.assertThat(result.get(0).find("city")).isPresent();
+            softly.assertThat(result.get(0).find("_id")).isPresent(); // Ensuring _id exists
         });
     }
 
