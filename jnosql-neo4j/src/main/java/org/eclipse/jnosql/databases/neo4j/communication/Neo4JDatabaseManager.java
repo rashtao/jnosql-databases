@@ -16,7 +16,11 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
+
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * This specialization of {@link DatabaseManager} is designed for Neo4j databases.
@@ -46,4 +50,35 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
  * @see DatabaseManager
  */
 public interface Neo4JDatabaseManager extends DatabaseManager {
+
+    /**
+     * A specialized {@link DatabaseManager
+
+    /**
+     * Executes a custom Cypher query with parameters and returns a stream of {@link CommunicationEntity}.
+     *
+     * @param cypher     the Cypher query to execute.
+     * @param parameters the parameters to bind to the query.
+     * @return a stream of {@link CommunicationEntity} matching the query result.
+     */
+    Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
+
+    /**
+     * Traverses the graph starting from a node and follows the specified relationship type up to a given depth.
+     *
+     * @param startNodeId   the ID of the starting node.
+     * @param relationship  the type of relationship to traverse.
+     * @param depth         the traversal depth limit.
+     * @return a stream of {@link CommunicationEntity} representing related nodes.
+     */
+    Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth);
+
+    /**
+     * Creates a relationship between two {@link CommunicationEntity} nodes.
+     *
+     * @param source           the source entity.
+     * @param target           the target entity.
+     * @param relationshipType the type of relationship to create.
+     */
+    void edge(CommunicationEntity source, CommunicationEntity target, String relationshipType);
 }
