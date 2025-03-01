@@ -16,6 +16,20 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
+/**
+ * Exception thrown when an issue occurs with edge (relationship) operations in Neo4j.
+ * <p>
+ * This exception is raised in cases where an edge cannot be created or removed
+ * due to missing nodes, constraint violations, or other graph-related inconsistencies.
+ * </p>
+ *
+ * <h3>Common Scenarios:</h3>
+ * <ul>
+ *     <li>Attempting to create an edge where either the source or target entity does not exist.</li>
+ *     <li>Removing an edge that is not found in the graph.</li>
+ *     <li>Trying to enforce an invalid relationship constraint.</li>
+ * </ul>
+ */
 public class EdgeCommunicationException extends Neo4JCommunicationException{
 
     public EdgeCommunicationException(String message) {
