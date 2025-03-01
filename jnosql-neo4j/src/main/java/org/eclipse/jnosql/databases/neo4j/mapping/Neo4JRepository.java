@@ -18,10 +18,30 @@ package org.eclipse.jnosql.databases.neo4j.mapping;
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
- * The Cassandra {@link NoSQLRepository}
+ * A repository interface for interacting with Neo4J databases using the Jakarta Data API.
+ * <p>
+ * This interface extends {@link NoSQLRepository}, providing
+ * generic CRUD operations for entities stored in a Neo4J database.
+ * It also allows defining custom Cypher queries using the {@link Cypher} annotation.
+ * </p>
  *
- * @param <T> the entity type
- * @param <K> the id entity type
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * @Repository
+ * public interface PersonRepository extends Neo4JRepository<Person, String> {
+ *
+ *     @Cypher("MATCH (p:Person) WHERE p.name = $name RETURN p")
+ *     List<Person> findByName(@Param("name") String name);
+ * }
+ * }
+ * </pre>
+ *
+ * @param <T> the entity type representing nodes in the Neo4J database.
+ * @param <K> the entity ID type, typically a {@link String} corresponding to the element ID.
+ *
+ * @see NoSQLRepository
+ * @see Cypher
  */
 public interface Neo4JRepository<T, K> extends NoSQLRepository<T, K> {
 
