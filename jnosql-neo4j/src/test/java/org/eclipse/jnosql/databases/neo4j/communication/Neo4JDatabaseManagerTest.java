@@ -20,6 +20,7 @@ import net.datafaker.Faker;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
+import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
@@ -35,6 +36,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.eclipse.jnosql.communication.semistructured.DeleteQuery.delete;
+import static org.eclipse.jnosql.communication.semistructured.SelectQuery.select;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Neo4JDatabaseManagerTest {
@@ -115,7 +117,7 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         var communicationEntity = entityManager.insert(entity);
         var id = communicationEntity.find("_id").orElseThrow().get();
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("_id").eq(id).build();
+        var query = select().from(COLLECTION_NAME).where("_id").eq(id).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
@@ -128,7 +130,7 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         var communicationEntity = entityManager.insert(entity);
         var id = communicationEntity.find("_id").orElseThrow().get();
-        var query = SelectQuery.select("name", "city").from(COLLECTION_NAME).where("_id").eq(id).build();
+        var query = select("name", "city").from(COLLECTION_NAME).where("_id").eq(id).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
@@ -143,7 +145,7 @@ class Neo4JDatabaseManagerTest {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
-        var query = SelectQuery.select().from(COLLECTION_NAME).limit(5).build();
+        var query = select().from(COLLECTION_NAME).limit(5).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
@@ -155,7 +157,7 @@ class Neo4JDatabaseManagerTest {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
-        var query = SelectQuery.select().from(COLLECTION_NAME).skip(5).build();
+        var query = select().from(COLLECTION_NAME).skip(5).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
@@ -167,7 +169,7 @@ class Neo4JDatabaseManagerTest {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
-        var query = SelectQuery.select().from(COLLECTION_NAME).skip(5).limit(2).build();
+        var query = select().from(COLLECTION_NAME).skip(5).limit(2).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(2);
@@ -182,7 +184,7 @@ class Neo4JDatabaseManagerTest {
             entityManager.insert(entity);
         }
 
-        var query = SelectQuery.select().from(COLLECTION_NAME).orderBy("index").asc().build();
+        var query = select().from(COLLECTION_NAME).orderBy("index").asc().build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(10);
@@ -199,7 +201,7 @@ class Neo4JDatabaseManagerTest {
             entity.add("index", index);
             entityManager.insert(entity);
         }
-        var query = SelectQuery.select().from(COLLECTION_NAME).orderBy("index").desc().build();
+        var query = select().from(COLLECTION_NAME).orderBy("index").desc().build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(10);
@@ -213,7 +215,7 @@ class Neo4JDatabaseManagerTest {
     void shouldSelectFindEquals() {
         var entity = getEntity();
         entityManager.insert(entity);
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").eq(entity.find("name").orElseThrow().get()).build();
+        var query = select().from(COLLECTION_NAME).where("name").eq(entity.find("name").orElseThrow().get()).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
@@ -227,7 +229,7 @@ class Neo4JDatabaseManagerTest {
         entityManager.insert(entity);
         entityManager.insert(getEntity());
         Object name = entity.find("name").orElseThrow().get();
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").not()
+        var query = select().from(COLLECTION_NAME).where("name").not()
                 .eq(name).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
@@ -244,7 +246,7 @@ class Neo4JDatabaseManagerTest {
             entityManager.insert(entity);
         }
         var index = 4;
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").gt(index).build();
+        var query = select().from(COLLECTION_NAME).where("index").gt(index).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
@@ -260,7 +262,7 @@ class Neo4JDatabaseManagerTest {
             entityManager.insert(entity);
         }
         var index = 4;
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").gte(index).build();
+        var query = select().from(COLLECTION_NAME).where("index").gte(index).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(6);
@@ -276,7 +278,7 @@ class Neo4JDatabaseManagerTest {
             entityManager.insert(entity);
         }
         var index = 4;
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").lt(index).build();
+        var query = select().from(COLLECTION_NAME).where("index").lt(index).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(4);
@@ -292,7 +294,7 @@ class Neo4JDatabaseManagerTest {
             entityManager.insert(entity);
         }
         var index = 4;
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").lte(index).build();
+        var query = select().from(COLLECTION_NAME).where("index").lte(index).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(5);
@@ -307,7 +309,7 @@ class Neo4JDatabaseManagerTest {
             entity.add("index", index);
             entityManager.insert(entity);
         }
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").in(List.of(1, 2, 3)).build();
+        var query = select().from(COLLECTION_NAME).where("index").in(List.of(1, 2, 3)).build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(3);
@@ -321,7 +323,7 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         entity.add("name", "Ada Lovelace");
         entityManager.insert(entity);
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").like("Love").build();
+        var query = select().from(COLLECTION_NAME).where("name").like("Love").build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
@@ -340,7 +342,7 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         entity.add("index", index);
         entityManager.insert(entity);
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index")
+        var query = select().from(COLLECTION_NAME).where("index")
                 .gte(index).and("name")
                 .eq(entity.find("name")
                         .orElseThrow().get()).build();
@@ -364,7 +366,7 @@ class Neo4JDatabaseManagerTest {
         entityManager.insert(entity);
         var name = entity.find("name")
                 .orElseThrow().get(String.class);
-        var query = SelectQuery.select().from(COLLECTION_NAME).where("index")
+        var query = select().from(COLLECTION_NAME).where("index")
                 .gte(index).or("name")
                 .eq(name).build();
         var entities = entityManager.select(query).toList();
@@ -375,6 +377,57 @@ class Neo4JDatabaseManagerTest {
             softly.assertThat(entities).allMatch(get.or(eq));
         });
     }
+
+    @Test
+    void shouldDeleteById() {
+        var entity = getEntity();
+        var communicationEntity = entityManager.insert(entity);
+        var id = communicationEntity.find("_id").orElseThrow().get();
+        var deleteQuery = delete().from(COLLECTION_NAME).where("_id").eq(id).build();
+        entityManager.delete(deleteQuery);
+        var query = select().from(COLLECTION_NAME).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).isEmpty();
+        });
+    }
+
+    @Test
+    void shouldDeleteGreaterThan() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var deleteQuery = delete().from(COLLECTION_NAME).where("index").gt(index).build();
+        entityManager.delete(deleteQuery);
+        var query = select().from(COLLECTION_NAME).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+        });
+    }
+
+    @Test
+    void shouldDeleteGreaterThanEqual() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var deleteQuery = delete().from(COLLECTION_NAME).where("index").gte(index).build();
+        entityManager.delete(deleteQuery);
+        var query = select().from(COLLECTION_NAME).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(4);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)< index);
+        });
+    }
+
 
 
     private CommunicationEntity getEntity() {
