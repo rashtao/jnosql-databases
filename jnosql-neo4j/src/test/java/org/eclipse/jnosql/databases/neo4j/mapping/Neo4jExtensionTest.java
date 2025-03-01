@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 @AddPackages(value = {Converters.class, Neo4JRepository.class, EntityConverter.class})
 @AddExtensions({EntityMetadataExtension.class, Neo4JExtension.class})
 @AddPackages(Reflections.class)
-public class CassandraExtensionTest {
+public class Neo4jExtensionTest {
 
 
     @Inject
