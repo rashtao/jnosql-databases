@@ -65,10 +65,12 @@ public enum Neo4JQueryBuilder {
             createWhereClause(cypher, c, parameters);
         });
 
-        query.sorts().forEach(sort -> cypher.append(" ORDER BY e.")
-                .append(translateField(sort.property()))
-                .append(" ").append(sort.isAscending() ? "ASC" : "DESC"));
-
+        if (!query.sorts().isEmpty()) {
+            cypher.append(" ORDER BY ");
+            cypher.append(query.sorts().stream()
+                    .map(sort -> "e." + sort.property() + (sort.isAscending() ? " ASC" : " DESC"))
+                    .collect(Collectors.joining(", "))); // Fix double "e."
+        }
         if (query.skip() > 0) {
             cypher.append(" SKIP ").append(query.skip());
         }
