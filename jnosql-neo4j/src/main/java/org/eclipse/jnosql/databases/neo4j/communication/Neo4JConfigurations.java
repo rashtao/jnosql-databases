@@ -61,7 +61,13 @@ public enum Neo4JConfigurations implements Supplier<String> {
      * The password for authentication.
      * Example: "password123"
      */
-    PASSWORD("jnosql.neo4j.password");
+    PASSWORD("jnosql.neo4j.password"),
+
+    /**
+     * The database name.
+     * Example: "library"
+     */
+    DATABASE("jnosql.neo4j.database");
 
     private final String value;
 
