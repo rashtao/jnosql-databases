@@ -92,7 +92,7 @@ public class Edge<T, E> {
                 '}';
     }
 
-    static <T, E> Edge<T, E> of(T source, E target, String relationship) {
+    static <T, E> Edge<T, E> of(T source, String relationship, E target) {
         return new Edge<>(source, target, relationship);
     }
 }

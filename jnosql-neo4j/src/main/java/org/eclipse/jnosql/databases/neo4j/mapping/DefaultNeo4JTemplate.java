@@ -14,7 +14,6 @@ import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -66,6 +65,7 @@ public class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate impleme
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Stream<T> traverse(String startNodeId, String relationship, int depth) {
         Objects.requireNonNull(startNodeId, "startNodeId is required");
@@ -75,35 +75,69 @@ public class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate impleme
     }
 
     @Override
-    public <T, E> void edge(T source, Supplier<String> relationship, E target) {
+    public <T, E> Edge<T, E> edge(T source, Supplier<String> relationship, E target) {
         Objects.requireNonNull(source, "source is required");
         Objects.requireNonNull(relationship, "relationship is required");
         Objects.requireNonNull(target, "target is required");
-        edge(source, relationship.get(), target);
+       return edge(source, relationship.get(), target);
     }
 
-
+    @SuppressWarnings("unchecked")
     @Override
-    public <T, E> void edge(T source, String relationshipType, E target) {
+    public <T, E> Edge<T, E> edge(T source, String relationshipType, E target) {
         Objects.requireNonNull(relationshipType, "relationshipType is required");
         Objects.requireNonNull(source, "source is required");
         Objects.requireNonNull(target, "target is required");
 
-         this.find(source.getClass(), source);
-        this.find(target.getClass(), target);
+        T findSource = this.find((Class<T>)source.getClass(), source).orElseGet(() ->{
+         LOGGER.fine("There is not entity to source: " + source + " inserting the entity");
+         return this.insert(source);
+        });
 
+        E findTarget = this.find((Class<E>)target.getClass(), source).orElseGet(() ->{
+            LOGGER.fine("There is not entity to target: " + target + " inserting the entity");
+            return this.insert(target);
+        });
 
+        var sourceCommunication = this.converter.toCommunication(findSource);
+        var targetCommunication = this.converter.toCommunication(findTarget);
+        LOGGER.fine(() -> "creating an edge from " + sourceCommunication + " to " + targetCommunication + " with the relationship: " + relationshipType);
+        manager.get().edge(sourceCommunication, relationshipType, targetCommunication);
+        return Edge.of(findSource, relationshipType, findTarget);
     }
 
 
-
-    @Override
-    public <T, E> void remove(T source, String relationshipType, E target) {
-
-    }
 
     @Override
     public <T, E> void remove(T source, Supplier<String> relationship, E target) {
+        Objects.requireNonNull(source, "source is required");
+        Objects.requireNonNull(relationship, "relationship is required");
+        Objects.requireNonNull(target, "target is required");
+        this.remove(source, relationship.get(), target);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T, E> void remove(T source, String relationshipType, E target) {
+        Objects.requireNonNull(source, "source is required");
+        Objects.requireNonNull(relationshipType, "relationshipType is required");
+        Objects.requireNonNull(target, "target is required");
+
+        T findSource = this.find((Class<T>)source.getClass(), source).orElseGet(() ->{
+            LOGGER.fine("There is not entity to source: " + source + " inserting the entity");
+            return this.insert(source);
+        });
+
+        E findTarget = this.find((Class<E>)target.getClass(), source).orElseGet(() ->{
+            LOGGER.fine("There is not entity to target: " + target + " inserting the entity");
+            return this.insert(target);
+        });
+
+        var sourceCommunication = this.converter.toCommunication(findSource);
+        var targetCommunication = this.converter.toCommunication(findTarget);
+
+        LOGGER.fine(() -> "removing an edge from " + sourceCommunication + " to " + targetCommunication + " with the relationship: " + relationshipType);
+        manager.get().remove(sourceCommunication, relationshipType, targetCommunication);
 
     }
 

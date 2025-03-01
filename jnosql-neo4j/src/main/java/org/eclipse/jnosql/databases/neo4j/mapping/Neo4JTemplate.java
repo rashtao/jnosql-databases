@@ -73,9 +73,10 @@ public interface Neo4JTemplate extends SemiStructuredTemplate {
      * @param target The target entity.
      * @param <T> The entity type representing the source node.
      * @param <E> The entity type representing the target node.
+     * @return The created {@link Edge} representing the relationship.
      * @throws NullPointerException if {@code source}, {@code relationshipType}, or {@code target} is null.
      */
-    <T, E> void edge(T source, String relationshipType, E target);
+    <T, E> Edge<T, E> edge(T source, String relationshipType, E target);
 
     /**
      * Creates an edge between two entities using a dynamically provided relationship type.
@@ -85,9 +86,10 @@ public interface Neo4JTemplate extends SemiStructuredTemplate {
      * @param target The target entity.
      * @param <T> The entity type representing the source node.
      * @param <E> The entity type representing the target node.
+     * @return The created {@link Edge} representing the relationship.
      * @throws NullPointerException if {@code source}, {@code relationship}, or {@code target} is null.
      */
-    <T, E> void edge(T source, Supplier<String> relationship, E target);
+    <T, E> Edge<T, E> edge(T source, Supplier<String> relationship, E target);
 
     /**
      * Removes an edge between two entities with the specified relationship type.
