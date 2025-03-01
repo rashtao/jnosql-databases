@@ -61,6 +61,17 @@ public enum Neo4JQueryBuilder {
             createWhereClause(cypher, c, parameters);
         });
 
+        query.sorts().forEach(sort -> cypher.append(" ORDER BY e.").append(sort.property()).append(" ")
+                .append(sort.isAscending() ? "ASC" : "DESC"));
+
+        if (query.skip() > 0) {
+            cypher.append(" SKIP ").append(query.skip());
+        }
+
+        if (query.limit() > 0) {
+            cypher.append(" LIMIT ").append(query.limit());
+        }
+
         cypher.append(" RETURN ");
         List<String> columns = query.columns();
         if (columns.isEmpty()) {
