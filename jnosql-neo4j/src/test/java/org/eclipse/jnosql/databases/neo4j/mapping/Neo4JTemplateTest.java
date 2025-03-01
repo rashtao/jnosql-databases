@@ -11,8 +11,6 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class,  Neo4JTemplate.class})
