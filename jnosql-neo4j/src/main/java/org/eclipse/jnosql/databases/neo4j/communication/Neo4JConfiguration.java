@@ -18,6 +18,7 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.communication.semistructured.DatabaseConfiguration;
+
 import java.util.logging.Logger;
 
 /**

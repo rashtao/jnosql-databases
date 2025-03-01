@@ -18,7 +18,6 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 
 import org.eclipse.jnosql.communication.CommunicationException;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
-import org.neo4j.driver.AuthToken;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
