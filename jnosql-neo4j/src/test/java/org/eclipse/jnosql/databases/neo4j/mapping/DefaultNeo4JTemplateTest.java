@@ -34,6 +34,7 @@ import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.Map;
@@ -108,7 +109,8 @@ class DefaultNeo4JTemplateTest {
         String relationshipType = "FRIENDS";
         Edge<Person, Person> edge = Edge.of(source, relationshipType, target);
 
-        doNothing().when(manager).edge(any(), anyString(), any());
+
+        Mockito.when(manager.insert(Mockito.any(CommunicationEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Edge<Person, Person> result = template.edge(source, relationshipType, target);
 
@@ -135,7 +137,7 @@ class DefaultNeo4JTemplateTest {
         String relationshipType = "FRIENDS";
 
         doNothing().when(manager).remove(any(), anyString(), any());
-
+        Mockito.when(manager.insert(Mockito.any(CommunicationEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
         template.remove(source, relationshipType, target);
         verify(manager).remove(any(), eq(relationshipType), any());
     }
