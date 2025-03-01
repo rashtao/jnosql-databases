@@ -299,6 +299,35 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldFindIn() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").in(List.of(1, 2, 3)).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(3);
+            softly.assertThat(entities).allMatch(e -> Stream.of(1, 2, 3)
+                    .anyMatch(i -> i.equals(e.find("index").orElseThrow().get(Integer.class))));
+        });
+    }
+
+    @Test
+    void shouldLike() {
+        var entity = getEntity();
+        entity.add("name", "Ada Lovelace");
+        entityManager.insert(entity);
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").like("Love").build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(1);
+            softly.assertThat(entities).allMatch(e -> e.find("name").orElseThrow().get().toString().contains("Love"));
+        });
+    }
+
 
     private CommunicationEntity getEntity() {
         Faker faker = new Faker();
