@@ -46,6 +46,11 @@ class Neo4JDatabaseManagerTest {
         entityManager = DatabaseContainer.INSTANCE.get("neo4j");
     }
 
+    @BeforeEach
+    void beforeEach() {
+        delete().from(COLLECTION_NAME).delete(entityManager);
+    }
+
     @Test
     void shouldInsert() {
         var entity = getEntity();
@@ -202,14 +207,6 @@ class Neo4JDatabaseManagerTest {
                     .containsExactly(9L, 8L, 7L, 6L, 5L, 4L, 3L, 2L, 1L, 0L);
         });
     }
-
-    @BeforeEach
-    void beforeEach() {
-        delete().from(COLLECTION_NAME).delete(entityManager);
-    }
-
-
-
 
     private CommunicationEntity getEntity() {
         Faker faker = new Faker();
