@@ -1830,8 +1830,82 @@ SolrTemplate template;
 List<Person> people = template.solr("age:@age AND type:@type AND _entity:@entity", params);
 ----
 
+== Neo4J
 
-=== Graph (Apache Tinkerpop)
+image::https://jnosql.github.io/img/logos/neo4j.png[Neo4J Project,align="center",width=25%,height=25%]
+https://neo4j.com/[Neo4J] is a highly scalable, native graph database designed to manage complex relationships in data. It enables developers to build applications that leverage the power of graph traversal, pattern matching, and high-performance querying using the **Cypher** query language.
+
+This API provides support for **Graph** database operations, including entity persistence, query execution via Cypher, and relationship traversal.
+
+=== How To Install
+
+You can use either the Maven or Gradle dependencies:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.eclipse.jnosql.databases</groupId>
+  <artifactId>jnosql-neo4j</artifactId>
+  <version>1.1.4</version>
+</dependency>
+----
+
+=== Configuration
+
+This API provides the `Neo4JDatabaseConfigurations` class to programmatically establish the credentials. You can configure Neo4J properties using the https://microprofile.io/microprofile-config/[MicroProfile Config] specification.
+
+[cols="2,4"]
+|===
+| Configuration Property | Description
+
+| `jnosql.neo4j.uri` | The connection URI for the Neo4J database. Example: `bolt://localhost:7687`
+| `jnosql.neo4j.username` | The username for authentication.
+| `jnosql.neo4j.password` | The password for authentication.
+| `jnosql.neo4j.database` | The target database name.
+|===
+
+==== Example Using MicroProfile Config
+
+[source,properties]
+----
+jnosql.neo4j.uri=bolt://localhost:7687
+jnosql.neo4j.username=neo4j
+jnosql.neo4j.password=yourpassword
+jnosql.neo4j.database=neo4j
+----
+
+=== Template API
+
+The `Neo4JTemplate` interface extends `GraphTemplate` and allows for dynamic Cypher execution.
+
+[source,java]
+----
+@Inject
+private Neo4JTemplate template;
+
+List<Person> people = template.cypherQuery("MATCH (p:Person) WHERE p.name = $name RETURN p", params);
+var edge = template.edge(otavio, "FRIENDS_WITH", ada);
+----
+
+=== Repository Support
+
+The `Neo4JRepository` interface extends the `NoSQLRepository` interface and enables query execution using the `@Cypher` annotation.
+
+[source,java]
+----
+@Repository
+interface PersonRepository extends Neo4JRepository<Person, String> {
+
+    @Cypher("MATCH (p:Person) RETURN p")
+    List<Person> findAll();
+
+    @Cypher("MATCH (p:Person) WHERE p.name = $name RETURN p")
+    List<Person> findByName(@Param("name") String name);
+}
+----
+
+
+== Graph (Apache Tinkerpop)
 
 Currently, the Jakarta NoSQL doesn't define an API for Graph database types but Eclipse JNoSQL provides a Graph template to explore the specific behavior of this NoSQL type.
 

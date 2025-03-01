@@ -57,15 +57,15 @@ final class DocumentQueryConversor {
             }
             case LIKE -> Filters.regex(document.name(), Pattern.compile(prepareRegexValue(value.toString())));
             case AND -> {
-                List<CriteriaCondition> andList = condition.element().value().get(new TypeReference<>() {
+                List<CriteriaCondition> andConditions = condition.element().value().get(new TypeReference<>() {
                 });
-                yield Filters.and(andList.stream()
+                yield Filters.and(andConditions.stream()
                         .map(DocumentQueryConversor::convert).toList());
             }
             case OR -> {
-                List<CriteriaCondition> orList = condition.element().value().get(new TypeReference<>() {
+                List<CriteriaCondition> orConditions = condition.element().value().get(new TypeReference<>() {
                 });
-                yield Filters.or(orList.stream()
+                yield Filters.or(orConditions.stream()
                         .map(DocumentQueryConversor::convert).toList());
             }
             case BETWEEN -> {
