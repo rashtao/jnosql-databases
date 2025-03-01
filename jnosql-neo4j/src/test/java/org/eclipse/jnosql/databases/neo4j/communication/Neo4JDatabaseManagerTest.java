@@ -208,6 +208,35 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldFindEquals() {
+        var entity = getEntity();
+        entityManager.insert(entity);
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").eq(entity.find("name").orElseThrow().get()).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(1);
+            softly.assertThat(entities).allMatch(e -> e.find("name").isPresent());
+        });
+    }
+
+    @Test
+    void shouldFindNotEquals(){
+        var entity = getEntity();
+        entityManager.insert(entity);
+        entityManager.insert(getEntity());
+        Object name = entity.find("name").orElseThrow().get();
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("name").not()
+                .eq(name).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(1);
+            softly.assertThat(entities).allMatch(e -> !e.find("name").orElseThrow().get().equals(name));
+        });
+    }
+
+
+
     private CommunicationEntity getEntity() {
         Faker faker = new Faker();
 
