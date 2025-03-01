@@ -428,6 +428,41 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldDeleteLesserThan() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var deleteQuery = delete().from(COLLECTION_NAME).where("index").lt(index).build();
+        entityManager.delete(deleteQuery);
+        var query = select().from(COLLECTION_NAME).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(6);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)>= index);
+        });
+    }
+
+    @Test
+    void shouldDeleteLesserThanEqual() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var deleteQuery = delete().from(COLLECTION_NAME).where("index").lte(index).build();
+        entityManager.delete(deleteQuery);
+        var query = select().from(COLLECTION_NAME).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)> index);
+        });
+    }
 
 
     private CommunicationEntity getEntity() {
