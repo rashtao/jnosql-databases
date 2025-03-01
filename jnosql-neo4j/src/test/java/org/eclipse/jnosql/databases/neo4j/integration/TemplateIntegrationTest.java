@@ -13,6 +13,7 @@ import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -41,12 +42,14 @@ public class TemplateIntegrationTest {
     @Inject
     private Neo4JTemplate template;
 
+    @BeforeEach
+    void setUp() {
+        template.delete(Magazine.class).execute();
+    }
+
     @Test
     void shouldFindById() {
-        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(magazine))
-                .isNotNull()
-                .isEqualTo(magazine);
+        Magazine magazine = template.insert(new Magazine(null, "Effective Java", 1));
 
         assertThat(template.find(Magazine.class, magazine.id()))
                 .isNotNull().get().isEqualTo(magazine);
@@ -54,8 +57,8 @@ public class TemplateIntegrationTest {
 
     @Test
     void shouldInsert() {
-        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
-        template.insert(magazine);
+        Magazine magazine = template.insert(new Magazine(null, "Effective Java", 1));
+
         Optional<Magazine> optional = template.find(Magazine.class, magazine.id());
         assertThat(optional).isNotNull().isNotEmpty()
                 .get().isEqualTo(magazine);
@@ -63,10 +66,7 @@ public class TemplateIntegrationTest {
 
     @Test
     void shouldUpdate() {
-        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(magazine))
-                .isNotNull()
-                .isEqualTo(magazine);
+        Magazine magazine = template.insert(new Magazine(null, "Effective Java", 1));
 
         Magazine updated = new Magazine(magazine.id(), magazine.title() + " updated", 2);
 
@@ -81,10 +81,7 @@ public class TemplateIntegrationTest {
 
     @Test
     void shouldDeleteById() {
-        Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
-        assertThat(template.insert(magazine))
-                .isNotNull()
-                .isEqualTo(magazine);
+        Magazine magazine = template.insert(new Magazine(null, "Effective Java", 1));
 
         template.delete(Magazine.class, magazine.id());
         assertThat(template.find(Magazine.class, magazine.id()))
@@ -94,10 +91,8 @@ public class TemplateIntegrationTest {
     @Test
     void shouldDeleteAll(){
         for (int index = 0; index < 20; index++) {
-            Magazine magazine = new Magazine(randomUUID().toString(), "Effective Java", 1);
-            assertThat(template.insert(magazine))
-                    .isNotNull()
-                    .isEqualTo(magazine);
+            Magazine magazine = template.insert(new Magazine(null, "Effective Java", 1));
+            assertThat(magazine).isNotNull();
         }
 
         template.delete(Magazine.class).execute();
