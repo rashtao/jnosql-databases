@@ -19,7 +19,6 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 import net.datafaker.Faker;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
-import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
 import org.junit.jupiter.api.BeforeAll;
