@@ -135,7 +135,13 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             createWhereClause(cypher, c, parameters);
         });
 
-        cypher.append(" DELETE e");
+        List<String> columns = query.columns();
+        if (!columns.isEmpty()) {
+            cypher.append(" SET ");
+            cypher.append(columns.stream().map(col -> "e." + col + " = NULL").collect(Collectors.joining(", ")));
+        } else {
+            cypher.append(" DELETE e");
+        }
 
         LOGGER.fine("Executing Delete Cypher Query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
