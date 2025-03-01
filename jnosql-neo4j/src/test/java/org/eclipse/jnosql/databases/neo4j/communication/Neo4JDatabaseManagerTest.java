@@ -139,7 +139,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldLimit() {
+    void shouldSelectLimit() {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
@@ -151,7 +151,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldStart() {
+    void shouldSelectStart() {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
@@ -163,7 +163,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldStartAndLimit() {
+    void shouldSelectStartAndLimit() {
         for (int index = 0; index < 10; index++) {
             entityManager.insert(getEntity());
         }
@@ -175,7 +175,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldTOrderAsc(){
+    void shouldSelectOrderAsc(){
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -193,7 +193,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldOrderDesc() {
+    void shouldSelectOrderDesc() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -210,7 +210,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldFindEquals() {
+    void shouldSelectFindEquals() {
         var entity = getEntity();
         entityManager.insert(entity);
         var query = SelectQuery.select().from(COLLECTION_NAME).where("name").eq(entity.find("name").orElseThrow().get()).build();
@@ -222,7 +222,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldFindNotEquals(){
+    void shouldSelectFindNotEquals(){
         var entity = getEntity();
         entityManager.insert(entity);
         entityManager.insert(getEntity());
@@ -237,7 +237,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldGreaterThan() {
+    void shouldSelectGreaterThan() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -253,7 +253,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldGreaterThanEqual() {
+    void shouldSelectGreaterThanEqual() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -269,7 +269,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldLesserThan() {
+    void shouldSelectLesserThan() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -285,7 +285,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldLesserThanEqual() {
+    void shouldSelectLesserThanEqual() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -301,7 +301,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldFindIn() {
+    void shouldSelectFindIn() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -317,7 +317,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldLike() {
+    void shouldSelectLike() {
         var entity = getEntity();
         entity.add("name", "Ada Lovelace");
         entityManager.insert(entity);
@@ -330,7 +330,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldAnd() {
+    void shouldSelectAnd() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
@@ -352,7 +352,7 @@ class Neo4JDatabaseManagerTest {
     }
 
     @Test
-    void shouldOr() {
+    void shouldSelectOr() {
         for (int index = 0; index < 10; index++) {
             var entity = getEntity();
             entity.add("index", index);
