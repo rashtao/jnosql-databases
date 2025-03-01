@@ -56,7 +56,6 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @param cypher     the Cypher query to execute.
      * @param parameters the parameters to bind to the query.
      * @return a stream of {@link CommunicationEntity} matching the query result.
-     * @throws NullPointerException  if any of the arguments are null
      */
     Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
 
