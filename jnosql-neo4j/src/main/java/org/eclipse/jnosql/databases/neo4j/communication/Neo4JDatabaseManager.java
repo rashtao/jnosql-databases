@@ -29,12 +29,11 @@ import java.util.stream.Stream;
  * using the APOC library. Implementations of this interface should handle TTL-related methods
  * accordingly—either by integrating APOC's TTL features or throwing {@link UnsupportedOperationException}
  * if TTL is not supported.</p>
- *
- * @apiNote All write operations, including {@code insert} and {@code update}, will be executed within a transaction.
+ * <p>
+ * All write operations, including {@code insert} and {@code update}, will be executed within a transaction.
  * When performing batch inserts using an iterable, the entire operation will be executed as a single transaction
  * to ensure consistency.
  *
- * <h3>Usage Example:</h3>
  * <pre>
  * Neo4JDatabaseManager manager = ...; // Obtain an instance
  * CommunicationEntity entity = CommunicationEntity.of("User");
@@ -43,8 +42,8 @@ import java.util.stream.Stream;
  *
  * manager.insert(entity); // Insert into Neo4j
  * </pre>
- *
- * @apiNote Ensure proper transaction and session management when implementing this interface.
+ * <p>
+ * Ensure proper transaction and session management when implementing this interface.
  * Unsupported TTL operations should result in an {@link UnsupportedOperationException}.
  *
  * @see DatabaseManager
@@ -53,25 +52,26 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
 
     /**
      * A specialized {@link DatabaseManager
-
-    /**
+     * <p>
+     * /**
      * Executes a custom Cypher query with parameters and returns a stream of {@link CommunicationEntity}.
+     *
      * @param cypher     the Cypher query to execute.
      * @param parameters the parameters to bind to the query.
      * @return a stream of {@link CommunicationEntity} matching the query result.
-     * @throws NullPointerException  if any of the arguments are {@code null}.
-     * @throws CypherException if there is an issue with the Cypher syntax.
+     * @throws NullPointerException if any of the arguments are {@code null}.
+     * @throws CypherException      if there is an issue with the Cypher syntax.
      */
     Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
 
     /**
      * Traverses the graph starting from a node and follows the specified relationship type up to a given depth.
      *
-     * @param startNodeId   the ID of the starting node.
-     * @param relationship  the type of relationship to traverse.
-     * @param depth         the traversal depth limit.
+     * @param startNodeId  the ID of the starting node.
+     * @param relationship the type of relationship to traverse.
+     * @param depth        the traversal depth limit.
      * @return a stream of {@link CommunicationEntity} representing related nodes.
-     * @throws NullPointerException      if any of the arguments are {@code null}.
+     * @throws NullPointerException if any of the arguments are {@code null}.
      */
     Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth);
 
@@ -82,7 +82,7 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @param target           the target entity.
      * @param relationshipType the type of relationship to create.
      * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
-     * @throws NullPointerException      if any of the arguments are {@code null}.
+     * @throws NullPointerException       if any of the arguments are {@code null}.
      */
     void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target);
 
@@ -93,7 +93,7 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @param target           the target entity, which must already exist in the database.
      * @param relationshipType the type of relationship to remove.
      * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
-     * @throws NullPointerException      if any of the arguments are {@code null}.
+     * @throws NullPointerException       if any of the arguments are {@code null}.
      */
     void remove(CommunicationEntity source, String relationshipType, CommunicationEntity target);
 }

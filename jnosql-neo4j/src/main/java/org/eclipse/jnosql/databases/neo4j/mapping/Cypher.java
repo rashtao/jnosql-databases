@@ -22,12 +22,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for defining Cypher queries in Neo4J repositories.
- * <p>
  * This annotation allows users to specify a Cypher query directly on repository methods,
  * enabling custom query execution within {@code Neo4JRepository}.
- * </p>
  *
- * <p>
  * Example usage:
  * <pre>
  * {@code
@@ -35,13 +32,10 @@ import java.lang.annotation.Target;
  * List<Person> findByName(@Param("name") String name);
  * }
  * </pre>
- * </p>
  *
- * <p>
  * The {@code value} attribute should contain a valid Cypher query. Query parameters
  * can be defined using the {@code $parameterName} syntax, which will be replaced by
  * method parameters annotated with {@code @Param}.
- * </p>
  *
  * @see Neo4JRepository
  */

@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 public enum Neo4JQueryBuilder {
+
     INSTANCE;
 
     private static final String INTERNAL_ID = "_id";
-    private static final String NEO4J_ID = "elementId(e)";
 
     public String buildQuery(DeleteQuery query, Map<String, Object> parameters) {
         StringBuilder cypher = new StringBuilder("MATCH (e:");

@@ -20,12 +20,9 @@ import org.eclipse.jnosql.communication.CommunicationException;
 
 /**
  * Exception representing general communication errors when interacting with a Neo4j database.
- * <p>
  * This exception is used as a base for more specific exceptions related to Neo4j operations,
  * such as Cypher syntax errors, transaction failures, or connectivity issues.
- * </p>
  *
- * <h3>Common Causes:</h3>
  * <ul>
  *     <li>Invalid Cypher query syntax.</li>
  *     <li>Transaction failures during read or write operations.</li>
