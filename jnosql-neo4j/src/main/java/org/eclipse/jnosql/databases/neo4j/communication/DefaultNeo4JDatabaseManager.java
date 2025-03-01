@@ -156,6 +156,72 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
     }
 
+    @Override
+    public Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters) {
+        Objects.requireNonNull(cypher, "Cypher query is required");
+        Objects.requireNonNull(parameters, "Parameters map is required");
+
+        try (Transaction tx = session.beginTransaction()) {
+            Stream<CommunicationEntity> result = tx.run(cypher, Values.parameters(flattenMap(parameters)))
+                    .list(record -> extractEntity("QueryResult", record, false))
+                    .stream();
+            LOGGER.fine("Executed Cypher query: " + cypher);
+            tx.commit();
+            return result;
+        } catch (Exception e) {
+            throw new CommunicationException("Error executing Cypher query", e);
+        }
+    }
+
+    @Override
+    public Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth) {
+        Objects.requireNonNull(startNodeId, "Start node ID is required");
+        Objects.requireNonNull(relationship, "Relationship type is required");
+
+        String cypher = "MATCH (startNode { _id: $_id })-[r:" + relationship + "*1.." + depth + "]-(endNode) RETURN endNode";
+
+        try (Transaction tx = session.beginTransaction()) {
+            Stream<CommunicationEntity> result = tx.run(cypher, Values.parameters("_id", startNodeId))
+                    .list(record -> extractEntity("TraversalResult", record, false))
+                    .stream();
+            LOGGER.fine("Executed traversal query: " + cypher);
+            tx.commit();
+            return result;
+        }
+    }
+
+    @Override
+    public void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target) {
+        Objects.requireNonNull(source, "Source entity is required");
+        Objects.requireNonNull(target, "Target entity is required");
+        Objects.requireNonNull(relationshipType, "Relationship type is required");
+
+        String cypher = "MATCH (s { _id: $_id_source }), (t { _id: $_id_target }) CREATE (s)-[:" + relationshipType + "]->(t)";
+
+        try (Transaction tx = session.beginTransaction()) {
+            tx.run(cypher, Values.parameters("_id_source", source.find("_id").orElseThrow(),
+                    "_id_target", target.find("_id").orElseThrow()));
+            LOGGER.fine("Created edge: " + cypher);
+            tx.commit();
+        }
+    }
+
+    @Override
+    public void remove(CommunicationEntity source, String relationshipType, CommunicationEntity target) {
+        Objects.requireNonNull(source, "Source entity is required");
+        Objects.requireNonNull(target, "Target entity is required");
+        Objects.requireNonNull(relationshipType, "Relationship type is required");
+
+        String cypher = "MATCH (s { _id: $_id_source })-[r:" + relationshipType + "]-(t { _id: $_id_target }) DELETE r";
+
+        try (Transaction tx = session.beginTransaction()) {
+            tx.run(cypher, Values.parameters("_id_source", source.find("_id").orElseThrow(),
+                    "_id_target", target.find("_id").orElseThrow()));
+            LOGGER.fine("Removed edge: " + cypher);
+            tx.commit();
+        }
+    }
+
 
     @Override
     public void close() {
