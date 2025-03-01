@@ -295,19 +295,20 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
         List<Element> elements = new ArrayList<>();
+
         for (String key : record.keys()) {
             var value = record.get(key);
 
-            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
-
-            if (isFullNode && value.hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
+            if (value.hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
                 var node = value.asNode();
-                node.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
-                elements.add(Element.of("_id", node.elementId()));  // Store Neo4j ID
+                node.asMap().forEach((k, v) -> elements.add(Element.of(k, v))); // Extract properties
+                elements.add(Element.of(ID, node.elementId()));
             } else {
-                elements.add(Element.of(fieldName, value.asObject())); // Proper field extraction
+                String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
+                elements.add(Element.of(fieldName, value.asObject()));
             }
         }
+
         return CommunicationEntity.of(entityName, elements);
     }
 }
