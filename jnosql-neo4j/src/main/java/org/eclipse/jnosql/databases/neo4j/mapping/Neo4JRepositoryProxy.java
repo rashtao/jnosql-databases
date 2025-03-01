@@ -24,6 +24,7 @@ import org.eclipse.jnosql.mapping.semistructured.query.SemiStructuredRepositoryP
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -89,14 +90,13 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
         if (Objects.nonNull(cql)) {
 
             Stream<T> result;
-            Map<String, Object> values = CQLObjectUtil.getValues(args, method);
+            Map<String, Object> values = ParamConverterUtils.getValues(args, method);
             if (!values.isEmpty()) {
-                result = template.cql(cql.value(), values);
-            } else if (args == null || args.length == 0) {
-                result = template.cql(cql.value());
+                result = template.cypher(cql.value(), values);
             } else {
-                result = template.cql(cql.value(), args);
+                result = template.cypher(cql.value(), Collections.emptyMap());
             }
+
             return DynamicReturn.builder()
                     .classSource(typeClass)
                     .methodSource(method)

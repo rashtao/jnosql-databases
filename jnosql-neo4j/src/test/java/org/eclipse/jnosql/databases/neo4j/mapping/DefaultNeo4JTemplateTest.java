@@ -83,22 +83,22 @@ class DefaultNeo4JTemplateTest {
     }
 
     @Test
-    void shouldExecuteQuery() {
+    void shouldCypher() {
         String cypher = "MATCH (n:Person) RETURN n";
         Map<String, Object> parameters = Collections.emptyMap();
         CommunicationEntity entity = CommunicationEntity.of("Person");
         entity.add(Element.of("name", "Ada"));
         when(manager.executeQuery(cypher, parameters)).thenReturn(Stream.of(entity));
 
-        Stream<Person> result = template.executeQuery(cypher, parameters);
+        Stream<Person> result = template.cypher(cypher, parameters);
         assertNotNull(result);
         assertTrue(result.findFirst().isPresent());
     }
 
     @Test
     void shouldThrowExceptionWhenQueryIsNull() {
-        assertThrows(NullPointerException.class, () -> template.executeQuery(null, Collections.emptyMap()));
-        assertThrows(NullPointerException.class, () -> template.executeQuery("MATCH (n) RETURN n", null));
+        assertThrows(NullPointerException.class, () -> template.cypher(null, Collections.emptyMap()));
+        assertThrows(NullPointerException.class, () -> template.cypher("MATCH (n) RETURN n", null));
     }
 
     @Test

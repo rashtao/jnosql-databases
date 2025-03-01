@@ -39,7 +39,7 @@ public interface Neo4JTemplate extends SemiStructuredTemplate {
      * @return A stream of entities representing the query result.
      * @throws NullPointerException if {@code cypher} or {@code parameters} is null.
      */
-    <T> Stream<T> executeQuery(String cypher, Map<String, Object> parameters);
+    <T> Stream<T> cypher(String cypher, Map<String, Object> parameters);
 
     /**
      * Traverses relationships from a given start node up to a specified depth.

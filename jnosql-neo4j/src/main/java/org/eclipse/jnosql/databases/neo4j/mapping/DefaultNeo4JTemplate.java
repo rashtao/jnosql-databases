@@ -66,7 +66,7 @@ public class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate impleme
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Stream<T> executeQuery(String cypher, Map<String, Object> parameters) {
+    public <T> Stream<T> cypher(String cypher, Map<String, Object> parameters) {
         Objects.requireNonNull(cypher, "cypher is required");
         Objects.requireNonNull(parameters, "parameters is required");
         return manager.get().executeQuery(cypher, parameters)
