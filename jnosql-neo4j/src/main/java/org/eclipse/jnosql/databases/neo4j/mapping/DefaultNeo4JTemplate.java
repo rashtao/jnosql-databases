@@ -14,11 +14,14 @@ import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @ApplicationScoped
 @Typed(Neo4JTemplate.class)
-public class DefaultNeo4JTe extends AbstractSemiStructuredTemplate implements Neo4JTemplate {
+public class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate implements Neo4JTemplate {
+
+    private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JTemplate.class.getName());
 
     private Instance<Neo4JDatabaseManager> manager;
 
