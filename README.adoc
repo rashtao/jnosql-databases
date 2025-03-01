@@ -1831,7 +1831,7 @@ List<Person> people = template.solr("age:@age AND type:@type AND _entity:@entity
 ----
 
 
-=== Graph (Apache Tinkerpop)
+== Graph (Apache Tinkerpop)
 
 Currently, the Jakarta NoSQL doesn't define an API for Graph database types but Eclipse JNoSQL provides a Graph template to explore the specific behavior of this NoSQL type.
 
