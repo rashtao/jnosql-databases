@@ -33,6 +33,9 @@ public enum DatabaseContainer {
     }
 
 
+    public String host() {
+        return neo4jContainer.getBoltUrl();
+    }
     public Neo4JDatabaseManager get(String database) {
         Objects.requireNonNull(database, "database is required");
         Settings settings = Settings.builder().put(Neo4JConfigurations.URI, neo4jContainer.getBoltUrl()).build();
