@@ -85,4 +85,15 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @throws NullPointerException      if any of the arguments are {@code null}.
      */
     void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target);
+
+    /**
+     * Removes an existing relationship (edge) between two {@link CommunicationEntity} nodes.
+     *
+     * @param source           the source entity, which must already exist in the database.
+     * @param target           the target entity, which must already exist in the database.
+     * @param relationshipType the type of relationship to remove.
+     * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
+     * @throws NullPointerException      if any of the arguments are {@code null}.
+     */
+    void remove(CommunicationEntity source, String relationshipType, CommunicationEntity target);
 }
