@@ -126,7 +126,22 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public void delete(DeleteQuery query) {
         Objects.requireNonNull(query, "query is required");
+        StringBuilder cypher = new StringBuilder("MATCH (e:");
+        cypher.append(query.name()).append(")");
 
+        Map<String, Object> parameters = new HashMap<>();
+        query.condition().ifPresent(c -> {
+            cypher.append(" WHERE ");
+            createWhereClause(cypher, c, parameters);
+        });
+
+        cypher.append(" DELETE e");
+
+        LOGGER.fine("Executing Delete Cypher Query: " + cypher);
+        try (Transaction tx = session.beginTransaction()) {
+            tx.run(cypher.toString(), Values.parameters(flattenMap(parameters)));
+            tx.commit();
+        }
     }
 
     @Override
