@@ -29,10 +29,21 @@ package org.eclipse.jnosql.databases.neo4j.communication;
  */
 public class EdgeCommunicationException extends Neo4JCommunicationException{
 
+    /**
+     * Constructs a new exception with the specified detail message.
+     *
+     * @param message the detail message
+     */
     public EdgeCommunicationException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a new exception with the specified detail message and cause.
+     *
+     * @param message the detail message
+     * @param exception the cause
+     */
     public EdgeCommunicationException(String message, Throwable exception) {
         super(message, exception);
     }

@@ -53,6 +53,12 @@ public final class Neo4JConfiguration implements DatabaseConfiguration {
 
     private static final String DEFAULT_BOLT = "bolt://localhost:7687";
 
+    /**
+     * Applies the provided settings to the Neo4j database configuration.
+     *
+     * @param settings the settings to apply
+     * @return a new {@link Neo4JDatabaseManagerFactory} instance
+     */
     @Override
     public Neo4JDatabaseManagerFactory apply(Settings settings) {
         var uri = settings.getOrDefault(Neo4JConfigurations.URI, DEFAULT_BOLT);

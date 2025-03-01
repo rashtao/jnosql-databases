@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
 @ApplicationScoped
 @Typed(Neo4JTemplate.class)
-public class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate implements Neo4JTemplate {
+class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate implements Neo4JTemplate {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JTemplate.class.getName());
 

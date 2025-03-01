@@ -35,11 +35,10 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
+class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JDatabaseManager.class.getName());
     public static final String ID = "_id";
-    public static final String NEO4J_NATIVE_ID = "nodeId";
 
     private final Session session;
     private final String database;

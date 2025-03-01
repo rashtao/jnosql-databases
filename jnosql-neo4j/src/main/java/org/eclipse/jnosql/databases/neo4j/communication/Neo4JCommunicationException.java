@@ -32,10 +32,21 @@ import org.eclipse.jnosql.communication.CommunicationException;
  */
 public class Neo4JCommunicationException extends CommunicationException {
 
+    /**
+     * Constructs a new exception with the specified detail message.
+     *
+     * @param message the detail message
+     */
     public Neo4JCommunicationException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a new exception with the specified detail message and cause.
+     *
+     * @param message the detail message
+     * @param exception the cause
+     */
     public Neo4JCommunicationException(String message, Throwable exception) {
         super(message, exception);
     }

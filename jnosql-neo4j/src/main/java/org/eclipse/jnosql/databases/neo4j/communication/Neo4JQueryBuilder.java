@@ -28,13 +28,14 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-public enum Neo4JQueryBuilder {
+
+enum Neo4JQueryBuilder {
 
     INSTANCE;
 
     private static final String INTERNAL_ID = "_id";
 
-    public String buildQuery(DeleteQuery query, Map<String, Object> parameters) {
+    String buildQuery(DeleteQuery query, Map<String, Object> parameters) {
         StringBuilder cypher = new StringBuilder("MATCH (e:");
         cypher.append(query.name()).append(")");
 
@@ -57,7 +58,7 @@ public enum Neo4JQueryBuilder {
         return cypher.toString();
     }
 
-    public String buildQuery(SelectQuery query, Map<String, Object> parameters) {
+    String buildQuery(SelectQuery query, Map<String, Object> parameters) {
         StringBuilder cypher = new StringBuilder("MATCH (e:");
         cypher.append(query.name()).append(")");
 
