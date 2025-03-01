@@ -96,7 +96,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             cypher.setLength(cypher.length() - 2);
         }
 
-        LOGGER.fine("Cypher: " + cypher);
+        LOGGER.finest(() -> "Executing Cyphyer to update entities: " + cypher);
 
         try (Transaction tx = session.beginTransaction()) {
             tx.run(cypher.toString(), Values.parameters(flattenMap(entityMap)));
@@ -133,7 +133,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Map<String, Object> parameters = new HashMap<>();
         String cypher = Neo4JQueryBuilder.INSTANCE.buildQuery(query, parameters);
 
-        LOGGER.fine("Executing Cypher Query: " + cypher);
+        LOGGER.fine("Executing Cypher Query for select entities: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
             return tx.run(cypher, Values.parameters(flattenMap(parameters)))
                     .list(record -> extractEntity(query.name(), record, query.columns().isEmpty()))
@@ -141,26 +141,12 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
     }
 
-
-    private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
-        List<Element> elements = new ArrayList<>();
-
-        for (String key : record.keys()) {
-            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
-            if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
-                record.get(key).asNode().asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
-            } else {
-                elements.add(Element.of(fieldName, record.get(key).asObject()));
-            }
-        }
-        return CommunicationEntity.of(entityName, elements);
-    }
-
     @Override
     public long count(String entity) {
         Objects.requireNonNull(entity, "entity is required");
         try (Transaction tx = session.beginTransaction()) {
             String cypher = "MATCH (e:" + entity + ") RETURN count(e) AS count";
+            LOGGER.fine("Executing Cypher Query for counting: " + cypher);
             long count = tx.run(cypher).single().get("count").asLong();
             tx.commit();
             return count;
@@ -169,6 +155,8 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
            throw new CommunicationException("Error executing count query", e);
         }
     }
+
+
     @Override
     public void close() {
         LOGGER.fine("Closing the Neo4J session, the database name is: " + database);
@@ -201,7 +189,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
                     cypher.setLength(cypher.length() - 2);
                 }
                 cypher.append("})");
-                LOGGER.fine("Cypher: " + cypher);
+                LOGGER.fine("Executing Cypher Query to insert entities: " + cypher);
 
                 tx.run(cypher.toString(), Values.parameters(flattenMap(properties)));
                 entitiesResult.add(entity);
@@ -210,5 +198,19 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
         LOGGER.fine("Inserted entities: " + entitiesResult.size());
         return entitiesResult;
+    }
+
+    private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
+        List<Element> elements = new ArrayList<>();
+
+        for (String key : record.keys()) {
+            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
+            if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
+                record.get(key).asNode().asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+            } else {
+                elements.add(Element.of(fieldName, record.get(key).asObject()));
+            }
+        }
+        return CommunicationEntity.of(entityName, elements);
     }
 }
