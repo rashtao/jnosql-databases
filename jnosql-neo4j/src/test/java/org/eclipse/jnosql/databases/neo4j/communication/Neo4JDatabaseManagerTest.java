@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.eclipse.jnosql.communication.semistructured.DeleteQuery.delete;
@@ -325,6 +326,53 @@ class Neo4JDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);
             softly.assertThat(entities).allMatch(e -> e.find("name").orElseThrow().get().toString().contains("Love"));
+        });
+    }
+
+    @Test
+    void shouldAnd() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var entity = getEntity();
+        entity.add("index", index);
+        entityManager.insert(entity);
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index")
+                .gte(index).and("name")
+                .eq(entity.find("name")
+                        .orElseThrow().get()).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(1);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+        });
+    }
+
+    @Test
+    void shouldOr() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var entity = getEntity();
+        entity.add("index", index);
+        entityManager.insert(entity);
+        var name = entity.find("name")
+                .orElseThrow().get(String.class);
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index")
+                .gte(index).or("name")
+                .eq(name).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(7);
+            Predicate<CommunicationEntity> get = e -> e.find("index").orElseThrow().get(Integer.class) >= index;
+            Predicate<CommunicationEntity> eq = e -> e.find("name").orElseThrow().get(String.class).equals(name);
+            softly.assertThat(entities).allMatch(get.or(eq));
         });
     }
 
