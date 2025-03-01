@@ -502,24 +502,36 @@ class Neo4JDatabaseManagerTest {
 
     @Test
     void shouldCreateEdge() {
-        var person1 = getEntity();
-        var person2 = getEntity();
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
 
-        entityManager.insert(person1);
-        entityManager.insert(person2);
+        String person1Id = entityManager.select(select().from(COLLECTION_NAME)
+                        .where("_id").eq(person1.find("_id").orElseThrow().get()).build())
+                .findFirst().orElseThrow().find("_id").orElseThrow().get(String.class);
+
+        String person2Id = entityManager.select(select().from(COLLECTION_NAME)
+                        .where("_id").eq(person2.find("_id").orElseThrow().get()).build())
+                .findFirst().orElseThrow().find("_id").orElseThrow().get(String.class);
+
+        person1.add("_id", person1Id);
+        person2.add("_id", person2Id);
 
         entityManager.edge(person1, "FRIEND", person2);
 
-        String cypher = "MATCH (p1:person { _id: $_id1 })-[r:FRIEND]-(p2:person { _id: $_id2 }) RETURN r";
+        String cypher = "MATCH (p1:person) WHERE elementId(p1) = $id1 " +
+                "MATCH (p2:person) WHERE elementId(p2) = $id2 " +
+                "MATCH (p1)-[r:FRIEND]-(p2) RETURN r";
+
         Map<String, Object> parameters = Map.of(
-                "_id1", person1.find("_id").orElseThrow().get(),
-                "_id2", person2.find("_id").orElseThrow().get()
+                "id1", person1Id,
+                "id2", person2Id
         );
 
         var result = entityManager.executeQuery(cypher, parameters).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(result).isNotEmpty();
         });
+
         entityManager.remove(person1, "FRIEND", person2);
     }
 

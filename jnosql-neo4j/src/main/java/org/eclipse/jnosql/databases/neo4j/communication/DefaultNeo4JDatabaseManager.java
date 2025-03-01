@@ -40,6 +40,7 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JDatabaseManager.class.getName());
     public static final String ID = "_id";
+    public static final String NEO4J_NATIVE_ID = "nodeId";
 
     private final Session session;
     private final String database;
@@ -243,11 +244,6 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         List<CommunicationEntity> entitiesResult = new ArrayList<>();
         try (Transaction tx = session.beginTransaction()) {
             for (CommunicationEntity entity : entities) {
-                if (!entity.contains(ID)) {
-                    String generatedId = UUID.randomUUID().toString();
-                    LOGGER.fine("The entity does not contain an _id field. Generating one: " + generatedId);
-                    entity.add(ID, generatedId);
-                }
 
                 Map<String, Object> properties = entity.toMap();
                 StringBuilder cypher = new StringBuilder("CREATE (e:");
@@ -258,10 +254,13 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
                 if (!properties.isEmpty()) {
                     cypher.setLength(cypher.length() - 2);
                 }
-                cypher.append("})");
+                cypher.append("}) RETURN e");
                 LOGGER.fine("Executing Cypher Query to insert entities: " + cypher);
 
-                tx.run(cypher.toString(), Values.parameters(flattenMap(properties)));
+                var result = tx.run(cypher.toString(), Values.parameters(flattenMap(properties)));
+                var record = result.hasNext() ? result.next() : null;
+                var insertedNode = record.get("e").asNode();
+                entity.add(ID, insertedNode.elementId());
                 entitiesResult.add(entity);
             }
             tx.commit();
@@ -276,7 +275,9 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         for (String key : record.keys()) {
             String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
             if (isFullNode && record.get(key).hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
-                record.get(key).asNode().asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+                var node = record.get(key).asNode();
+                node.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+                elements.add(Element.of(ID, node.elementId()));
             } else {
                 elements.add(Element.of(fieldName, record.get(key).asObject()));
             }

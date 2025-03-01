@@ -28,9 +28,11 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 public enum Neo4JQueryBuilder {
     INSTANCE;
+
+    private static final String INTERNAL_ID = "_id";
+    private static final String NEO4J_ID = "elementId(e)";
 
     public String buildQuery(DeleteQuery query, Map<String, Object> parameters) {
         StringBuilder cypher = new StringBuilder("MATCH (e:");
@@ -44,7 +46,9 @@ public enum Neo4JQueryBuilder {
         List<String> columns = query.columns();
         if (!columns.isEmpty()) {
             cypher.append(" SET ");
-            cypher.append(columns.stream().map(col -> "e." + col + " = NULL").collect(Collectors.joining(", ")));
+            cypher.append(columns.stream()
+                    .map(col -> "e." + translateField(col) + " = NULL")
+                    .collect(Collectors.joining(", ")));
         } else {
             cypher.append(" DELETE e");
         }
@@ -61,8 +65,9 @@ public enum Neo4JQueryBuilder {
             createWhereClause(cypher, c, parameters);
         });
 
-        query.sorts().forEach(sort -> cypher.append(" ORDER BY e.").append(sort.property()).append(" ")
-                .append(sort.isAscending() ? "ASC" : "DESC"));
+        query.sorts().forEach(sort -> cypher.append(" ORDER BY e.")
+                .append(translateField(sort.property()))
+                .append(" ").append(sort.isAscending() ? "ASC" : "DESC"));
 
         if (query.skip() > 0) {
             cypher.append(" SKIP ").append(query.skip());
@@ -77,7 +82,9 @@ public enum Neo4JQueryBuilder {
         if (columns.isEmpty()) {
             cypher.append("e");
         } else {
-            cypher.append(columns.stream().map(col -> "e." + col).collect(Collectors.joining(", ")));
+            cypher.append(columns.stream()
+                    .map(this::translateField)
+                    .collect(Collectors.joining(", ")));
         }
 
         return cypher.toString();
@@ -86,6 +93,7 @@ public enum Neo4JQueryBuilder {
     private void createWhereClause(StringBuilder cypher, CriteriaCondition condition, Map<String, Object> parameters) {
         Element element = condition.element();
         String fieldName = element.name();
+        String queryField = translateField(fieldName); // Correct field translation
 
         switch (condition.condition()) {
             case EQUALS:
@@ -95,10 +103,11 @@ public enum Neo4JQueryBuilder {
             case LESSER_EQUALS_THAN:
             case LIKE:
             case IN:
-                parameters.put(fieldName, element.get());
-                cypher.append("e.").append(fieldName).append(" ")
+                String paramName = INTERNAL_ID.equals(fieldName) ? "id" : fieldName; // Ensure valid parameter name
+                parameters.put(paramName, element.get());
+                cypher.append(queryField).append(" ")
                         .append(getConditionOperator(condition.condition()))
-                        .append(" $").append(fieldName);
+                        .append(" $").append(paramName);
                 break;
             case NOT:
                 cypher.append("NOT (");
@@ -120,6 +129,10 @@ public enum Neo4JQueryBuilder {
             default:
                 throw new CommunicationException("Unsupported condition: " + condition.condition());
         }
+    }
+
+    private String translateField(String field) {
+        return INTERNAL_ID.equals(field) ? "elementId(e)" : "e." + field;
     }
 
     private String getConditionOperator(Condition condition) {
