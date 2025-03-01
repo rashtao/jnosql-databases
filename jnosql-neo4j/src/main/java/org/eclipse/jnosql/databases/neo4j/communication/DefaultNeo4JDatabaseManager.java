@@ -16,15 +16,8 @@
  */
 package org.eclipse.jnosql.databases.neo4j.communication;
 
-import jakarta.data.Sort;
 import org.eclipse.jnosql.communication.CommunicationException;
-import org.eclipse.jnosql.communication.Condition;
-import org.eclipse.jnosql.communication.TypeReference;
-import org.eclipse.jnosql.communication.Value;
-import org.eclipse.jnosql.communication.ValueUtil;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
-import org.eclipse.jnosql.communication.semistructured.CriteriaCondition;
-import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
@@ -34,7 +27,6 @@ import org.neo4j.driver.Values;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +34,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
@@ -126,26 +117,12 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public void delete(DeleteQuery query) {
         Objects.requireNonNull(query, "query is required");
-        StringBuilder cypher = new StringBuilder("MATCH (e:");
-        cypher.append(query.name()).append(")");
-
         Map<String, Object> parameters = new HashMap<>();
-        query.condition().ifPresent(c -> {
-            cypher.append(" WHERE ");
-            createWhereClause(cypher, c, parameters);
-        });
-
-        List<String> columns = query.columns();
-        if (!columns.isEmpty()) {
-            cypher.append(" SET ");
-            cypher.append(columns.stream().map(col -> "e." + col + " = NULL").collect(Collectors.joining(", ")));
-        } else {
-            cypher.append(" DELETE e");
-        }
+        String cypher = Neo4JQueryBuilder.INSTANCE.buildQuery(query, parameters);
 
         LOGGER.fine("Executing Delete Cypher Query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
-            tx.run(cypher.toString(), Values.parameters(flattenMap(parameters)));
+            tx.run(cypher, Values.parameters(flattenMap(parameters)));
             tx.commit();
         }
     }
@@ -153,89 +130,17 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public Stream<CommunicationEntity> select(SelectQuery query) {
         Objects.requireNonNull(query, "query is required");
-        StringBuilder cypher = new StringBuilder("MATCH (e:");
-        cypher.append(query.name()).append(")");
-
         Map<String, Object> parameters = new HashMap<>();
-        query.condition().ifPresent(c -> {
-            cypher.append(" WHERE ");
-            createWhereClause(cypher, c, parameters);
-        });
-
-        cypher.append(" RETURN ");
-        List<String> columns = query.columns();
-        if (columns.isEmpty()) {
-            cypher.append("e ");
-        } else {
-            cypher.append(columns.stream().map(col -> "e." + col).collect(Collectors.joining(", ")));
-        }
-        if (query.skip() > 0) {
-            cypher.append(" SKIP ").append(query.skip());
-        }
-        if (query.limit() > 0) {
-            cypher.append(" LIMIT ").append(query.limit());
-        }
-        List<Sort<?>> sorts = query.sorts();
-        if (!sorts.isEmpty()) {
-            cypher.append(" ORDER BY ");
-            cypher.append(sorts.stream()
-                    .map(order -> "e." + order.property() + " " + (order.isAscending() ? "ASC" : "DESC"))
-                    .collect(Collectors.joining(", ")));
-        }
+        String cypher = Neo4JQueryBuilder.INSTANCE.buildQuery(query, parameters);
 
         LOGGER.fine("Executing Cypher Query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
-            return tx.run(cypher.toString(), Values.parameters(flattenMap(parameters)))
-                    .list(record -> extractEntity(query.name(), record, columns.isEmpty()))
+            return tx.run(cypher, Values.parameters(flattenMap(parameters)))
+                    .list(record -> extractEntity(query.name(), record, query.columns().isEmpty()))
                     .stream();
         }
     }
 
-    private void createWhereClause(StringBuilder cypher, CriteriaCondition condition, Map<String, Object> parameters) {
-        Element element = condition.element();
-        String fieldName = element.name();
-
-        switch (condition.condition()) {
-            case EQUALS:
-            case GREATER_THAN:
-            case GREATER_EQUALS_THAN:
-            case LESSER_THAN:
-            case LESSER_EQUALS_THAN:
-            case LIKE:
-            case IN:
-                parameters.put(fieldName, ValueUtil.convert(element.value()));
-                cypher.append("e.").append(fieldName).append(" ")
-                        .append(getConditionOperator(condition.condition()))
-                        .append(" $").append(fieldName);
-                break;
-            case BETWEEN:
-                List<?> values = element.get(List.class);
-                parameters.put(fieldName + "_start", ValueUtil.convert(Value.of(values.get(0))));
-                parameters.put(fieldName + "_end", ValueUtil.convert(Value.of(values.get(1))));
-                cypher.append("e.").append(fieldName).append(" >= $").append(fieldName).append("_start AND e.")
-                        .append(fieldName).append(" <= $").append(fieldName).append("_end");
-                break;
-            case NOT:
-                cypher.append("NOT (");
-                createWhereClause(cypher, element.get(CriteriaCondition.class), parameters);
-                cypher.append(")");
-                break;
-            case AND:
-            case OR:
-                cypher.append("(");
-                List<CriteriaCondition> conditions = element.get(List.class);
-                for (int i = 0; i < conditions.size(); i++) {
-                    if (i > 0) {
-                        cypher.append(" ").append(getConditionOperator(condition.condition())).append(" ");
-                    }
-                    createWhereClause(cypher, conditions.get(i), parameters);
-                }
-                cypher.append(")");
-                break;
-            default:
-                throw new CommunicationException("Unsupported condition: " + condition.condition());
-        }
-    }
 
     private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
         List<Element> elements = new ArrayList<>();
@@ -250,21 +155,6 @@ public class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
         return CommunicationEntity.of(entityName, elements);
     }
-    private String getConditionOperator(Condition condition) {
-        return switch (condition) {
-            case EQUALS -> "=";
-            case GREATER_THAN -> ">";
-            case GREATER_EQUALS_THAN -> ">=";
-            case LESSER_THAN -> "<";
-            case LESSER_EQUALS_THAN -> "<=";
-            case LIKE -> "CONTAINS";
-            case IN -> "IN";
-            case AND -> "AND";
-            case OR -> "OR";
-            default -> throw new CommunicationException("Unsupported operator: " + condition);
-        };
-    }
-
 
     @Override
     public long count(String entity) {
