@@ -235,6 +235,69 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldGreaterThan() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").gt(index).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)> index);
+        });
+    }
+
+    @Test
+    void shouldGreaterThanEqual() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").gte(index).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(6);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)>= index);
+        });
+    }
+
+    @Test
+    void shouldLesserThan() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").lt(index).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(4);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class) < index);
+        });
+    }
+
+    @Test
+    void shouldLesserThanEqual() {
+        for (int index = 0; index < 10; index++) {
+            var entity = getEntity();
+            entity.add("index", index);
+            entityManager.insert(entity);
+        }
+        var index = 4;
+        var query = SelectQuery.select().from(COLLECTION_NAME).where("index").lte(index).build();
+        var entities = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).hasSize(5);
+            softly.assertThat(entities).allMatch(e -> e.find("index").orElseThrow().get(Integer.class)<= index);
+        });
+    }
 
 
     private CommunicationEntity getEntity() {
