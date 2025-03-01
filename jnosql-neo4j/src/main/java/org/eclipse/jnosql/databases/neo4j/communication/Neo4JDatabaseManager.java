@@ -56,10 +56,11 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
 
     /**
      * Executes a custom Cypher query with parameters and returns a stream of {@link CommunicationEntity}.
-     *
      * @param cypher     the Cypher query to execute.
      * @param parameters the parameters to bind to the query.
      * @return a stream of {@link CommunicationEntity} matching the query result.
+     * @throws NullPointerException  if any of the arguments are {@code null}.
+     * @throws CypherException if there is an issue with the Cypher syntax.
      */
     Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
 
@@ -70,6 +71,7 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @param relationship  the type of relationship to traverse.
      * @param depth         the traversal depth limit.
      * @return a stream of {@link CommunicationEntity} representing related nodes.
+     * @throws NullPointerException      if any of the arguments are {@code null}.
      */
     Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth);
 
@@ -79,6 +81,8 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
      * @param source           the source entity.
      * @param target           the target entity.
      * @param relationshipType the type of relationship to create.
+     * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
+     * @throws NullPointerException      if any of the arguments are {@code null}.
      */
-    void edge(CommunicationEntity source, CommunicationEntity target, String relationshipType);
+    void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target);
 }
