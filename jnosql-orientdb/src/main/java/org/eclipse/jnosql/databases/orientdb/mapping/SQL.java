@@ -21,10 +21,8 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for defining dynamic SQL queries in OrientDB repositories.
- * <p>
  * This annotation is used on methods within {@link OrientDBCrudRepository} to execute
  * custom SQL queries directly on OrientDB.
- * </p>
  *
  * <p>Example usage:</p>
  * <pre>
