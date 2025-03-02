@@ -133,6 +133,6 @@ public class CouchbaseDocumentRepositoryProxyTest {
         List<Human> findAllQuery();
 
         @N1QL("select * from Person where name = $name")
-        List<Human> findByName(@Param("name") String name);
+        List<Human> findByName(String name);
     }
 }

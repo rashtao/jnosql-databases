@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Annotation used to define a dynamic N1QL query in {@link CouchbaseRepository}.
  * <p>
  * This annotation allows repository methods to be mapped to Couchbase N1QL queries.
- * Parameters can be provided using the {@link Param} annotation.
+ * Parameters can be provided using the {@link jakarta.data.repository.Param} annotation.
  * </p>
  *
  * <h2>Example Usage</h2>
