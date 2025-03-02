@@ -20,10 +20,8 @@ import org.eclipse.jnosql.mapping.NoSQLRepository;
 /**
  * A Hazelcast-specific extension of {@link NoSQLRepository}, providing
  * key-value data storage and retrieval using Hazelcast.
- * <p>
  * This repository interface allows for defining custom queries using
  * {@link Query} annotations and enables CRUD operations for entities.
- * </p>
  *
  * Example usage:
  * <pre>

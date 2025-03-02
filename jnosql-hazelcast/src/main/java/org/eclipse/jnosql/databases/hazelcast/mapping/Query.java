@@ -21,10 +21,8 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for defining a dynamic query method in Hazelcast repositories.
- * <p>
  * This annotation allows developers to specify Hazelcast query expressions
  * directly in repository methods.
- * </p>
  *
  * Example usage:
  * <pre>

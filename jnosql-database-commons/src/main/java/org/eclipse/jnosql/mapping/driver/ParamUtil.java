@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 /**
  * Utility class for extracting method parameters annotated with {@link Param} across all repository interfaces.
  *
- * <p>This utility supports repositories using custom query annotations such as {@code @AQL}, {@code @Cypher},
- * and others, where parameters are annotated with {@link Param} to enable named parameter binding.</p>
+ * This utility supports repositories using custom query annotations such as {@code @AQL}, {@code @Cypher},
+ * and others, where parameters are annotated with {@link Param} to enable named parameter binding.
  *
  * Example Usage:
  * <pre>{@code
