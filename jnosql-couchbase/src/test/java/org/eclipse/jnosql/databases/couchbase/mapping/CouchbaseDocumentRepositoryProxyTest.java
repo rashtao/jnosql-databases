@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.couchbase.mapping;
 
 import com.couchbase.client.java.json.JsonObject;
+import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
@@ -133,6 +134,6 @@ public class CouchbaseDocumentRepositoryProxyTest {
         List<Human> findAllQuery();
 
         @N1QL("select * from Person where name = $name")
-        List<Human> findByName(String name);
+        List<Human> findByName(@Param("name") String name);
     }
 }
