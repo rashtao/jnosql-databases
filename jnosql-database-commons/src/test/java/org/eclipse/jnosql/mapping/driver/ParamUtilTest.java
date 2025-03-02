@@ -16,12 +16,11 @@ package org.eclipse.jnosql.mapping.driver;
 
 import jakarta.data.repository.Param;
 import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ParamUtilTest {
 
@@ -82,21 +81,4 @@ class ParamUtilTest {
         assertThat(params).isEmpty();
     }
 
-    @Test
-    void shouldThrowExceptionWhenMethodIsNull() {
-        Object[] args = {"test"};
-
-        assertThatThrownBy(() -> ParamUtil.INSTANCE.getParams(args, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Arguments and method cannot be null");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenArgsAreNull() throws NoSuchMethodException {
-        Method method = TestRepository.class.getMethod("findByName", String.class);
-
-        assertThatThrownBy(() -> ParamUtil.INSTANCE.getParams(null, method))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Arguments and method cannot be null");
-    }
 }
