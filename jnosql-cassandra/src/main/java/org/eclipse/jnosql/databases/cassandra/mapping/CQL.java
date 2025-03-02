@@ -21,17 +21,13 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to define a dynamic CQL query method in {@link CassandraRepository}.
- * <p>
  * Methods annotated with {@code @CQL} allow the execution of custom Cassandra Query Language (CQL) statements
  * within repository interfaces.
- * </p>
- * <p>
  * Example usage:
  * <pre>{@code
  * @CQL("SELECT * FROM users WHERE username = :username")
  * List<User> findByUsername(@Param("username") String username);
  * }</pre>
- * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
