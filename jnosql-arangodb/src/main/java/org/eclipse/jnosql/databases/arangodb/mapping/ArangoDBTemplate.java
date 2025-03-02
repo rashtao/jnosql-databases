@@ -21,62 +21,71 @@ import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import java.util.Map;
 import java.util.stream.Stream;
 /**
- * A template specialization for ArangoDB that includes capabilities for executing ArangoDB query language, AQL.
- * This template extends {@link DocumentTemplate} and provides methods for executing AQL queries with various
- * options.
+ * A specialized {@link DocumentTemplate} for ArangoDB, providing methods to execute
+ * queries using the ArangoDB Query Language (AQL).
+ *
+ * <p>This template allows executing AQL queries with named parameters and supports
+ * result serialization either through Eclipse JNoSQL or directly via ArangoDB.</p>
  */
 public interface ArangoDBTemplate extends DocumentTemplate {
 
     /**
      * Executes an ArangoDB query using the ArangoDB Query Language (AQL).
      *
-     * <p>Example query: {@code FOR u IN users FILTER u.status == @status RETURN u}</p>
+     * <p>Example query:</p>
+     * <pre>{@code
+     * FOR u IN users FILTER u.status == @status RETURN u
+     * }</pre>
      *
-     * <p>The conversion from the query result to entities will happen at the Eclipse JNoSQL side.
-     * It will utilize and consider all the annotations supported by Eclipse JNoSQL.</p>
+     * <p>The conversion of query results to entity objects is handled by Eclipse JNoSQL,
+     * applying all supported annotations.</p>
      *
-     * @param <T>    the entity class
-     * @param query  the AQL query
-     * @param params the named parameters for the query
+     * @param <T>    the entity type
+     * @param query  the AQL query string
+     * @param params a map containing named parameters for the query
      * @return a {@link Stream} of entities representing the query result
-     * @throws NullPointerException when either the query or params are null
+     * @throws NullPointerException if {@code query} or {@code params} is {@code null}
      */
     <T> Stream<T> aql(String query, Map<String, Object> params);
 
     /**
-     * Executes an ArangoDB query using the ArangoDB Query Language (AQL).
+     * Executes an ArangoDB query using AQL with direct serialization via ArangoDB.
      *
-     * <p>Example query: {@code FOR u IN users FILTER u.status == @status RETURN u}</p>
+     * <p>Example query:</p>
+     * <pre>{@code
+     * FOR u IN users FILTER u.status == @status RETURN u
+     * }</pre>
      *
-     * <p>The serialization of the query result will happen at the ArangoDB side using
-     * {@link com.arangodb.ArangoDatabase#query(String, Class)}. This serialization does not have any converter support
-     * at the mapper side,
-     * thus it will ignore any annotations that Eclipse JNoSQL has.</p>
+     * <p>The serialization of query results is performed directly by ArangoDB using
+     * {@link com.arangodb.ArangoDatabase#query(String, Class)}, bypassing Eclipse JNoSQL
+     * converters. Consequently, annotations supported by Eclipse JNoSQL are ignored.</p>
      *
-     * @param query  the AQL query
-     * @param params the named parameters for the query
-     * @param type   the type of the result
-     * @param <T>    the type
-     * @return a {@link Stream} of the specified type representing the query result
-     * @throws NullPointerException when either the query or params are null
+     * @param <T>    the expected result type
+     * @param query  the AQL query string
+     * @param params a map containing named parameters for the query
+     * @param type   the target class for result serialization
+     * @return a {@link Stream} of results of type {@code T}
+     * @throws NullPointerException if {@code query}, {@code params}, or {@code type} is {@code null}
      */
     <T> Stream<T> aql(String query, Map<String, Object> params, Class<T> type);
 
     /**
-     * Executes an ArangoDB query using the ArangoDB Query Language (AQL) with an empty parameter map.
+     * Executes an ArangoDB query using AQL with an empty parameter map.
      *
-     * <p>Example query: {@code FOR u IN users FILTER u.status == @status RETURN u}</p>
+     * <p>Example query:</p>
+     * <pre>{@code
+     * FOR u IN users FILTER u.status == @status RETURN u
+     * }</pre>
      *
-     * <p>The serialization of the query result will happen at the ArangoDB side using
-     * {@link com.arangodb.ArangoDatabase#query(String, Class)}. This serialization does not have any converter support
-     * at the mapper side,
-     * thus it will ignore any annotations that Eclipse JNoSQL has.</p>
+     * <p>The serialization of query results is performed directly by ArangoDB using
+     * {@link com.arangodb.ArangoDatabase#query(String, Class)}. This means that
+     * Eclipse JNoSQL annotations will not be considered.</p>
      *
-     * @param query the AQL query
-     * @param type  the type of the result
-     * @param <T>   the type
-     * @return a {@link Stream} of the specified type representing the query result
-     * @throws NullPointerException when either the query or type are null
+     * @param <T>   the expected result type
+     * @param query the AQL query string
+     * @param type  the target class for result serialization
+     * @return a {@link Stream} of results of type {@code T}
+     * @throws NullPointerException if {@code query} or {@code type} is {@code null}
      */
     <T> Stream<T> aql(String query, Class<T> type);
 }
