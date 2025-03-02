@@ -23,10 +23,8 @@ import java.util.Map;
 /**
  * A specialized {@link KeyValueTemplate} for Hazelcast,
  * providing methods to execute queries using SQL-like expressions and predicates.
- * <p>
  * This template facilitates querying key-value structures stored in a Hazelcast instance.
  * It supports both SQL-like queries with named parameters and Hazelcast-specific predicates.
- * </p>
  *
  * Example usage:
  * <pre>
@@ -51,9 +49,7 @@ public interface HazelcastTemplate extends KeyValueTemplate {
 
     /**
      * Executes a Hazelcast query using SQL-like syntax.
-     * <p>
      * The query should follow Hazelcast's SQL-like query syntax for key-value stores.
-     * </p>
      *
      * @param <T>   the entity type
      * @param query the SQL-like query string
@@ -64,14 +60,12 @@ public interface HazelcastTemplate extends KeyValueTemplate {
 
     /**
      * Executes a Hazelcast query with named parameters.
-     * <p>
      * Example usage:
      * <pre>
      * {@code
      * Collection<Movie> movies = hazelcastTemplate.sql("name = :name", Map.of("name", "The Matrix"));
      * }
      * </pre>
-     * </p>
      *
      * @param <T>    the entity type
      * @param query  the SQL-like query string
@@ -83,10 +77,8 @@ public interface HazelcastTemplate extends KeyValueTemplate {
 
     /**
      * Executes a Hazelcast query using a {@link Predicate}.
-     * <p>
      * The predicate-based approach is useful for filtering key-value pairs
      * based on specific criteria.
-     * </p>
      *
      * @param <K>       the key type
      * @param <V>       the value type
