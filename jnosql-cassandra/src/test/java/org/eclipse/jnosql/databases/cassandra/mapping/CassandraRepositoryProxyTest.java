@@ -14,6 +14,7 @@
  */
 package org.eclipse.jnosql.databases.cassandra.mapping;
 
+import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.mapping.column.ColumnTemplate;
