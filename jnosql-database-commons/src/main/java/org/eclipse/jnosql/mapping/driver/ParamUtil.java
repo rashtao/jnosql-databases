@@ -23,9 +23,42 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Utility class for extracting method parameters annotated with {@link Param} across all repository interfaces.
+ *
+ * <p>This utility supports repositories using custom query annotations such as {@code @AQL}, {@code @Cypher},
+ * and others, where parameters are annotated with {@link Param} to enable named parameter binding.</p>
+ *
+ * <h3>Example Usage:</h3>
+ * <pre>{@code
+ * public interface PersonRepository extends DatabaseBRepository<Person, String> {
+ *
+ *     @DatabaseQuery("FOR p IN Person FILTER p.name == @name RETURN p")
+ *     List<Person> findByName(@Param("name") String name);
+ * }
+ *
+ * Method method = PersonRepository.class.getMethod("findByName", String.class);
+ * Object[] args = {"John Doe"};
+ * Map<String, Object> params = ParamUtil.INSTANCE.getParams(args, method);
+ * System.out.println(params); // {name=John Doe}
+ * }</pre>
+ *
+ * <p>The returned map is then used for binding values to query parameters dynamically at runtime.</p>
+ */
 public enum ParamUtil {
 
     INSTANCE;
+
+    /**
+     * Extracts parameters annotated with {@link Param} from repository methods and returns them as a key-value map.
+     *
+     * <p>This method is designed to work with various repository query types.
+     *
+     * @param args   the arguments passed to the repository method invocation
+     * @param method the repository method whose parameters should be extracted
+     * @return a map of parameter names (from {@code @Param}) and their corresponding values
+     * @throws IllegalArgumentException if {@code args} or {@code method} is {@code null}
+     */
     static Map<String, Object> getParams(Object[] args, Method method) {
 
         Map<String, Object> params = new HashMap<>();
