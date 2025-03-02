@@ -33,7 +33,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
 
     /**
      * Executes a native OrientDB SQL query.
-     * <p>
      * This method allows running SQL queries with positional parameters.
      * Example usage:
      * <pre>
@@ -41,7 +40,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
      * Stream<User> users = template.sql("SELECT FROM User WHERE age > ?", 30);
      * }
      * </pre>
-     * </p>
      *
      * @param <T>    the expected result type
      * @param query  the SQL query string
@@ -53,7 +51,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
 
     /**
      * Executes a native OrientDB SQL query with named parameters.
-     * <p>
      * Example usage:
      * <pre>
      * {@code
@@ -61,7 +58,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
      * Stream<User> users = template.sql("SELECT FROM User WHERE age > :age", params);
      * }
      * </pre>
-     * </p>
      *
      * @param <T>    the expected result type
      * @param query  the SQL query string
@@ -73,7 +69,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
 
     /**
      * Executes a live query in OrientDB.
-     * <p>
      * A live query listens for real-time changes in the database and triggers callbacks
      * for each event that occurs (insert, update, delete).
      * Example usage:
@@ -82,7 +77,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
      * template.live(selectQuery, event -> System.out.println("Update: " + event));
      * }
      * </pre>
-     * </p>
      *
      * @param <T>      the expected result type
      * @param query    the query definition using {@link SelectQuery}
@@ -93,7 +87,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
 
     /**
      * Executes a live query in OrientDB using a SQL string.
-     * <p>
      * The query must include the "LIVE" keyword.
      * Example usage:
      * <pre>
@@ -101,7 +94,6 @@ public interface OrientDBTemplate extends DocumentTemplate {
      * template.live("LIVE SELECT FROM User", event -> System.out.println("User changed: " + event));
      * }
      * </pre>
-     * </p>
      *
      * @param <T>      the expected result type
      * @param query    the SQL query string containing the "LIVE" keyword
