@@ -59,7 +59,7 @@ public enum ParamUtil {
      * @return a map of parameter names (from {@code @Param}) and their corresponding values
      * @throws IllegalArgumentException if {@code args} or {@code method} is {@code null}
      */
-    static Map<String, Object> getParams(Object[] args, Method method) {
+    public Map<String, Object> getParams(Object[] args, Method method) {
 
         Map<String, Object> params = new HashMap<>();
         Annotation[][] annotations = method.getParameterAnnotations();
