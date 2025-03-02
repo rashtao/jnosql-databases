@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * <p>This utility supports repositories using custom query annotations such as {@code @AQL}, {@code @Cypher},
  * and others, where parameters are annotated with {@link Param} to enable named parameter binding.</p>
  *
- * <h3>Example Usage:</h3>
+ * Example Usage:
  * <pre>{@code
  * public interface PersonRepository extends DatabaseBRepository<Person, String> {
  *
