@@ -19,6 +19,7 @@ import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
+import org.eclipse.jnosql.mapping.driver.ParamUtil;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.semistructured.query.AbstractSemiStructuredRepositoryProxy;
@@ -93,7 +94,7 @@ class ArangoDBDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposi
         AQL aql = method.getAnnotation(AQL.class);
         if (Objects.nonNull(aql)) {
             Stream<T> result;
-            Map<String, Object> params = ParamUtil.getParams(args, method);
+            Map<String, Object> params = ParamUtil.INSTANCE.getParams(args, method);
             if (params.isEmpty()) {
                 result = template.aql(aql.value(), emptyMap());
             } else {

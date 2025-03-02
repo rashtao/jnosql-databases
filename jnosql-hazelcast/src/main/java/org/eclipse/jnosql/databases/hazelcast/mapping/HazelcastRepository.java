@@ -18,10 +18,27 @@ package org.eclipse.jnosql.databases.hazelcast.mapping;
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
- * The hazelcast {@link NoSQLRepository}
+ * A Hazelcast-specific extension of {@link NoSQLRepository}, providing
+ * key-value data storage and retrieval using Hazelcast.
+ * This repository interface allows for defining custom queries using
+ * {@link Query} annotations and enables CRUD operations for entities.
+ *
+ * Example usage:
+ * <pre>
+ * {@code
+ * @Repository
+ * interface ProductRepository extends HazelcastRepository<Product, String> {
+ *
+ *     @Query("category = :category")
+ *     Set<Product> findByCategory(@Param("category") String category);
+ * }
+ * }
+ * </pre>
  *
  * @param <T> the entity type
- * @param <K> the id entity type
+ * @param <K> the identifier type
+ * @see Query
+ * @see NoSQLRepository
  */
 public interface HazelcastRepository<T, K> extends NoSQLRepository<T, K> {
 }

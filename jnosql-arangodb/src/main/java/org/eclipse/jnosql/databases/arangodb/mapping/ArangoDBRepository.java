@@ -19,9 +19,25 @@ import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 
 /**
- * The arangodb {@link NoSQLRepository}
+ * A repository interface for ArangoDB, extending the generic {@link NoSQLRepository}.
+ * This repository supports executing custom AQL queries via the {@link AQL} annotation.
+ *
+ * Example usage:
+ * <pre>{@code
+ * @Repository
+ * public interface PersonRepository extends ArangoDBRepository<Person, String> {
+ *
+ *     @AQL("FOR p IN Person RETURN p")
+ *     List<Person> findAll();
+ *
+ *     @AQL("FOR p IN Person FILTER p.name == @name RETURN p")
+ *     List<Person> findByName(@Param("name") String name);
+ * }
+ * }</pre>
+ *
  * @param <T> the entity type
- * @param <K> the id entity type
+ * @param <K> the entity ID type
+ * @see AQL
  */
 public interface ArangoDBRepository<T, K> extends NoSQLRepository<T, K> {
 }

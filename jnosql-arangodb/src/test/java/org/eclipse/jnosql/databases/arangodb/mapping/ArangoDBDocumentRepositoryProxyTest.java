@@ -14,6 +14,7 @@
  */
 package org.eclipse.jnosql.databases.arangodb.mapping;
 
+import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jnosql.mapping.core.Converters;

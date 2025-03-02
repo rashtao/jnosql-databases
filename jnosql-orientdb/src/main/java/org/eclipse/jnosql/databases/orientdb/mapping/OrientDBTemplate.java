@@ -23,45 +23,83 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * A {@link DocumentTemplate} to orientdb
+ * A specialized {@link DocumentTemplate} for OrientDB.
+ * <p>
+ * This template provides methods for executing native SQL queries,
+ * live queries, and queries with named parameters.
+ * </p>
  */
 public interface OrientDBTemplate extends DocumentTemplate {
 
     /**
-     * Find using OrientDB native query
+     * Executes a native OrientDB SQL query.
+     * This method allows running SQL queries with positional parameters.
+     * Example usage:
+     * <pre>
+     * {@code
+     * Stream<User> users = template.sql("SELECT FROM User WHERE age > ?", 30);
+     * }
+     * </pre>
      *
-     * @param query  the query
-     * @param params the params
-     * @return the query result
-     * @throws NullPointerException when either query or params are null
+     * @param <T>    the expected result type
+     * @param query  the SQL query string
+     * @param params optional positional parameters for the query
+     * @return a stream of results matching the query
+     * @throws NullPointerException if the query or params are null
      */
     <T> Stream<T> sql(String query, Object... params);
 
     /**
-     * Find using OrientDB native query with map params
+     * Executes a native OrientDB SQL query with named parameters.
+     * Example usage:
+     * <pre>
+     * {@code
+     * Map<String, Object> params = Map.of("age", 30);
+     * Stream<User> users = template.sql("SELECT FROM User WHERE age > :age", params);
+     * }
+     * </pre>
      *
-     * @param query  the query
-     * @param params the params
-     * @return the query result
-     * @throws NullPointerException when either query or params are null
+     * @param <T>    the expected result type
+     * @param query  the SQL query string
+     * @param params a map of named parameters for the query
+     * @return a stream of results matching the query
+     * @throws NullPointerException if the query or params are null
      */
     <T> Stream<T> sql(String query, Map<String, Object> params);
+
     /**
-     * Execute live query
+     * Executes a live query in OrientDB.
+     * A live query listens for real-time changes in the database and triggers callbacks
+     * for each event that occurs (insert, update, delete).
+     * Example usage:
+     * <pre>
+     * {@code
+     * template.live(selectQuery, event -> System.out.println("Update: " + event));
+     * }
+     * </pre>
      *
-     * @param query    the query
-     * @param callBacks callbacks for each operation
-     * @throws NullPointerException when both query and callBack are null
+     * @param <T>      the expected result type
+     * @param query    the query definition using {@link SelectQuery}
+     * @param callBacks callback to handle live query events
+     * @throws NullPointerException if either query or callBacks is null
      */
     <T> void live(SelectQuery query, OrientDBLiveCallback<T> callBacks);
 
     /**
-     * Execute live query
+     * Executes a live query in OrientDB using a SQL string.
+     * The query must include the "LIVE" keyword.
+     * Example usage:
+     * <pre>
+     * {@code
+     * template.live("LIVE SELECT FROM User", event -> System.out.println("User changed: " + event));
+     * }
+     * </pre>
      *
-     * @param query    the string query, you must add "live"
-     * @param callBacks callbacks for each operation
-     * @param params   the params
-     * @throws NullPointerException when both query, callBack are null
+     * @param <T>      the expected result type
+     * @param query    the SQL query string containing the "LIVE" keyword
+     * @param callBacks callback to handle live query events
+     * @param params   optional positional parameters for the query
+     * @throws NullPointerException if either query or callBacks is null
      */
     <T> void live(String query, OrientDBLiveCallback<T> callBacks, Object... params);
 }

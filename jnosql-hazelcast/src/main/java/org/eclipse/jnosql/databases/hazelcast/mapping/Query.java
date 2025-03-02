@@ -20,11 +20,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * To a dynamic query on HazelcastRepository interfaces.
+ * Annotation for defining a dynamic query method in Hazelcast repositories.
+ * This annotation allows developers to specify Hazelcast query expressions
+ * directly in repository methods.
+ *
+ * Example usage:
+ * <pre>
+ * {@code
+ * @Repository
+ * interface PersonRepository extends HazelcastRepository<Person, String> {
+ *
+ *     @Query("age > 30")
+ *     List<Person> findAdults();
+ * }
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Query {
 
+    /**
+     * The Hazelcast query expression.
+     *
+     * @return the query string to be executed
+     */
     String value();
 }

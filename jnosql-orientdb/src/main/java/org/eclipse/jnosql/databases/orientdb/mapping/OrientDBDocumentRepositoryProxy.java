@@ -19,6 +19,7 @@ import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
+import org.eclipse.jnosql.mapping.driver.ParamUtil;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.semistructured.query.AbstractSemiStructuredRepositoryProxy;
@@ -96,7 +97,7 @@ class OrientDBDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposi
             if (args == null || args.length == 0) {
                 result = template.sql(sql.value());
             } else {
-                Map<String, Object> params = MapTypeUtil.getParams(args, method);
+                Map<String, Object> params = ParamUtil.INSTANCE.getParams(args, method);
                 if (params.isEmpty()) {
                     result = template.sql(sql.value(), args);
                 } else {

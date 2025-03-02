@@ -14,6 +14,7 @@
  */
 package org.eclipse.jnosql.databases.hazelcast.mapping;
 
+import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
@@ -136,6 +137,6 @@ public class HazelcastRepositoryProxyTest {
         List<Human> findActive();
 
         @Query("name = :name AND age = :age")
-        Set<Human> findByAgeAndInteger(@Param("name") String name, @Param("age") Integer age);
+        Set<Human> findByAgeAndInteger(@Param("name") String name,@Param("age") Integer age);
     }
 }

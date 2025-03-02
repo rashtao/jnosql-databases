@@ -19,6 +19,7 @@ import org.eclipse.jnosql.mapping.column.ColumnTemplate;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
+import org.eclipse.jnosql.mapping.driver.ParamUtil;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.semistructured.query.AbstractSemiStructuredRepositoryProxy;
@@ -91,7 +92,7 @@ class CassandraRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryPro
         if (Objects.nonNull(cql)) {
 
             Stream<T> result;
-            Map<String, Object> values = CQLObjectUtil.getValues(args, method);
+            Map<String, Object> values = ParamUtil.INSTANCE.getParams(args, method);
             if (!values.isEmpty()) {
                 result = template.cql(cql.value(), values);
             } else if (args == null || args.length == 0) {

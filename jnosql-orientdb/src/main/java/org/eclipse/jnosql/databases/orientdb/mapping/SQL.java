@@ -20,11 +20,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * To a dynamic query on OrientDBCrudRepository and OrientDBCrudRepositoryAsync interfaces.
+ * Annotation for defining dynamic SQL queries in OrientDB repositories.
+ * This annotation is used on methods within {@link OrientDBCrudRepository} to execute
+ * custom SQL queries directly on OrientDB.
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * @SQL("SELECT FROM User WHERE age > :age")
+ * List<User> findUsersByAge(@Param("age") int age);
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface SQL {
 
+    /**
+     * Defines the SQL query to be executed.
+     *
+     * @return the SQL query string
+     */
     String value();
 }

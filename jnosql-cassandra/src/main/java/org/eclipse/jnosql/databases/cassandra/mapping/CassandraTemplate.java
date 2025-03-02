@@ -27,120 +27,120 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * A Cassandra extension of {@link ColumnTemplate}
+ * A Cassandra-specific extension of {@link ColumnTemplate}, providing additional functionality for interacting
+ * with a Cassandra database using CQL queries and different consistency levels.
  */
 public interface CassandraTemplate extends ColumnTemplate {
 
     /**
-     * Saves a ColumnEntity with a defined ConsistencyLevel
+     * Saves an entity with a specified {@link ConsistencyLevel}.
      *
-     * @param <T>    type
-     * @param entity the entity
-     * @param level  the {@link ConsistencyLevel}
-     * @return the entity saved
-     * @throws NullPointerException when both entity or level are null
+     * @param <T>    the type of the entity
+     * @param entity the entity to be saved
+     * @param level  the desired {@link ConsistencyLevel} for the operation
+     * @return the saved entity
+     * @throws NullPointerException if either {@code entity} or {@code level} is {@code null}
      */
-
     <T> T save(T entity, ConsistencyLevel level);
 
-
     /**
-     * Saves an entity using {@link ConsistencyLevel}
+     * Saves multiple entities with a specified {@link ConsistencyLevel} and a time-to-live (TTL) duration.
      *
-     * @param <T>      type
-     * @param entities the entities
-     * @param ttl      the ttl
-     * @param level    the level
-     * @return the entity saved
-     * @throws NullPointerException when either entity or ttl or level are null
+     * @param <T>      the type of the entities
+     * @param entities the iterable collection of entities to be saved
+     * @param ttl      the time-to-live duration for the records
+     * @param level    the desired {@link ConsistencyLevel} for the operation
+     * @return an iterable containing the saved entities
+     * @throws NullPointerException if {@code entities}, {@code ttl}, or {@code level} is {@code null}
      */
     <T> Iterable<T> save(Iterable<T> entities, Duration ttl, ConsistencyLevel level);
 
     /**
-     * Saves a ColumnEntity with a defined ConsistencyLevel
+     * Saves multiple entities with a specified {@link ConsistencyLevel}.
      *
-     * @param <T>      type
-     * @param entities the entities
-     * @param level    the {@link ConsistencyLevel}
-     * @return the entity saved
-     * @throws NullPointerException when both entity or level are null
+     * @param <T>      the type of the entities
+     * @param entities the iterable collection of entities to be saved
+     * @param level    the desired {@link ConsistencyLevel} for the operation
+     * @return an iterable containing the saved entities
+     * @throws NullPointerException if {@code entities} or {@code level} is {@code null}
      */
-
     <T> Iterable<T> save(Iterable<T> entities, ConsistencyLevel level);
 
-
     /**
-     * Saves an entity using {@link ConsistencyLevel}
+     * Saves an entity with a specified {@link ConsistencyLevel} and a time-to-live (TTL) duration.
      *
-     * @param <T>    type
-     * @param entity the entity
-     * @param ttl    the ttl
-     * @param level  the level
-     * @return the entity saved
-     * @throws NullPointerException when either entity or ttl or level are null
+     * @param <T>    the type of the entity
+     * @param entity the entity to be saved
+     * @param ttl    the time-to-live duration for the record
+     * @param level  the desired {@link ConsistencyLevel} for the operation
+     * @return the saved entity
+     * @throws NullPointerException if {@code entity}, {@code ttl}, or {@code level} is {@code null}
      */
     <T> T save(T entity, Duration ttl, ConsistencyLevel level);
 
-
     /**
-     * Deletes an information using {@link ConsistencyLevel}
+     * Deletes records based on a {@link DeleteQuery} with a specified {@link ConsistencyLevel}.
      *
-     * @param query the query
-     * @param level the level
-     * @throws NullPointerException when either query or level are null
+     * @param query the delete query defining the criteria for deletion
+     * @param level the desired {@link ConsistencyLevel} for the operation
+     * @throws NullPointerException if either {@code query} or {@code level} is {@code null}
      */
     void delete(DeleteQuery query, ConsistencyLevel level);
 
     /**
-     * Finds using a consistency level
+     * Executes a {@link SelectQuery} using a specified {@link ConsistencyLevel} and retrieves the matching records.
      *
-     * @param <T>   type
-     * @param query the query
-     * @param level the consistency level
-     * @return the query using a consistency level
+     * @param <T>   the type of the result
+     * @param query the select query defining the criteria for data retrieval
+     * @param level the desired {@link ConsistencyLevel} for the operation
+     * @return a stream of results matching the query criteria
      */
     <T> Stream<T> find(SelectQuery query, ConsistencyLevel level);
 
     /**
-     * Executes CQL
+     * Executes a raw CQL query.
      *
-     * @param <T>   type
-     * @param query the Cassandra query language
-     * @return the result of this query
-     * @throws NullPointerException when query is null
+     * @param <T>   the type of the result
+     * @param query the CQL query to be executed
+     * @return a stream containing the results of the query
+     * @throws NullPointerException if {@code query} is {@code null}
      */
     <T> Stream<T> cql(String query);
 
     /**
-     * Executes CQL using the provided named values.
-     * E.g.: "SELECT * FROM users WHERE id = :i", Map.&#60;String, Object&#62;of("i", 1)"
+     * Executes a CQL query with named parameters.
+     * <p>
+     * Example usage:
+     * <pre>{@code
+     * template.cql("SELECT * FROM users WHERE id = :id", Map.of("id", 1));
+     * }</pre>
      *
-     * @param <T>    type
-     * @param query  the Cassandra query language
-     * @param values values required for the execution of {@code query}
-     * @return the result of this query
-     * @throws NullPointerException when query is null
+     * @param <T>    the type of the result
+     * @param query  the CQL query with named placeholders
+     * @param values a map of parameter names to values
+     * @return a stream containing the results of the query
+     * @throws NullPointerException if {@code query} is {@code null}
      */
     <T> Stream<T> cql(String query, Map<String, Object> values);
 
     /**
-     * Executes CQL
+     * Executes a CQL query with positional parameters.
      *
-     * @param <T>    type
-     * @param query  the Cassandra query language
-     * @param params the params
-     * @return the result of this query
-     * @throws NullPointerException when query is null
+     * @param <T>    the type of the result
+     * @param query  the CQL query with positional placeholders
+     * @param params the values to be bound to the query placeholders
+     * @return a stream containing the results of the query
+     * @throws NullPointerException if {@code query} is {@code null}
      */
     <T> Stream<T> cql(String query, Object... params);
 
     /**
-     * Executes a statement
+     * Executes a {@link SimpleStatement} in Cassandra.
      *
-     * @param <T>       type
-     * @param statement the statement
-     * @return the result of this query
-     * @throws NullPointerException when statement is null
+     * @param <T>       the type of the result
+     * @param statement the prepared {@link SimpleStatement} to be executed
+     * @return a stream containing the results of the query
+     * @throws NullPointerException if {@code statement} is {@code null}
      */
     <T> Stream<T> execute(SimpleStatement statement);
 

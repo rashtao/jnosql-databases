@@ -19,6 +19,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Couchbase client 3.7.6
 - Update DynamoDB driver 2.29.45
 - Update ArangoDb driver to 7.17.0
+- At repositories params, use the Param annotation from Jakarta Data API.
 
 === Fixed
 

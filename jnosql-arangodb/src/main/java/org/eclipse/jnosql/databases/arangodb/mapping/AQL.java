@@ -20,11 +20,33 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * To a dynamic query on ArangoDBRepository and ArangoDBRepositoryAsync interfaces.
+ * Annotation to define a dynamic AQL (ArangoDB Query Language) query for methods
+ * in the {@link ArangoDBRepository} interface.
+ * This annotation enables executing custom AQL queries directly from repository methods,
+ * similar to how queries are defined in other JNoSQL repositories.
+ *
+ * Example usage:
+ * <pre>{@code
+ * @AQL("FOR p IN Person RETURN p")
+ * List<Person> findAll();
+ * }</pre>
+ *
+ *Parameterized query:
+ * <pre>{@code
+ * @AQL("FOR p IN Person FILTER p.name == @name RETURN p")
+ * List<Person> findByName(@Param("name") String name);
+ * }</pre>
+ *
+ * @see ArangoDBRepository
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AQL {
 
+    /**
+     * The AQL query string to be executed.
+     *
+     * @return the AQL query
+     */
     String value();
 }

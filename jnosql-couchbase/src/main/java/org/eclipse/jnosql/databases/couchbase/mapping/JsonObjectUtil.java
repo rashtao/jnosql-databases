@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.couchbase.mapping;
 
 
 import com.couchbase.client.java.json.JsonObject;
+import jakarta.data.repository.Param;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

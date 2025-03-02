@@ -20,14 +20,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to define a dynamic CQL query method in CassandraRepository and CassandraRepositoryAsync interfaces.
+ * Annotation used to define a dynamic CQL query method in {@link CassandraRepository}.
+ * Methods annotated with {@code @CQL} allow the execution of custom Cassandra Query Language (CQL) statements
+ * within repository interfaces.
+ * Example usage:
+ * <pre>{@code
+ * @CQL("SELECT * FROM users WHERE username = :username")
+ * List<User> findByUsername(@Param("username") String username);
+ * }</pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CQL {
 
     /**
-     * The CQL query string.
+     * The CQL query string to be executed.
      *
      * @return the CQL query string
      */

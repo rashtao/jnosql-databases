@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * The solr implementation to {@link DatabaseManager} that does not support TTL methods
- * <p>{@link DefaultSolrDocumentManager#insert(CommunicationEntity, Duration)}</p>
+ * {@link DefaultSolrDocumentManager#insert(CommunicationEntity, Duration)}
  */
 public interface SolrDocumentManager extends DatabaseManager {
 

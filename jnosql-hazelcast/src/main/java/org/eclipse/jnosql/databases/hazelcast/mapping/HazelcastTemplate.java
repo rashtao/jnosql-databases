@@ -21,40 +21,70 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * A template layer to Hazelcast key-value type
+ * A specialized {@link KeyValueTemplate} for Hazelcast,
+ * providing methods to execute queries using SQL-like expressions and predicates.
+ * This template facilitates querying key-value structures stored in a Hazelcast instance.
+ * It supports both SQL-like queries with named parameters and Hazelcast-specific predicates.
+ *
+ * Example usage:
+ * <pre>
+ * {@code
+ * @Inject
+ * private HazelcastTemplate hazelcastTemplate;
+ *
+ * // Query using SQL-like syntax
+ * Collection<Movie> movies = hazelcastTemplate.sql("name = :name", Map.of("name", "Inception"));
+ * movies.forEach(System.out::println);
+ *
+ * // Query using Hazelcast Predicate
+ * Predicate<String, Movie> predicate = Predicates.equal("genre", "Sci-Fi");
+ * Collection<Movie> sciFiMovies = hazelcastTemplate.sql(predicate);
+ * sciFiMovies.forEach(System.out::println);
+ * }
+ * </pre>
+ *
+ * @see KeyValueTemplate
  */
 public interface HazelcastTemplate extends KeyValueTemplate {
 
     /**
-     * Executes hazelcast query
+     * Executes a Hazelcast query using SQL-like syntax.
+     * The query should follow Hazelcast's SQL-like query syntax for key-value stores.
      *
      * @param <T>   the entity type
-     * @param query the query
-     * @return the result query
-     * @throws NullPointerException when there is null query
+     * @param query the SQL-like query string
+     * @return a collection of matching entities
+     * @throws NullPointerException if the query is null
      */
     <T> Collection<T> sql(String query);
 
     /**
-     * Executes hazelcast query with named query.
-     * E.g.:  bucketManager.query("name = :name", singletonMap("name", "Matrix"))
+     * Executes a Hazelcast query with named parameters.
+     * Example usage:
+     * <pre>
+     * {@code
+     * Collection<Movie> movies = hazelcastTemplate.sql("name = :name", Map.of("name", "The Matrix"));
+     * }
+     * </pre>
      *
-     * @param query  the query
      * @param <T>    the entity type
-     * @param params the params to bind
-     * @return the result query
-     * @throws NullPointerException when there is null query
+     * @param query  the SQL-like query string
+     * @param params a map of named parameters to bind in the query
+     * @return a collection of matching entities
+     * @throws NullPointerException if the query or params are null
      */
     <T> Collection<T> sql(String query, Map<String, Object> params);
 
     /**
-     * Executes hazelcast query
+     * Executes a Hazelcast query using a {@link Predicate}.
+     * The predicate-based approach is useful for filtering key-value pairs
+     * based on specific criteria.
      *
-     * @param predicate the hazelcast predicate
      * @param <K>       the key type
      * @param <V>       the value type
-     * @return the result query
-     * @throws NullPointerException when there is null predicate
+     * @param predicate the Hazelcast predicate for filtering data
+     * @return a collection of values that match the predicate
+     * @throws NullPointerException if the predicate is null
      */
     <K, V> Collection<V> sql(Predicate<K, V> predicate);
 

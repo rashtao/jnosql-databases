@@ -45,7 +45,7 @@ import static net.ravendb.client.Constants.Documents.Metadata.EXPIRES;
 
 /**
  * The RavenDB implementation to {@link DatabaseManager} that does not support TTL methods
- * <p>{@link RavenDBDocumentManager#insert(CommunicationEntity, Duration)}</p>
+ * {@link RavenDBDocumentManager#insert(CommunicationEntity, Duration)}
  */
 public class RavenDBDocumentManager implements DatabaseManager {
 

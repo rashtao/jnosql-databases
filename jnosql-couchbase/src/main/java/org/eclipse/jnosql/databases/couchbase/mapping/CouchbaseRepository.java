@@ -18,9 +18,25 @@ package org.eclipse.jnosql.databases.couchbase.mapping;
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
- * The couchbase {@link NoSQLRepository}
+ * A Couchbase-specific extension of {@link NoSQLRepository}.
+ * This repository interface provides built-in CRUD operations and supports dynamic queries
+ * using the {@link N1QL} annotation for executing Couchbase N1QL queries.
+ *
+ * Example Usage
+ * <pre>{@code
+ * @Repository
+ * interface UserRepository extends CouchbaseRepository<User, String> {
+ *
+ *     @N1QL("SELECT * FROM users WHERE name = $name")
+ *     List<User> findByName(@Param("name") String name);
+ *
+ *     @N1QL("SELECT * FROM users WHERE age > $age")
+ *     List<User> findByAgeGreaterThan(@Param("age") int age);
+ * }
+ * }</pre>
+ *
  * @param <T> the entity type
- * @param <K> the entity id type
+ * @param <K> the entity ID type
  */
 public interface CouchbaseRepository<T, K> extends NoSQLRepository<T, K> {
 }

@@ -21,28 +21,50 @@ import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import java.util.stream.Stream;
 
 /**
- * A {@link DocumentTemplate} to couchbase
+ * A Couchbase-specific extension of {@link DocumentTemplate} that enables querying using N1QL.
+ * <p>
+ * This interface provides methods to execute Couchbase's N1QL queries, allowing dynamic parameterized
+ * queries and plain queries.
+ * </p>
+ *
+ * Example Usage
+ * <pre>{@code
+ * @Inject
+ * private CouchbaseTemplate template;
+ *
+ * // Query with named parameters
+ * JsonObject params = JsonObject.create().put("status", "active");
+ * Stream<User> activeUsers = template.n1qlQuery("SELECT * FROM users WHERE status = $status", params);
+ *
+ * // Plain query execution
+ * Stream<User> allUsers = template.n1qlQuery("SELECT * FROM users");
+ * }</pre>
  */
 public interface CouchbaseTemplate extends DocumentTemplate {
 
 
     /**
-     * Executes the n1qlquery with params and then result que result
+     * Executes an N1QL query with named parameters and returns the query result.
+     * Example query:
+     * {@code SELECT * FROM users WHERE status = $status}
      *
-     * @param n1qlQuery the query
-     * @param params    the params
-     * @return the query result
-     * @throws NullPointerException when either n1qlQuery or params are null
+     * @param <T>       the entity type
+     * @param n1qlQuery the N1QL query to execute
+     * @param params    the parameters for the query
+     * @return a {@link Stream} of entities representing the query result
+     * @throws NullPointerException if either {@code n1qlQuery} or {@code params} is null
      */
     <T> Stream<T> n1qlQuery(String n1qlQuery, JsonObject params);
 
-
     /**
-     * Executes the n1ql  plain query and then result que result
+     * Executes a plain N1QL query without parameters and returns the query result.
+     * Example query:
+     * {@code SELECT * FROM users}
      *
-     * @param n1qlQuery the query
-     * @return the query result
-     * @throws NullPointerException when either n1qlQuery or params are null
+     * @param <T>       the entity type
+     * @param n1qlQuery the N1QL query to execute
+     * @return a {@link Stream} of entities representing the query result
+     * @throws NullPointerException if {@code n1qlQuery} is null
      */
     <T> Stream<T> n1qlQuery(String n1qlQuery);
 

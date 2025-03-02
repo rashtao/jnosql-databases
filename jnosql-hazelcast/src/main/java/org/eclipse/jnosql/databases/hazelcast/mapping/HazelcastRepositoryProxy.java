@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.hazelcast.mapping;
 
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
+import org.eclipse.jnosql.mapping.driver.ParamUtil;
 import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
 import org.eclipse.jnosql.mapping.keyvalue.query.AbstractKeyValueRepositoryProxy;
 import org.eclipse.jnosql.mapping.keyvalue.query.DefaultKeyValueRepository;
@@ -84,7 +85,7 @@ class HazelcastRepositoryProxy<T, K> extends AbstractKeyValueRepositoryProxy<T, 
         Query query = method.getAnnotation(Query.class);
         if (Objects.nonNull(query)) {
             Stream<T> result;
-            Map<String, Object> params = ParamUtil.getParams(args, method);
+            Map<String, Object> params = ParamUtil.INSTANCE.getParams(args, method);
             if (params.isEmpty()) {
                 result = template.<T>sql(query.value()).stream();
             } else {
