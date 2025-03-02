@@ -14,6 +14,7 @@
  */
 package org.eclipse.jnosql.databases.arangodb.mapping;
 
+import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jnosql.mapping.core.Converters;
@@ -144,6 +145,6 @@ public class ArangoDBDocumentRepositoryProxyTest {
         List<Human> findAllQuery();
 
         @AQL("FOR p IN Person FILTER p.name = @name RETURN p")
-        List<Human> findByName(String name);
+        List<Human> findByName(@Param("name") String name);
     }
 }
