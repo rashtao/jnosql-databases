@@ -19,15 +19,33 @@ package org.eclipse.jnosql.databases.couchdb.communication;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 
 /**
- * A couchdb extension where it does provide a {@link CouchDBDocumentManager#count()} feature.
+ * A CouchDB-specific extension of {@link DatabaseManager} that provides an additional
+ * feature to count the number of documents in the database.
+ * <p>
+ * This interface offers a {@code count()} method to retrieve the total number of documents
+ * stored in the CouchDB database. It extends the {@link DatabaseManager} to align with
+ * Eclipse JNoSQL's database management abstraction.
+ * </p>
+ *
+ * Example Usage:
+ * <pre>{@code
+ * @Inject
+ * private CouchDBDocumentManager documentManager;
+ *
+ * long totalDocuments = documentManager.count();
+ * }</pre>
+ *
+ * @see DatabaseManager
  */
 public interface CouchDBDocumentManager extends DatabaseManager {
 
     /**
-     * Returns the number of elements of database
+     * Retrieves the total number of documents in the database.
+     * Note: Not all CouchDB implementations support this feature. If the operation is not
+     * supported, an {@link UnsupportedOperationException} will be thrown.
      *
-     * @return the number of elements
-     * @throws UnsupportedOperationException when the database dot not have support
+     * @return the total number of documents in the database
+     * @throws UnsupportedOperationException if the database does not support counting documents
      */
     long count();
 }
