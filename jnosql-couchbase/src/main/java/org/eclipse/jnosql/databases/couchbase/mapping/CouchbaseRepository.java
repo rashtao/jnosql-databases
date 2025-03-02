@@ -19,12 +19,10 @@ import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
  * A Couchbase-specific extension of {@link NoSQLRepository}.
- * <p>
  * This repository interface provides built-in CRUD operations and supports dynamic queries
  * using the {@link N1QL} annotation for executing Couchbase N1QL queries.
- * </p>
  *
- * <h2>Example Usage</h2>
+ * Example Usage
  * <pre>{@code
  * @Repository
  * interface UserRepository extends CouchbaseRepository<User, String> {
