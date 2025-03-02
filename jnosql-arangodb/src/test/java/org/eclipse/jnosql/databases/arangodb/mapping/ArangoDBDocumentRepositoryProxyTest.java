@@ -144,6 +144,6 @@ public class ArangoDBDocumentRepositoryProxyTest {
         List<Human> findAllQuery();
 
         @AQL("FOR p IN Person FILTER p.name = @name RETURN p")
-        List<Human> findByName(@Param("name") String name);
+        List<Human> findByName(String name);
     }
 }
