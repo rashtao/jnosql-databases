@@ -18,10 +18,29 @@ package org.eclipse.jnosql.databases.orientdb.mapping;
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
- * The OrientDB {@link NoSQLRepository}
+ * A repository interface for OrientDB that extends {@link NoSQLRepository}.
+ * <p>
+ * This interface allows interaction with OrientDB as a document-oriented NoSQL database,
+ * supporting standard CRUD operations and custom queries using the {@link SQL} annotation.
+ * </p>
  *
- * @param <T>  the entity type
- * @param <K> the entity id type
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * @Repository
+ * public interface UserRepository extends OrientDBCrudRepository<User, String> {
+ *
+ *     @SQL("SELECT FROM User WHERE age > :age")
+ *     List<User> findUsersByAge(@Param("age") int age);
+ *
+ *     @SQL("SELECT FROM User WHERE name = :name")
+ *     List<User> findByName(@Param("name") String name);
+ * }
+ * }
+ * </pre>
+ *
+ * @param <T> the entity type
+ * @param <K> the entity ID type
  */
 public interface OrientDBCrudRepository<T, K> extends NoSQLRepository<T, K> {
 }
