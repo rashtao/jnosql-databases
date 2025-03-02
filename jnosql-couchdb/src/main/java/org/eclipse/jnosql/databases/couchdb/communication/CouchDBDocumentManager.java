@@ -21,12 +21,9 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 /**
  * A CouchDB-specific extension of {@link DatabaseManager} that provides an additional
  * feature to count the number of documents in the database.
- * <p>
  * This interface offers a {@code count()} method to retrieve the total number of documents
  * stored in the CouchDB database. It extends the {@link DatabaseManager} to align with
  * Eclipse JNoSQL's database management abstraction.
- * </p>
- *
  * Example Usage:
  * <pre>{@code
  * @Inject

@@ -22,17 +22,16 @@ import java.lang.annotation.Target;
 /**
  * Annotation to define a dynamic AQL (ArangoDB Query Language) query for methods
  * in the {@link ArangoDBRepository} interface.
+ * This annotation enables executing custom AQL queries directly from repository methods,
+ * similar to how queries are defined in other JNoSQL repositories.
  *
- * <p>This annotation enables executing custom AQL queries directly from repository methods,
- * similar to how queries are defined in other JNoSQL repositories.</p>
- *
- * <p>Example usage:</p>
+ * Example usage:
  * <pre>{@code
  * @AQL("FOR p IN Person RETURN p")
  * List<Person> findAll();
  * }</pre>
  *
- * <p>Parameterized query:</p>
+ *Parameterized query:
  * <pre>{@code
  * @AQL("FOR p IN Person FILTER p.name == @name RETURN p")
  * List<Person> findByName(@Param("name") String name);

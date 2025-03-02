@@ -24,8 +24,8 @@ import java.util.stream.Stream;
  * A specialized {@link DocumentTemplate} for ArangoDB, providing methods to execute
  * queries using the ArangoDB Query Language (AQL).
  *
- * <p>This template allows executing AQL queries with named parameters and supports
- * result serialization either through Eclipse JNoSQL or directly via ArangoDB.</p>
+ *  This template allows executing AQL queries with named parameters and supports
+ * result serialization either through Eclipse JNoSQL or directly via ArangoDB.
  */
 public interface ArangoDBTemplate extends DocumentTemplate {
 

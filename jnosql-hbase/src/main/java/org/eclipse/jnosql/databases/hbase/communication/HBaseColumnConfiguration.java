@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Configuration to HBase that returns {@link HBaseColumnManagerFactory}
- * <p>hbase.family.n: as prefix to add family, eg: hbase,family.1=column-family</p>
+ * hbase.family.n: as prefix to add family, eg: hbase,family.1=column-family
  */
 public class HBaseColumnConfiguration implements DatabaseConfiguration {
 

@@ -48,8 +48,8 @@ import static org.eclipse.jnosql.databases.mongodb.communication.MongoDBUtils.ge
 
 /**
  * The mongodb implementation to {@link DatabaseManager} that does not support TTL methods
- * <p>{@link MongoDBDocumentManager#insert(CommunicationEntity, Duration)}</p>
- * <p>Closing a {@link MongoDBDocumentManager} has no effect.
+ * {@link MongoDBDocumentManager#insert(CommunicationEntity, Duration)}
+ * Closing a {@link MongoDBDocumentManager} has no effect.
  */
 public class MongoDBDocumentManager implements DatabaseManager {
 

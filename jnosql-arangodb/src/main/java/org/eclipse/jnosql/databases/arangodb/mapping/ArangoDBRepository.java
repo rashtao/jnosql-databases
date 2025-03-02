@@ -20,10 +20,9 @@ import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 /**
  * A repository interface for ArangoDB, extending the generic {@link NoSQLRepository}.
+ * This repository supports executing custom AQL queries via the {@link AQL} annotation.
  *
- * <p>This repository supports executing custom AQL queries via the {@link AQL} annotation.</p>
- *
- * <p>Example usage:</p>
+ * Example usage:
  * <pre>{@code
  * @Repository
  * public interface PersonRepository extends ArangoDBRepository<Person, String> {

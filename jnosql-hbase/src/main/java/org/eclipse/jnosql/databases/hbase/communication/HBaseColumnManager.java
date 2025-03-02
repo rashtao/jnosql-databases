@@ -52,7 +52,7 @@ import static org.eclipse.jnosql.communication.Condition.OR;
 /**
  * The Hbase implementation to {@link DatabaseManager}.
  * It does not support TTL methods
- * <p>{@link HBaseColumnManager#insert(org.eclipse.jnosql.communication.semistructured.CommunicationEntity, Duration)}</p>
+ * {@link HBaseColumnManager#insert(org.eclipse.jnosql.communication.semistructured.CommunicationEntity, Duration)}
  */
 public class HBaseColumnManager implements DatabaseManager {
 
