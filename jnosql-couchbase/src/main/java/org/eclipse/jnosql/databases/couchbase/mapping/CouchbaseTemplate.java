@@ -45,10 +45,8 @@ public interface CouchbaseTemplate extends DocumentTemplate {
 
     /**
      * Executes an N1QL query with named parameters and returns the query result.
-     * <p>
      * Example query:
      * {@code SELECT * FROM users WHERE status = $status}
-     * </p>
      *
      * @param <T>       the entity type
      * @param n1qlQuery the N1QL query to execute
@@ -60,10 +58,8 @@ public interface CouchbaseTemplate extends DocumentTemplate {
 
     /**
      * Executes a plain N1QL query without parameters and returns the query result.
-     * <p>
      * Example query:
      * {@code SELECT * FROM users}
-     * </p>
      *
      * @param <T>       the entity type
      * @param n1qlQuery the N1QL query to execute
