@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  *
  * @see org.apache.tinkerpop.gremlin.structure.Graph
  */
-public interface GraphTemplate extends SemiStructuredTemplate {
+public interface TinkerpopTemplate extends SemiStructuredTemplate {
 
     /**
      * Deletes a {@link org.apache.tinkerpop.gremlin.structure.Vertex}

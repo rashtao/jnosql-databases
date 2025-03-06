@@ -31,7 +31,7 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 @Default
 @ApplicationScoped
 @Database(GRAPH)
-class DefaultGraphTemplate extends AbstractGraphTemplate {
+class DefaultTinkerpopTemplate extends AbstractTinkerpopTemplate {
 
     private EntityConverter converter;
     private TinkerpopGraphDatabaseManager manager;
@@ -41,9 +41,9 @@ class DefaultGraphTemplate extends AbstractGraphTemplate {
     private Graph graph;
 
     @Inject
-    DefaultGraphTemplate(EntityConverter converter, Graph graph,
-                         EventPersistManager eventManager,
-                         EntitiesMetadata entities, Converters converters) {
+    DefaultTinkerpopTemplate(EntityConverter converter, Graph graph,
+                             EventPersistManager eventManager,
+                             EntitiesMetadata entities, Converters converters) {
         this.converter = converter;
         this.graph = graph;
         this.eventManager = eventManager;
@@ -56,7 +56,7 @@ class DefaultGraphTemplate extends AbstractGraphTemplate {
      * Constructor for CDI
      */
     @Deprecated
-    DefaultGraphTemplate() {}
+    DefaultTinkerpopTemplate() {}
 
     @Override
     protected EntityConverter converter() {

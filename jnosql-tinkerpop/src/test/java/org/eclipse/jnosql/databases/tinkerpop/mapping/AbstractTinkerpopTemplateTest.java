@@ -49,11 +49,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class AbstractGraphTemplateTest {
+public abstract class AbstractTinkerpopTemplateTest {
 
     protected abstract Graph getGraph();
 
-    protected abstract GraphTemplate getGraphTemplate();
+    protected abstract TinkerpopTemplate getGraphTemplate();
 
     @AfterEach
     void after() {

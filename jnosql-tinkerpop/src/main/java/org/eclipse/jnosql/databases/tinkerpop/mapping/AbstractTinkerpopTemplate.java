@@ -50,7 +50,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static org.apache.tinkerpop.gremlin.structure.T.id;
 
-abstract class AbstractGraphTemplate extends AbstractSemiStructuredTemplate implements GraphTemplate {
+abstract class AbstractTinkerpopTemplate extends AbstractSemiStructuredTemplate implements TinkerpopTemplate {
 
     @SuppressWarnings("unchecked")
     private static final Function<GraphTraversal<?, ?>, GraphTraversal<Vertex, Vertex>> INITIAL_VERTEX =

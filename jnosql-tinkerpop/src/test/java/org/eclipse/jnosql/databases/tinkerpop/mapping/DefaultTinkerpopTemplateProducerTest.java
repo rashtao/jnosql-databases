@@ -24,33 +24,33 @@ import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, GraphTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
-class GraphTemplateProducerTest {
+class DefaultTinkerpopTemplateProducerTest {
 
     @Inject
     private GraphTemplateProducer producer;
 
+
     @Test
     void shouldReturnErrorWhenManagerNull() {
-        assertThrows(NullPointerException.class, () -> producer.apply(null));
+        Assertions.assertThrows(NullPointerException.class, () -> producer.apply(null));
     }
 
     @Test
-    void shouldReturnGraphTemplateWhenGetGraph() {
-        Graph graph = Mockito.mock(Graph.class);
-        GraphTemplate template = producer.apply(graph);
+    void shouldReturn() {
+        var graph = Mockito.mock(Graph.class);
+        var template = producer.apply(graph);
         assertNotNull(template);
     }
-
-
 }
