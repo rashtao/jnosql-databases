@@ -23,8 +23,8 @@ import jakarta.inject.Inject;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManager;
 import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.graph.AbstractGraphTemplate;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.semistructured.AbstractSemiStructuredTemplate;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
 @ApplicationScoped
 @Typed(Neo4JTemplate.class)
-class DefaultNeo4JTemplate extends AbstractSemiStructuredTemplate implements Neo4JTemplate {
+class DefaultNeo4JTemplate extends AbstractGraphTemplate implements Neo4JTemplate {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultNeo4JTemplate.class.getName());
 
