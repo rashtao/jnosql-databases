@@ -253,19 +253,69 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     @Override
     public <K> void deleteEdge(K id) {
         Objects.requireNonNull(id, "The id is required");
+        LOGGER.fine(() -> "Deleting edge with ID: " + id);
+        String cypher = "MATCH ()-[r]-() WHERE elementId(r) = $elementId DELETE r";
 
+        try (Transaction tx = session.beginTransaction()) {
+            tx.run(cypher, Values.parameters("elementId", id));
+            LOGGER.fine(() -> "Deleted edge with ID: " + id);
+            tx.commit();
+        }
     }
 
     @Override
     public <K> Optional<CommunicationEdge> findEdgeById(K id) {
+        Objects.requireNonNull(id, "The edge ID is required");
+
+        String cypher = "MATCH (s)-[r]->(t) WHERE elementId(r) = $edgeId RETURN r, s, t";
+        LOGGER.fine(() -> "Find edge with ID: " + id);
+        try (Transaction tx = session.beginTransaction()) {
+            var result = tx.run(cypher, Values.parameters("edgeId", id));
+            if (result.hasNext()) {
+                LOGGER.fine(() -> "Found edge with ID: " + id);
+                var record = result.next();
+                var relationship = record.get("r").asRelationship();
+
+                var sourceNode = record.get("s").asNode();
+                var targetNode = record.get("t").asNode();
+                var sourceEntity = extractEntity(sourceNode.labels().iterator().next(), record, true);
+                var targetEntity = extractEntity(targetNode.labels().iterator().next(), record, true);
+                Map<String, Object> properties = relationship.asMap();
+                return Optional.of(new Neo4jCommunicationEdge(relationship.elementId(), sourceEntity, targetEntity, relationship.type(), properties));
+            }
+        }
         return Optional.empty();
     }
 
     @Override
     public CommunicationEdge edge(CommunicationEntity source, String label, CommunicationEntity target, Map<String, Object> properties) {
-        return null;
-    }
+        Objects.requireNonNull(source, "Source entity is required");
+        Objects.requireNonNull(target, "Target entity is required");
+        Objects.requireNonNull(label, "Relationship type is required");
+        Objects.requireNonNull(properties, "Properties map is required");
 
+        String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
+                "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                "CREATE (s)-[r:" + label + " $props]->(t) RETURN r";
+        LOGGER.fine(() -> "Creating edge with label: " + label);
+        try (Transaction tx = session.beginTransaction()) {
+            var sourceId = source.find(ID).orElseThrow(() ->
+                    new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
+            var targetId = target.find(ID).orElseThrow(() ->
+                    new EdgeCommunicationException("The target entity should have the " + ID + " property")).get();
+
+            var result = tx.run(cypher, Values.parameters(
+                    "sourceElementId", sourceId,
+                    "targetElementId", targetId,
+                    "props", properties
+            ));
+
+            var relationship = result.single().get("r").asRelationship();
+            LOGGER.fine(() -> "Created edge with ID: " + relationship.elementId());
+            tx.commit();
+            return new Neo4jCommunicationEdge(relationship.elementId(), source, target, label, properties);
+        }
+    }
 
     @Override
     public void close() {
