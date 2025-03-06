@@ -20,7 +20,7 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
-import org.eclipse.jnosql.databases.tinkerpop.communication.GraphDatabaseManager;
+import org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDatabaseManager;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -70,14 +70,14 @@ public class GraphTemplateProducer implements Function<Graph, GraphTemplate> {
 
         private final Graph graph;
 
-        private final GraphDatabaseManager manager;
+        private final TinkerpopGraphDatabaseManager manager;
 
         public ProducerGraphTemplate(EntityConverter converter, Graph graph,
                                      EventPersistManager eventManager,
                                      EntitiesMetadata entities, Converters converters) {
             this.converter = converter;
             this.graph = graph;
-            this.manager = GraphDatabaseManager.of(graph);
+            this.manager = TinkerpopGraphDatabaseManager.of(graph);
             this.eventManager = eventManager;
             this.entities = entities;
             this.converters = converters;
@@ -93,7 +93,7 @@ public class GraphTemplateProducer implements Function<Graph, GraphTemplate> {
         }
 
         @Override
-        protected GraphDatabaseManager manager() {
+        protected TinkerpopGraphDatabaseManager manager() {
             return manager;
         }
 

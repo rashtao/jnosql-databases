@@ -27,7 +27,7 @@ public enum CommunicationEntityConverter implements Function<Vertex, Communicati
     public CommunicationEntity apply(Vertex vertex) {
         var entity = CommunicationEntity.of(vertex.label());
         vertex.properties().forEachRemaining(p -> entity.add(p.key(), p.value()));
-        entity.add(DefaultGraphDatabaseManager.ID_PROPERTY, vertex.id());
+        entity.add(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY, vertex.id());
         return entity;
     }
 }

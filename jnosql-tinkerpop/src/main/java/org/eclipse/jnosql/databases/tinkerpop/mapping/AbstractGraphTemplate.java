@@ -25,7 +25,7 @@ import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.jnosql.databases.tinkerpop.communication.CommunicationEntityConverter;
-import org.eclipse.jnosql.databases.tinkerpop.communication.GraphDatabaseManager;
+import org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDatabaseManager;
 import org.eclipse.jnosql.databases.tinkerpop.communication.GraphTransactionUtil;
 import org.eclipse.jnosql.mapping.IdNotFoundException;
 import org.eclipse.jnosql.mapping.PreparedStatement;
@@ -62,11 +62,11 @@ abstract class AbstractGraphTemplate extends AbstractSemiStructuredTemplate impl
 
 
     /**
-     * Retrieves the {@link GraphDatabaseManager} associated with this graph template.
+     * Retrieves the {@link TinkerpopGraphDatabaseManager} associated with this graph template.
      *
-     * @return the {@link GraphDatabaseManager} associated with this graph template
+     * @return the {@link TinkerpopGraphDatabaseManager} associated with this graph template
      */
-    protected abstract GraphDatabaseManager manager();
+    protected abstract TinkerpopGraphDatabaseManager manager();
 
     /**
      * Retrieves the {@link GraphTraversalSource} associated with this graph template.

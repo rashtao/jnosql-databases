@@ -33,7 +33,7 @@ import static org.apache.tinkerpop.gremlin.process.traversal.Order.asc;
 import static org.apache.tinkerpop.gremlin.process.traversal.Order.desc;
 
 /**
- * Default implementation of {@link GraphDatabaseManager} that serves as an adapter to the TinkerPop
+ * Default implementation of {@link TinkerpopGraphDatabaseManager} that serves as an adapter to the TinkerPop
  * graph database provided by the Apache TinkerPop framework.
  * <p>
  * This implementation wraps a TinkerPop {@link Graph} instance and provides methods to interact with
@@ -44,12 +44,12 @@ import static org.apache.tinkerpop.gremlin.process.traversal.Order.desc;
  * as indicated by the UnsupportedOperationException thrown by those methods.
  * </p>
  */
-public class DefaultGraphDatabaseManager implements GraphDatabaseManager {
+public class DefaultTinkerpopGraphDatabaseManager implements TinkerpopGraphDatabaseManager {
 
     public static final String ID_PROPERTY = "_id";
     private final Graph graph;
 
-    DefaultGraphDatabaseManager(Graph graph) {
+    DefaultTinkerpopGraphDatabaseManager(Graph graph) {
         this.graph = graph;
     }
 

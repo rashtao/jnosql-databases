@@ -44,18 +44,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DefaultGraphDatabaseManagerTest {
+class DefaultTinkerpopGraphDatabaseManagerTest {
 
     public static final String COLLECTION_NAME = "person";
 
-    private GraphDatabaseManager entityManager;
+    private TinkerpopGraphDatabaseManager entityManager;
 
     private final Faker faker = new Faker();
 
     @BeforeEach
     void setUp(){
         Graph graph = GraphSupplier.INSTANCE.get();
-        this.entityManager = GraphDatabaseManager.of(graph);
+        this.entityManager = TinkerpopGraphDatabaseManager.of(graph);
     }
 
     @BeforeEach
@@ -76,7 +76,7 @@ class DefaultGraphDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(communicationEntity.find("name", String.class)).get().isEqualTo(name);
             softly.assertThat(communicationEntity.find("age", int.class)).get().isEqualTo(age);
-            softly.assertThat(communicationEntity.find(DefaultGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntity.find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
         });
     }
 
@@ -102,11 +102,11 @@ class DefaultGraphDatabaseManagerTest {
             softly.assertThat(communicationEntities).hasSize(2);
             softly.assertThat(communicationEntities.get(0).find("name", String.class)).get().isEqualTo(name);
             softly.assertThat(communicationEntities.get(0).find("age", int.class)).get().isEqualTo(age);
-            softly.assertThat(communicationEntities.get(0).find(DefaultGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntities.get(0).find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
 
             softly.assertThat(communicationEntities.get(1).find("name", String.class)).get().isEqualTo(name2);
             softly.assertThat(communicationEntities.get(1).find("age", int.class)).get().isEqualTo(age2);
-            softly.assertThat(communicationEntities.get(1).find(DefaultGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntities.get(1).find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
         });
 
     }
