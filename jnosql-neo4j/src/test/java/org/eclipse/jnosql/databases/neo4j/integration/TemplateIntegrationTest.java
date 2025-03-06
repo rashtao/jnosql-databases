@@ -21,6 +21,7 @@ import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.graph.Edge;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -109,5 +110,13 @@ public class TemplateIntegrationTest {
 
         template.delete(Magazine.class).execute();
         assertThat(template.select(Magazine.class).result()).isEmpty();
+    }
+
+    @Test
+    void shouldCreateEdge() {
+        Magazine firstEdition = template.insert(new Magazine(null, "Effective Java", 1));
+        Magazine secondEdition = template.insert(new Magazine(null, "Effective Java", 2));
+        Edge<Magazine, Magazine> edge = Edge.source(firstEdition).label("NEXT").target(secondEdition).property("year", 2025).build();
+        template.edge(edge);
     }
 }

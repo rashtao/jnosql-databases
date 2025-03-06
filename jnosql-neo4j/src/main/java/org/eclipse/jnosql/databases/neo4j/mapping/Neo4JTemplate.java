@@ -16,7 +16,7 @@
  */
 package org.eclipse.jnosql.databases.neo4j.mapping;
 
-import org.eclipse.jnosql.mapping.semistructured.SemiStructuredTemplate;
+import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * traversing relationships, and handling edges between entities.
  *
  */
-public interface Neo4JTemplate extends SemiStructuredTemplate {
+public interface Neo4JTemplate extends GraphTemplate {
     /**
      * Executes a Cypher query and returns a stream of results mapped to the given entity type.
      *
