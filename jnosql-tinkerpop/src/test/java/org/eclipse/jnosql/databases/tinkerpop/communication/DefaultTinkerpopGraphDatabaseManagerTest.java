@@ -18,6 +18,7 @@ import net.datafaker.Faker;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
+import org.eclipse.jnosql.communication.graph.CommunicationEdge;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
@@ -427,8 +428,66 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldCreateEdge() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
 
+        String label = "FRIEND";
+        Map<String, Object> properties = Map.of("since", 2023);
 
+        var edge = entityManager.edge(person1, label, person2, properties);
+
+        assertNotNull(edge);
+        assertEquals(label, edge.label());
+        assertEquals(person1.find("_id").orElseThrow().get(), edge.source().find("_id").orElseThrow().get());
+        assertEquals(person2.find("_id").orElseThrow().get(), edge.target().find("_id").orElseThrow().get());
+        assertEquals(properties, edge.properties());
+    }
+
+    @Test
+    void shouldRemoveEdge() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        entityManager.edge(person1, "FRIEND", person2, Map.of());
+
+        entityManager.remove(person1, "FRIEND", person2);
+
+        var edgesQuery = select().from(COLLECTION_NAME).where("_id").eq(person1.find("_id").orElseThrow().get()).build();
+        var edges = entityManager.select(edgesQuery).toList();
+
+        assertThat(edges).isEmpty();
+    }
+
+    @Test
+    void shouldDeleteEdgeById() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of());
+
+        entityManager.deleteEdge(edge.id());
+
+        Optional<CommunicationEdge> foundEdge = entityManager.findEdgeById(edge.id());
+        assertFalse(foundEdge.isPresent());
+    }
+
+    @Test
+    void shouldFindEdgeById() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of("since", 2023));
+
+        Optional<CommunicationEdge> foundEdge = entityManager.findEdgeById(edge.id());
+
+        assertTrue(foundEdge.isPresent());
+        assertEquals(edge.id(), foundEdge.get().id());
+        assertEquals(edge.label(), foundEdge.get().label());
+        assertEquals(edge.source().find("_id").orElseThrow().get(), foundEdge.get().source().find("_id").orElseThrow().get());
+        assertEquals(edge.target().find("_id").orElseThrow().get(), foundEdge.get().target().find("_id").orElseThrow().get());
+    }
 
     private CommunicationEntity getEntity() {
         CommunicationEntity entity = CommunicationEntity.of(COLLECTION_NAME);
