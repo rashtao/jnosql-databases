@@ -325,10 +325,10 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         return entity.find(ID).filter(this::entityExists).map(id -> entity).orElseGet(() -> insert(entity));
     }
 
-    private boolean entityExists(Object id) {
+    private boolean entityExists(Element id) {
         String cypher = "MATCH (e) WHERE elementId(e) = $id RETURN count(e) > 0 AS exists";
         try (Transaction tx = session.beginTransaction()) {
-            var result = tx.run(cypher, Values.parameters("id", id));
+            var result = tx.run(cypher, Values.parameters("id", id.get()));
             var exists =  result.single().get("exists").asBoolean();
             LOGGER.fine(() -> "Checking if entity exists with ID: " + id + " result: " + exists);
             return exists;

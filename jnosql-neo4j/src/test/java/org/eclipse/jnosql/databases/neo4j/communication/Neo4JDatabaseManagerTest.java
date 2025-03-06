@@ -562,6 +562,63 @@ class Neo4JDatabaseManagerTest {
         });
     }
 
+    @Test
+    void shouldDeleteEdgeById() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of("since", 2020));
+
+        var edgeId = edge.id();
+
+        entityManager.deleteEdge(edgeId);
+
+        String cypher = "MATCH ()-[r]-() WHERE elementId(r) = $id RETURN r";
+        Map<String, Object> parameters = Map.of("id", edgeId);
+
+        var result = entityManager.executeQuery(cypher, parameters).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isEmpty();
+        });
+    }
+
+    @Test
+    void shouldFindEdgeById() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of("since", 2020));
+
+        var edgeId = edge.id();
+
+        var retrievedEdge = entityManager.findEdgeById(edgeId);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(retrievedEdge).isPresent();
+            softly.assertThat(retrievedEdge.get().label()).isEqualTo("FRIEND");
+            softly.assertThat(retrievedEdge.get().properties()).containsEntry("since", 2020);
+        });
+    }
+
+    @Test
+    void shouldCreateEdgeWithProperties() {
+        var person1 = entityManager.insert(getEntity());
+        var person2 = entityManager.insert(getEntity());
+
+        Map<String, Object> properties = Map.of("since", 2019, "strength", "strong");
+        var edge = entityManager.edge(person1, "FRIEND", person2, properties);
+
+        String cypher = "MATCH (p1:person)-[r:FRIEND]-(p2:person) " +
+                "WHERE elementId(r) = $edgeId RETURN r";
+        Map<String, Object> parameters = Map.of("edgeId", edge.id());
+
+        var result = entityManager.executeQuery(cypher, parameters).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).isNotEmpty();
+            softly.assertThat(edge.properties()).containsEntry("since", 2019);
+            softly.assertThat(edge.properties()).containsEntry("strength", "strong");
+        });
+    }
 
     private CommunicationEntity getEntity() {
         Faker faker = new Faker();
