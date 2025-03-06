@@ -179,12 +179,12 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
-    public Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth) {
+    public Stream<CommunicationEntity> traverse(String startNodeId, String label, int depth) {
         Objects.requireNonNull(startNodeId, "Start node ID is required");
-        Objects.requireNonNull(relationship, "Relationship type is required");
+        Objects.requireNonNull(label, "Relationship type is required");
 
         String cypher = "MATCH (startNode) WHERE elementId(startNode) = $elementId " +
-                "MATCH (startNode)-[r:" + relationship + "*1.." + depth + "]-(endNode) " +
+                "MATCH (startNode)-[r:" + label + "*1.." + depth + "]-(endNode) " +
                 "RETURN endNode";
 
         try (Transaction tx = session.beginTransaction()) {
@@ -198,14 +198,14 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
-    public void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target) {
+    public void edge(CommunicationEntity source, String label, CommunicationEntity target) {
         Objects.requireNonNull(source, "Source entity is required");
         Objects.requireNonNull(target, "Target entity is required");
-        Objects.requireNonNull(relationshipType, "Relationship type is required");
+        Objects.requireNonNull(label, "Relationship type is required");
 
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
                 "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "CREATE (s)-[r:" + relationshipType + "]->(t)";
+                "CREATE (s)-[r:" + label + "]->(t)";
 
         try (Transaction tx = session.beginTransaction()) {
             var sourceId = source.find(ID).orElseThrow(() ->
@@ -224,14 +224,14 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
-    public void remove(CommunicationEntity source, String relationshipType, CommunicationEntity target) {
+    public void remove(CommunicationEntity source, String label, CommunicationEntity target) {
         Objects.requireNonNull(source, "Source entity is required");
         Objects.requireNonNull(target, "Target entity is required");
-        Objects.requireNonNull(relationshipType, "Relationship type is required");
+        Objects.requireNonNull(label, "Relationship type is required");
 
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
                 "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "MATCH (s)-[r:" + relationshipType + "]-(t) DELETE r";
+                "MATCH (s)-[r:" + label + "]-(t) DELETE r";
 
         var sourceId = source.find(ID).orElseThrow(() ->
                 new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();

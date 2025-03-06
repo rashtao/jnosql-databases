@@ -61,35 +61,35 @@ public interface Neo4JDatabaseManager extends DatabaseManager {
     Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
 
     /**
-     * Traverses the graph starting from a node and follows the specified relationship type up to a given depth.
+     * Traverses the graph starting from a node and follows the specified label type up to a given depth.
      *
      * @param startNodeId  the ID of the starting node.
-     * @param relationship the type of relationship to traverse.
+     * @param label the type of label to traverse.
      * @param depth        the traversal depth limit.
      * @return a stream of {@link CommunicationEntity} representing related nodes.
-     * @throws NullPointerException if {@code startNodeId}, {@code relationship}, or {@code depth} is null.
+     * @throws NullPointerException if {@code startNodeId}, {@code label}, or {@code depth} is null.
      */
-    Stream<CommunicationEntity> traverse(String startNodeId, String relationship, int depth);
+    Stream<CommunicationEntity> traverse(String startNodeId, String label, int depth);
 
     /**
      * Creates a relationship (edge) between two {@link CommunicationEntity} nodes.
      *
      * @param source           the source entity.
      * @param target           the target entity.
-     * @param relationshipType the type of relationship to create.
+     * @param label the type of relationship to create.
      * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
-     * @throws NullPointerException       if {@code source}, {@code target}, or {@code relationshipType} is null.
+     * @throws NullPointerException       if {@code source}, {@code target}, or {@code label} is null.
      */
-    void edge(CommunicationEntity source, String relationshipType, CommunicationEntity target);
+    void edge(CommunicationEntity source, String label, CommunicationEntity target);
 
     /**
      * Removes an existing relationship (edge) between two {@link CommunicationEntity} nodes.
      *
      * @param source           the source entity, which must already exist in the database.
      * @param target           the target entity, which must already exist in the database.
-     * @param relationshipType the type of relationship to remove.
+     * @param label the type of relationship to remove.
      * @throws EdgeCommunicationException if either the source or target entity does not exist in the database.
-     * @throws NullPointerException       if {@code source}, {@code target}, or {@code relationshipType} is null.
+     * @throws NullPointerException       if {@code source}, {@code target}, or {@code label} is null.
      */
-    void remove(CommunicationEntity source, String relationshipType, CommunicationEntity target);
+    void remove(CommunicationEntity source, String label, CommunicationEntity target);
 }
