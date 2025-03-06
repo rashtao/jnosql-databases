@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.neo4j.integration;
 
 import jakarta.inject.Inject;
+import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.neo4j.communication.DatabaseContainer;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfigurations;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
@@ -117,6 +118,32 @@ public class TemplateIntegrationTest {
         Magazine firstEdition = template.insert(new Magazine(null, "Effective Java", 1));
         Magazine secondEdition = template.insert(new Magazine(null, "Effective Java", 2));
         Edge<Magazine, Magazine> edge = Edge.source(firstEdition).label("NEXT").target(secondEdition).property("year", 2025).build();
-        template.edge(edge);
+        Edge<Magazine, Magazine> magazineEdge = template.edge(edge);
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(magazineEdge.source()).isEqualTo(firstEdition);
+            soft.assertThat(magazineEdge.target()).isEqualTo(secondEdition);
+            soft.assertThat(magazineEdge.label()).isEqualTo("NEXT");
+            soft.assertThat(magazineEdge.property("year", Integer.class)).contains(2025);
+            soft.assertThat(magazineEdge.id()).isPresent();
+        });
+    }
+
+    @Test
+    void shouldCreateEdgeFromNullId() {
+        Magazine firstEdition = new Magazine(null, "Effective Java", 1);
+        Magazine secondEdition = new Magazine(null, "Effective Java", 2);
+        Edge<Magazine, Magazine> edge = Edge.source(firstEdition).label("NEXT").target(secondEdition).property("year", 2025).build();
+        Edge<Magazine, Magazine> magazineEdge = template.edge(edge);
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(magazineEdge.source()).isNotNull();
+            soft.assertThat(magazineEdge.source().id()).isNotNull();
+            soft.assertThat(magazineEdge.target()).isNotNull();
+            soft.assertThat(magazineEdge.target().id()).isNotNull();
+            soft.assertThat(magazineEdge.label()).isEqualTo("NEXT");
+            soft.assertThat(magazineEdge.property("year", Integer.class)).contains(2025);
+            soft.assertThat(magazineEdge.id()).isPresent();
+        });
     }
 }
