@@ -294,10 +294,13 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(label, "Relationship type is required");
         Objects.requireNonNull(properties, "Properties map is required");
 
+        source = ensureEntityExists(source);
+        target = ensureEntityExists(target);
+
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
                 "MATCH (t) WHERE elementId(t) = $targetElementId " +
                 "CREATE (s)-[r:" + label + " $props]->(t) RETURN r";
-        LOGGER.fine(() -> "Creating edge with label: " + label);
+
         try (Transaction tx = session.beginTransaction()) {
             var sourceId = source.find(ID).orElseThrow(() ->
                     new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
@@ -313,7 +316,22 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             var relationship = result.single().get("r").asRelationship();
             LOGGER.fine(() -> "Created edge with ID: " + relationship.elementId());
             tx.commit();
+
             return new Neo4jCommunicationEdge(relationship.elementId(), source, target, label, properties);
+        }
+    }
+
+    private CommunicationEntity ensureEntityExists(CommunicationEntity entity) {
+        return entity.find(ID).filter(this::entityExists).map(id -> entity).orElseGet(() -> insert(entity));
+    }
+
+    private boolean entityExists(Object id) {
+        String cypher = "MATCH (e) WHERE elementId(e) = $id RETURN count(e) > 0 AS exists";
+        try (Transaction tx = session.beginTransaction()) {
+            var result = tx.run(cypher, Values.parameters("id", id));
+            var exists =  result.single().get("exists").asBoolean();
+            LOGGER.fine(() -> "Checking if entity exists with ID: " + id + " result: " + exists);
+            return exists;
         }
     }
 
