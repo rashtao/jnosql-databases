@@ -17,6 +17,7 @@
 package org.eclipse.jnosql.databases.neo4j.communication;
 
 import org.eclipse.jnosql.communication.CommunicationException;
+import org.eclipse.jnosql.communication.graph.CommunicationEdge;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -248,6 +250,21 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         }
     }
 
+    @Override
+    public <K> void deleteEdge(K id) {
+        Objects.requireNonNull(id, "The id is required");
+
+    }
+
+    @Override
+    public <K> Optional<CommunicationEdge> findEdgeById(K id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public CommunicationEdge edge(CommunicationEntity source, String label, CommunicationEntity target, Map<String, Object> properties) {
+        return null;
+    }
 
 
     @Override
