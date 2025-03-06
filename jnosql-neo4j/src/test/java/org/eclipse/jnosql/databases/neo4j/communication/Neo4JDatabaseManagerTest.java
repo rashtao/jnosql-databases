@@ -596,7 +596,7 @@ class Neo4JDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(retrievedEdge).isPresent();
             softly.assertThat(retrievedEdge.get().label()).isEqualTo("FRIEND");
-            softly.assertThat(retrievedEdge.get().properties()).containsEntry("since", 2020);
+            softly.assertThat(retrievedEdge.get().properties()).containsEntry("since", 2020L);
         });
     }
 
