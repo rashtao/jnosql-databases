@@ -20,13 +20,16 @@ import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.jnosql.communication.CommunicationException;
 import org.eclipse.jnosql.communication.ValueUtil;
+import org.eclipse.jnosql.communication.graph.CommunicationEdge;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 
 import java.time.Duration;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.apache.tinkerpop.gremlin.process.traversal.Order.asc;
@@ -166,5 +169,25 @@ public class DefaultTinkerpopGraphDatabaseManager implements TinkerpopGraphDatab
         } catch (Exception e) {
             throw new CommunicationException("There is an issue when close the Graph connection", e);
         }
+    }
+
+    @Override
+    public CommunicationEdge edge(CommunicationEntity source, String label, CommunicationEntity target, Map<String, Object> properties) {
+        return null;
+    }
+
+    @Override
+    public void remove(CommunicationEntity source, String label, CommunicationEntity target) {
+
+    }
+
+    @Override
+    public <K> void deleteEdge(K id) {
+
+    }
+
+    @Override
+    public <K> Optional<CommunicationEdge> findEdgeById(K id) {
+        return Optional.empty();
     }
 }
