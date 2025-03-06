@@ -200,11 +200,11 @@ public class DefaultTinkerpopGraphDatabaseManager implements TinkerpopGraphDatab
 
         Vertex sourceVertex = findVertexById(source.find(ID_PROPERTY)
                 .orElseThrow(() -> new CommunicationException("Source entity must have an ID")))
-                .orElseThrow(() -> new EmptyResultException("Source entity not found")));
+                .orElseThrow(() -> new EmptyResultException("Source entity not found"));
 
         Vertex targetVertex = findVertexById(target.find(ID_PROPERTY)
                 .orElseThrow(() -> new CommunicationException("Target entity must have an ID")))
-                .orElseThrow(() -> new EmptyResultException("Target entity not found")));
+                .orElseThrow(() -> new EmptyResultException("Target entity not found"));
 
         Iterator<Edge> edges = sourceVertex.edges(Direction.OUT, label);
         while (edges.hasNext()) {
