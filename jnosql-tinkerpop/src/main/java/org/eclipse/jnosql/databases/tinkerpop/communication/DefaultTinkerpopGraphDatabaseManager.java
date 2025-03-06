@@ -199,11 +199,11 @@ public class DefaultTinkerpopGraphDatabaseManager implements TinkerpopGraphDatab
         Objects.requireNonNull(label, "label is required");
 
         Vertex sourceVertex = findVertexById(source.find(ID_PROPERTY)
-                .orElseThrow(() -> new CommunicationException("Source entity must have an ID")))
+                .orElseThrow(() -> new CommunicationException("Source entity must have an ID")).get())
                 .orElseThrow(() -> new EmptyResultException("Source entity not found"));
 
         Vertex targetVertex = findVertexById(target.find(ID_PROPERTY)
-                .orElseThrow(() -> new CommunicationException("Target entity must have an ID")))
+                .orElseThrow(() -> new CommunicationException("Target entity must have an ID")).get())
                 .orElseThrow(() -> new EmptyResultException("Target entity not found"));
 
         Iterator<Edge> edges = sourceVertex.edges(Direction.OUT, label);

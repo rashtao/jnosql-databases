@@ -450,12 +450,11 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         var person1 = entityManager.insert(getEntity());
         var person2 = entityManager.insert(getEntity());
 
-        entityManager.edge(person1, "FRIEND", person2, Map.of());
+        CommunicationEdge communicationEdge = entityManager.edge(person1, "FRIEND", person2, Map.of());
 
         entityManager.remove(person1, "FRIEND", person2);
 
-        var edgesQuery = select().from(COLLECTION_NAME).where("_id").eq(person1.find("_id").orElseThrow().get()).build();
-        var edges = entityManager.select(edgesQuery).toList();
+        var edges = entityManager.findEdgeById(communicationEdge.id());
 
         assertThat(edges).isEmpty();
     }
