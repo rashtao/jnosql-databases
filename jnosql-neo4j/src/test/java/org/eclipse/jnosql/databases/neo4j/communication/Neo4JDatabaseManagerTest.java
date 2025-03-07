@@ -148,9 +148,7 @@ class Neo4JDatabaseManagerTest {
         }
         var query = select().from(COLLECTION_NAME).limit(5).build();
         var entities = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(entities).hasSize(5);
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(entities).hasSize(5));
     }
 
     @Test
