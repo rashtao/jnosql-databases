@@ -32,7 +32,6 @@ class GraphConfigurationSupplier implements Supplier<GraphDatabaseManager> {
     @Inject
     private GraphSupplier supplier;
 
-
     @Override
     @Produces
     @ApplicationScoped
