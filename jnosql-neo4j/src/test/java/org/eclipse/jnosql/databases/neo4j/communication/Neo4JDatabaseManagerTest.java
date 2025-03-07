@@ -158,9 +158,7 @@ class Neo4JDatabaseManagerTest {
         }
         var query = select().from(COLLECTION_NAME).skip(5).build();
         var entities = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(entities).hasSize(5);
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(entities).hasSize(5));
     }
 
     @Test
@@ -170,9 +168,7 @@ class Neo4JDatabaseManagerTest {
         }
         var query = select().from(COLLECTION_NAME).skip(5).limit(2).build();
         var entities = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(entities).hasSize(2);
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(entities).hasSize(2));
     }
 
     @Test
@@ -386,9 +382,7 @@ class Neo4JDatabaseManagerTest {
         entityManager.delete(deleteQuery);
         var query = select().from(COLLECTION_NAME).build();
         var entities = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(entities).isEmpty();
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(entities).isEmpty());
     }
 
     @Test
@@ -531,9 +525,7 @@ class Neo4JDatabaseManagerTest {
         );
 
         var result = entityManager.executeQuery(cypher, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(result).isNotEmpty();
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isNotEmpty());
 
         entityManager.remove(person1, "FRIEND", person2);
     }
@@ -555,9 +547,7 @@ class Neo4JDatabaseManagerTest {
         Map<String, Object> parameters = Map.of("_id1", startNodeId, "_id2", targetNodeId);
 
         var result = entityManager.executeQuery(cypher, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(result).isEmpty();
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
     @Test
@@ -575,9 +565,7 @@ class Neo4JDatabaseManagerTest {
         Map<String, Object> parameters = Map.of("id", edgeId);
 
         var result = entityManager.executeQuery(cypher, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(result).isEmpty();
-        });
+        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
     @Test
