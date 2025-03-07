@@ -42,6 +42,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 @EnableAutoWeld
 @AddPackages(value = {Database.class, EntityConverter.class, Neo4JTemplate.class})
 @AddPackages(Magazine.class)
+@AddPackages(GraphTemplate.class)
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
 @AddExtensions({EntityMetadataExtension.class})
