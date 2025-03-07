@@ -24,6 +24,9 @@ import org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDataba
 
 import java.util.logging.Logger;
 
+/**
+ * The {@link DatabaseConfiguration} wrapper to {@link GraphConfiguration}
+ */
 public class GraphDatabaseConfiguration implements DatabaseConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(GraphDatabaseConfiguration.class.getName());
