@@ -17,7 +17,6 @@ package org.eclipse.jnosql.databases.neo4j.integration;
 
 import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JRepository;
-import org.eclipse.jnosql.mapping.NoSQLRepository;
 
 @Repository
 public interface MagazineRepository extends Neo4JRepository<Magazine, String> {

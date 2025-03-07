@@ -16,7 +16,6 @@ package org.eclipse.jnosql.databases.neo4j.mapping;
 
 import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
-import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
