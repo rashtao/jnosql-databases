@@ -32,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,6 +59,7 @@ public class TemplateIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        removeAllEdges();
         template.delete(Magazine.class).execute();
     }
 
@@ -145,5 +147,16 @@ public class TemplateIntegrationTest {
             soft.assertThat(magazineEdge.property("year", Integer.class)).contains(2025);
             soft.assertThat(magazineEdge.id()).isPresent();
         });
+    }
+
+    private void removeAllEdges() {
+        String cypher = "MATCH ()-[r]-() DELETE r";
+
+        try {
+            var entityManager = DatabaseContainer.INSTANCE.get("neo4j");
+            entityManager.executeQuery(cypher, new HashMap<>()).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to remove edges before node deletion", e);
+        }
     }
 }
