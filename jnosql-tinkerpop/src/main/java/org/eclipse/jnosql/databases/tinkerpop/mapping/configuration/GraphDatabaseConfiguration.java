@@ -26,7 +26,8 @@ import java.util.logging.Logger;
 
 public class GraphDatabaseConfiguration implements DatabaseConfiguration {
 
-    private static Logger LOGGER = Logger.getLogger(GraphDatabaseConfiguration.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GraphDatabaseConfiguration.class.getName());
+
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
         LOGGER.fine(() -> "Creating graph database manager");
