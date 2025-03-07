@@ -58,10 +58,11 @@ public class Neo4jRepositoryProxyTest {
 
     private HumanRepository personRepository;
 
+    @SuppressWarnings("rawtypes")
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(Neo4JTemplate.class);
-        Neo4JRepositoryProxy handler = new Neo4JRepositoryProxy(template,
+        Neo4JRepositoryProxy handler = new Neo4JRepositoryProxy<>(template,
                 HumanRepository.class, converters, entitiesMetadata);
 
         when(template.insert(any(Contact.class))).thenReturn(new Contact());
@@ -97,6 +98,7 @@ public class Neo4jRepositoryProxyTest {
         verify(template).cypher("MATCH (p:Person) WHERE p.name = $1 RETURN p", Collections.singletonMap("name", "Ada"));
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void shouldFindByName2CQL() {
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
