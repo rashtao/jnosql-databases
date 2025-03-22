@@ -116,7 +116,7 @@ public class OrientDBDocumentRepositoryProxyTest {
         person.setName("Ada-2");
         person.setAge(10);
         person.setId("10");
-        when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
+        when(template.find(Person.class, "10")).thenReturn(Optional.of(person));
         humanRepository.save(person);
         verify(template).update(eq(person));
     }
