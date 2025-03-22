@@ -17,14 +17,14 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping.spi;
 import jakarta.inject.Inject;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphTemplate;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.People;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, GraphTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})

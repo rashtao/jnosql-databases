@@ -12,36 +12,46 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.oracle.mapping;
+package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.inject.Inject;
-import jakarta.nosql.Convert;
-import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
-import org.eclipse.jnosql.mapping.keyvalue.spi.KeyValueExtension;
+import jakarta.nosql.Template;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
+import org.eclipse.jnosql.mapping.Database;
+import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
+import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 
 @EnableAutoWeld
-@AddPackages(value = {Convert.class})
-@AddPackages(MockProducer.class)
+@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
+@AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, KeyValueExtension.class,
-        DocumentExtension.class, OracleExtension.class})
-@ExtendWith(MockitoExtension.class)
-public class OracleDBExtensionTest {
+@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+class TinkerpopTemplateTest {
 
     @Inject
-    private HumanNoSQLRepository repository;
+    private Template template;
+
+    @Inject
+    @Database(GRAPH)
+    private Template qualifier;
+
 
     @Test
-    public void shouldSave() {
-        Assertions.assertNotNull(repository);
+    void shouldInjectTemplate() {
+        Assertions.assertNotNull(template);
+    }
+
+    @Test
+    void shouldInjectQualifier() {
+        Assertions.assertNotNull(qualifier);
     }
 }
