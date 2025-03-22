@@ -22,7 +22,7 @@ import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLDocumentManager;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, DocumentTemplate.class, SQL.class})
 @AddPackages(MockProducer.class)
-@AddExtensions({EntityMetadataExtension.class, DocumentExtension.class, OracleExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, DocumentExtension.class, OracleExtension.class})
 @ExtendWith(MockitoExtension.class)
 @AddPackages(Reflections.class)
 class DefaultOracleNoSQLTemplateTest {

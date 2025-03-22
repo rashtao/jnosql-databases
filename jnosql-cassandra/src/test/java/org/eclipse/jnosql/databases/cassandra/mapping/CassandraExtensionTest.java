@@ -18,7 +18,7 @@ import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.column.ColumnTemplate;
 import org.eclipse.jnosql.mapping.column.spi.ColumnExtension;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 @AddPackages(value = {Converters.class, ColumnTemplate.class, EntityConverter.class,
         CQL.class})
 @AddPackages(MockProducer.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         ColumnExtension.class, CassandraExtension.class})
 @AddPackages(Reflections.class)
 public class CassandraExtensionTest {

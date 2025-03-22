@@ -16,7 +16,7 @@ package org.eclipse.jnosql.databases.neo4j.mapping;
 
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, Neo4JRepository.class, EntityConverter.class})
-@AddExtensions({EntityMetadataExtension.class, Neo4JExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, Neo4JExtension.class})
 @AddPackages(Reflections.class)
 public class Neo4jExtensionTest {
 

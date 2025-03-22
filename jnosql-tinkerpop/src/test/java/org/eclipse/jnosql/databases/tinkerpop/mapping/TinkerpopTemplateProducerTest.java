@@ -18,7 +18,7 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -31,11 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, GraphTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
-class TinkerpopTemplateProducerTest {
+@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+class GraphTemplateProducerTest {
 
     @Inject
     private GraphTemplateProducer producer;
@@ -48,7 +48,7 @@ class TinkerpopTemplateProducerTest {
     @Test
     void shouldReturnGraphTemplateWhenGetGraph() {
         Graph graph = Mockito.mock(Graph.class);
-        TinkerpopTemplate template = producer.apply(graph);
+        GraphTemplate template = producer.apply(graph);
         assertNotNull(template);
     }
 

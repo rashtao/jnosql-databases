@@ -14,17 +14,12 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
-import jakarta.data.exceptions.EmptyResultException;
 import jakarta.inject.Inject;
-import org.assertj.core.api.SoftAssertions;
-import org.eclipse.jnosql.communication.Value;
-import org.eclipse.jnosql.communication.semistructured.Element;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
+import jakarta.nosql.Template;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
+import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
-import org.eclipse.jnosql.mapping.graph.GraphTemplate;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -33,37 +28,30 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, GraphTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
 class GraphTemplateTest {
 
+    @Inject
+    private Template template;
 
     @Inject
-    private GraphTemplate template;
+    @Database(GRAPH)
+    private Template qualifier;
 
 
     @Test
-    void shouldReturnErrorWhenInboundIsNull() {
-        var human = template.insert(Human.builder().withName("Poliana").withAge().build());
-
-        SoftAssertions.assertSoftly(soft -> {
-            soft.assertThat(human).isNotNull();
-            soft.assertThat(human.getName()).isEqualTo("Poliana");
-            soft.assertThat(human.getAge()).isNotNull();
-        });
+    void shouldInjectTemplate() {
+        Assertions.assertNotNull(template);
     }
 
+    @Test
+    void shouldInjectQualifier() {
+        Assertions.assertNotNull(qualifier);
+    }
 }

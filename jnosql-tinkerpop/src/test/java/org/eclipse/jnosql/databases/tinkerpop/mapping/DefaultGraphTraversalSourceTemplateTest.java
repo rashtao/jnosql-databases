@@ -18,7 +18,7 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -28,11 +28,11 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, Transactional.class})
 @AddPackages({MagazineRepository.class, Reflections.class, GraphProducer.class})
-@AddExtensions({EntityMetadataExtension.class, GraphExtension.class})
-class DefaultGraphTraversalSourceTemplateTest extends AbstractTinkerpopTemplateTest {
+@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+class DefaultGraphTraversalSourceTemplateTest extends AbstractGraphTemplateTest {
 
     @Inject
-    private TinkerpopTemplate tinkerpopTemplate;
+    private GraphTemplate graphTemplate;
 
     @Inject
     private Graph graph;
@@ -43,7 +43,7 @@ class DefaultGraphTraversalSourceTemplateTest extends AbstractTinkerpopTemplateT
     }
 
     @Override
-    protected TinkerpopTemplate getGraphTemplate() {
-        return tinkerpopTemplate;
+    protected GraphTemplate getGraphTemplate() {
+        return graphTemplate;
     }
 }

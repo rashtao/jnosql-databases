@@ -16,7 +16,7 @@ package org.eclipse.jnosql.databases.hazelcast.mapping;
 
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.keyvalue.AbstractKeyValueTemplate;
 import org.eclipse.jnosql.mapping.keyvalue.spi.KeyValueExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 @AddPackages(value = {Converters.class, AbstractKeyValueTemplate.class, Query.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         KeyValueExtension.class, HazelcastExtension.class})
 public class HazelcastExtensionTest {
 

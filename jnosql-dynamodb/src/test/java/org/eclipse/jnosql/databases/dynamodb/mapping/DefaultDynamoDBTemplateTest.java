@@ -21,7 +21,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.databases.dynamodb.communication.DynamoDBDatabaseManager;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, PartiQL.class})
 @AddPackages(MockProducer.class)
-@AddExtensions({EntityMetadataExtension.class, DocumentExtension.class, DynamoDBExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, DocumentExtension.class, DynamoDBExtension.class})
 @ExtendWith(MockitoExtension.class)
 @AddPackages(Reflections.class)
 class DefaultDynamoDBTemplateTest {
