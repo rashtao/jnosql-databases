@@ -115,7 +115,7 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada-2");
         person.setAge(10);
-        person.setId(10L);
+        person.setId("10");
         when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
         humanRepository.save(person);
         verify(template).update(eq(person));
@@ -134,7 +134,7 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada");
         person.setAge(10);
-        person.setId(10L);
+        person.setId("10");
         humanRepository.delete(person);
         verify(template).delete(Person.class, person.getId());
     }
