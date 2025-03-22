@@ -14,9 +14,9 @@
  */
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
+import ee.jakarta.tck.nosql.entities.Person;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;

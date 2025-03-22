@@ -14,9 +14,9 @@
  */
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
+import ee.jakarta.tck.nosql.entities.Person;
 import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
-import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
