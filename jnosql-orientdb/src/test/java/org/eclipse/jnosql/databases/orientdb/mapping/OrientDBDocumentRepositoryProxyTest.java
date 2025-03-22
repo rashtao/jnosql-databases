@@ -18,7 +18,7 @@ import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
         EntityConverter.class, DocumentTemplate.class, SQL.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         DocumentExtension.class, OrientDBExtension.class})
 public class OrientDBDocumentRepositoryProxyTest {
 

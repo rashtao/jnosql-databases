@@ -17,7 +17,7 @@ package org.eclipse.jnosql.databases.dynamodb.mapping;
 
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @AddPackages(value = {Converters.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         DocumentExtension.class, DynamoDBExtension.class})
 @ExtendWith(MockitoExtension.class)
 public class DynamoDBExtensionTest {

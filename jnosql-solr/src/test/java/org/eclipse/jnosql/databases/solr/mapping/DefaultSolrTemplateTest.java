@@ -20,7 +20,7 @@ import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.databases.solr.communication.SolrDocumentManager;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
         EntityConverter.class, DocumentTemplate.class, Solr.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         DocumentExtension.class, SolrExtension.class})
 public class DefaultSolrTemplateTest {
 

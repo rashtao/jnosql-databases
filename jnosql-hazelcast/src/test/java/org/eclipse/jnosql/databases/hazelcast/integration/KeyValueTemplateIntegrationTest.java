@@ -19,7 +19,7 @@ import jakarta.inject.Inject;
 import org.eclipse.jnosql.databases.hazelcast.mapping.HazelcastTemplate;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.keyvalue.KeyValueEntityConverter;
 import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
 import org.eclipse.jnosql.mapping.keyvalue.spi.KeyValueExtension;
@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AddPackages(Magazine.class)
 @AddPackages(Reflections.class)
 @AddPackages(HazelcastTemplate.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         KeyValueExtension.class})
 class KeyValueTemplateIntegrationTest {
 

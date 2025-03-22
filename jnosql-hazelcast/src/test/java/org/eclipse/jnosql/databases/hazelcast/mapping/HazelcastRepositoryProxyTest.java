@@ -17,7 +17,7 @@ package org.eclipse.jnosql.databases.hazelcast.mapping;
 import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.keyvalue.AbstractKeyValueTemplate;
 import org.eclipse.jnosql.mapping.keyvalue.spi.KeyValueExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -53,7 +53,7 @@ import static org.mockito.Mockito.when;
 @AddPackages(value = {Converters.class, AbstractKeyValueTemplate.class, Query.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         KeyValueExtension.class, HazelcastExtension.class})
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

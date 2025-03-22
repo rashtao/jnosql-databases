@@ -22,7 +22,7 @@ import org.eclipse.jnosql.databases.dynamodb.communication.DynamoDBTestUtils;
 import org.eclipse.jnosql.databases.dynamodb.mapping.DynamoDBExtension;
 import org.eclipse.jnosql.databases.dynamodb.mapping.DynamoDBTemplate;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -44,7 +44,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 @AddPackages(value = {Converters.class, EntityConverter.class})
 @AddPackages(Magazine.class)
 @AddPackages(DynamoDBTemplate.class)
-@AddExtensions({EntityMetadataExtension.class, DocumentExtension.class, DynamoDBExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, DocumentExtension.class, DynamoDBExtension.class})
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
