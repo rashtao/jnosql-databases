@@ -41,7 +41,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 @AddPackages(Magazine.class)
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
-@AddExtensions({EntityMetadataExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class})
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
 public class TemplateIntegrationTest {
 

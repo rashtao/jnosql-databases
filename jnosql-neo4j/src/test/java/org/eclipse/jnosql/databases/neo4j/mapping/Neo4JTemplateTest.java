@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 @AddPackages(value = {Converters.class, EntityConverter.class,  Neo4JTemplate.class})
 @AddPackages(Music.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class})
 class Neo4JTemplateTest {
 
     @Inject

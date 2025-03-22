@@ -55,7 +55,7 @@ import static org.mockito.Mockito.when;
 @AddPackages(value = {Converters.class, EntityConverter.class,  Neo4JTemplate.class})
 @AddPackages(Music.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class})
 class DefaultNeo4JTemplateTest {
 
     @Inject
