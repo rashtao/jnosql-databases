@@ -24,11 +24,11 @@ import org.eclipse.jnosql.databases.orientdb.communication.OrientDBDocumentManag
 import org.eclipse.jnosql.databases.orientdb.communication.OrientDBLiveCallback;
 import org.eclipse.jnosql.databases.orientdb.communication.OrientDBLiveCreateCallback;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 import org.jboss.weld.junit5.auto.AddExtensions;

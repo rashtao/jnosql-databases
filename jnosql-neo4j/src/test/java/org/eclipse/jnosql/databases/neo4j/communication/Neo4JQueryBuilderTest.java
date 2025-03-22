@@ -18,8 +18,8 @@ package org.eclipse.jnosql.databases.neo4j.communication;
 
 import org.eclipse.jnosql.communication.semistructured.CriteriaCondition;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
-import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
+import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
