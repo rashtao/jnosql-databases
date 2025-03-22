@@ -14,10 +14,11 @@
  */
 package org.eclipse.jnosql.databases.arangodb.tck;
 
+import ee.jakarta.tck.nosql.TemplateSupplier;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.nosql.Template;
-import jakarta.nosql.tck.TemplateSupplier;
+
 import org.eclipse.jnosql.databases.arangodb.communication.ArangoDBConfigurations;
 import org.eclipse.jnosql.databases.arangodb.communication.DocumentDatabase;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;

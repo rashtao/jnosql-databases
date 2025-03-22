@@ -18,7 +18,7 @@ import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, Neo4JRepository.class, EntityConverter.class})
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class, Neo4JExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, Neo4JExtension.class})
 public class Neo4jRepositoryProxyTest {
 
     private Neo4JTemplate template;

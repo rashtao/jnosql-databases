@@ -23,7 +23,7 @@ import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.databases.arangodb.communication.ArangoDBDocumentManager;
 import org.eclipse.jnosql.databases.arangodb.communication.Human;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, DocumentTemplate.class, AQL.class})
 @AddPackages(MockProducer.class)
-@AddExtensions({EntityMetadataExtension.class, DocumentExtension.class, ArangoDBExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, DocumentExtension.class, ArangoDBExtension.class})
 @ExtendWith(MockitoExtension.class)
 @AddPackages(Reflections.class)
 public class DefaultArangoDBTemplateTest {

@@ -15,8 +15,8 @@
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
 
+import ee.jakarta.tck.nosql.entities.Person;
 import jakarta.data.repository.Repository;
-import jakarta.nosql.tck.entities.Person;
 
 @Repository
 public interface PersonRepository extends OrientDBCrudRepository<Person, String> {

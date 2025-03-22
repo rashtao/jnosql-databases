@@ -20,7 +20,7 @@ import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfigurations;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
@@ -41,7 +41,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 @AddPackages(Magazine.class)
 @AddPackages(Reflections.class)
 @AddPackages(Converters.class)
-@AddExtensions({EntityMetadataExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class})
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
 public class TemplateIntegrationTest {
 

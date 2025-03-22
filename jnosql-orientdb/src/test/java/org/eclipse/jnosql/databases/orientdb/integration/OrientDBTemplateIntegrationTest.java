@@ -21,7 +21,7 @@ import org.eclipse.jnosql.databases.orientdb.communication.OrientDBDocumentConfi
 import org.eclipse.jnosql.databases.orientdb.mapping.OrientDBTemplate;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -45,7 +45,7 @@ import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 @AddPackages(Magazine.class)
 @AddPackages(OrientDBTemplate.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         DocumentExtension.class})
 @EnabledIfSystemProperty(named = NAMED, matches = MATCHES)
 class OrientDBTemplateIntegrationTest {

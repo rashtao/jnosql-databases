@@ -16,10 +16,10 @@
  */
 package org.eclipse.jnosql.databases.oracle.tck;
 
+import ee.jakarta.tck.nosql.TemplateSupplier;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.nosql.Template;
-import jakarta.nosql.tck.TemplateSupplier;
 import org.eclipse.jnosql.databases.oracle.communication.Database;
 import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLConfigurations;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;

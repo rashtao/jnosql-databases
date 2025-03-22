@@ -14,11 +14,11 @@
  */
 package org.eclipse.jnosql.databases.orientdb.mapping;
 
+import ee.jakarta.tck.nosql.entities.Person;
 import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
-import jakarta.nosql.tck.entities.Person;
 import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.core.spi.EntityMetadataExtension;
+import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
         EntityConverter.class, DocumentTemplate.class, SQL.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({EntityMetadataExtension.class,
+@AddExtensions({ReflectionEntityMetadataExtension.class,
         DocumentExtension.class, OrientDBExtension.class})
 public class OrientDBDocumentRepositoryProxyTest {
 
@@ -115,8 +115,8 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada-2");
         person.setAge(10);
-        person.setId(10L);
-        when(template.find(Person.class, 10L)).thenReturn(Optional.of(person));
+        person.setId("10");
+        when(template.find(Person.class, "10")).thenReturn(Optional.of(person));
         humanRepository.save(person);
         verify(template).update(eq(person));
     }
@@ -134,7 +134,7 @@ public class OrientDBDocumentRepositoryProxyTest {
         var person = new Person();
         person.setName("Ada");
         person.setAge(10);
-        person.setId(10L);
+        person.setId("10");
         humanRepository.delete(person);
         verify(template).delete(Person.class, person.getId());
     }

@@ -16,10 +16,10 @@
  */
 package org.eclipse.jnosql.databases.redis.tck;
 
+import ee.jakarta.tck.nosql.TemplateSupplier;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.nosql.Template;
-import jakarta.nosql.tck.TemplateSupplier;
 import org.eclipse.jnosql.databases.redis.communication.KeyValueDatabase;
 import org.eclipse.jnosql.databases.redis.communication.RedisConfigurations;
 import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
