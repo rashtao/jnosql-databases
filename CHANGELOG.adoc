@@ -21,6 +21,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update DynamoDB driver 2.29.45
 - Update ArangoDb driver to 7.17.0
 - At repositories params, use the Param annotation from Jakarta Data API.
+- Rename at tinkerpop `GraphTempalte`to `TinkerPopTemplate`
 
 === Fixed
 
