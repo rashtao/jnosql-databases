@@ -24,11 +24,27 @@ import org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDataba
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * An abstract configuration class that serves as an adapter to integrate Apache TinkerPop's {@link Graph}
+ * with Eclipse JNoSQL. This class implements a template method pattern to provide a standardized way
+ * to create and manage graph database instances.
+ * <p>
+ * Subclasses are required to implement the {@link #graph(Settings)} method to provide the specific
+ * {@link Graph} instance based on the given settings.
+ * </p>
+ */
 public abstract class AbstractTinkerpopConfiguration implements DatabaseConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractTinkerpopConfiguration.class.getName());
 
 
+    /**
+     * Abstract method to be implemented by subclasses to provide the specific {@link Graph} instance
+     * based on the given settings.
+     *
+     * @param settings the settings to configure the graph instance
+     * @return the configured {@link Graph} instance
+     */
     abstract Graph graph(Settings settings);
 
     @Override
@@ -39,6 +55,9 @@ public abstract class AbstractTinkerpopConfiguration implements DatabaseConfigur
         return new GraphDatabaseManagerFactory(graph);
     }
 
+    /**
+     * A factory class to create instances of {@link DatabaseManager} for the graph database.
+     */
     static class GraphDatabaseManagerFactory implements DatabaseManagerFactory {
 
         private final Graph graph;
