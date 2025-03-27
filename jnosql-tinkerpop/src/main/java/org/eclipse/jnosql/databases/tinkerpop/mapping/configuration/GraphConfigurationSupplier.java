@@ -14,9 +14,12 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping.configuration;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptor;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.eclipse.jnosql.communication.graph.GraphDatabaseManager;
 import org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDatabaseManager;
@@ -25,6 +28,8 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 @ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.LIBRARY_BEFORE)
 class GraphConfigurationSupplier implements Supplier<GraphDatabaseManager> {
 
     private static final Logger LOGGER = Logger.getLogger(GraphSupplier.class.getName());
