@@ -21,7 +21,6 @@ import jakarta.enterprise.inject.Typed;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManager;
-import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManagerFactory;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 
 import java.util.function.Supplier;
