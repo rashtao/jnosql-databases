@@ -22,6 +22,11 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
 
 import java.util.logging.Logger;
 
+/**
+ * Adapter class that integrates both DatabaseConfiguration and GraphConfiguration.
+ * This class is responsible for creating a DatabaseManagerFactory based on the provided settings.
+ * It utilizes the GraphConfiguration SPI to create a Graph instance and then wraps it in a DatabaseManagerFactory.
+ */
 public class DatabaseConfigurationAdapter implements DatabaseConfiguration {
 
 
