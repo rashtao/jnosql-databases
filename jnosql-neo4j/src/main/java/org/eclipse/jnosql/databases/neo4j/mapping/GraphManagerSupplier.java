@@ -21,6 +21,7 @@ import jakarta.enterprise.inject.Typed;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManager;
+import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 
 import java.util.function.Supplier;
@@ -43,7 +44,7 @@ class GraphManagerSupplier implements Supplier<Neo4JDatabaseManager> {
         Settings settings = MicroProfileSettings.INSTANCE;
         var configuration = new Neo4JConfiguration();
         var managerFactory = configuration.apply(settings);
-        var database = settings.getOrDefault("database", DATABASE_DEFAULT);
+        var database = settings.getOrDefault(MappingConfigurations.GRAPH_DATABASE, DATABASE_DEFAULT);
         LOGGER.fine(() -> "Creating a Neo4JDatabaseManager bean with database: " + database);
         return managerFactory.apply(database);
     }
