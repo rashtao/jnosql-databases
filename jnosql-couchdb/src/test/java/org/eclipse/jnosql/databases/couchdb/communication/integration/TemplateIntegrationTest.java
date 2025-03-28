@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.couchdb.communication.integration;
 
 
 import jakarta.inject.Inject;
+import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.couchdb.communication.CouchDBConfigurations;
 import org.eclipse.jnosql.databases.couchdb.communication.configuration.DocumentDatabase;
 import org.eclipse.jnosql.mapping.Database;
@@ -123,6 +124,17 @@ class TemplateIntegrationTest {
         template.delete(Magazine.class).execute();
         var magazines = template.select(Magazine.class).result();
         assertThat(magazines).isNotNull().isEmpty();
+    }
+
+    @Test
+    void shouldInsertByteArray() {
+        var failure = new Failure("test", new byte[]{'a','b','c','d'});
+        template.insert(failure);
+        Optional<Failure> entity = template.find(Failure.class, "test");
+        SoftAssertions.assertSoftly(softly -> {
+           softly.assertThat(entity).isNotNull().isNotEmpty();
+              softly.assertThat(entity).get().isEqualTo(failure);
+        });
     }
 
 }
