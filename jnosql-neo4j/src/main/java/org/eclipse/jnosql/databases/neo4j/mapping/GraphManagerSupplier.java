@@ -43,7 +43,7 @@ class GraphManagerSupplier implements Supplier<Neo4JDatabaseManager> {
         LOGGER.fine(() -> "Creating a Neo4JDatabaseManager bean");
         Settings settings = MicroProfileSettings.INSTANCE;
         var configuration = new Neo4JConfiguration();
-        Neo4JDatabaseManagerFactory managerFactory = configuration.apply(settings);
+        var managerFactory = configuration.apply(settings);
         var database = settings.getOrDefault("database", DATABASE_DEFAULT);
         LOGGER.fine(() -> "Creating a Neo4JDatabaseManager bean with database: " + database);
         return managerFactory.apply(database);
