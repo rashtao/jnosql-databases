@@ -14,13 +14,10 @@
  */
 package org.eclipse.jnosql.databases.neo4j.mapping;
 
-import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Typed;
-import jakarta.interceptor.Interceptor;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManager;
