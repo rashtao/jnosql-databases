@@ -51,7 +51,7 @@ public class RepositoryIntegrationTest {
     }
 
     @Inject
-   private MagazineRepository repository;
+    private MagazineRepository repository;
 
     @Test
     void shouldSave() {

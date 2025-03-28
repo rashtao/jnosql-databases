@@ -14,16 +14,14 @@
  */
 package org.eclipse.jnosql.databases.neo4j.mapping;
 
-import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
-import jakarta.interceptor.Interceptor;
+import jakarta.enterprise.inject.Typed;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManager;
-import org.eclipse.jnosql.databases.neo4j.communication.Neo4JDatabaseManagerFactory;
+import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
 import org.eclipse.jnosql.mapping.core.config.MicroProfileSettings;
 
 import java.util.function.Supplier;
@@ -31,8 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@Alternative
-@Priority(Interceptor.Priority.LIBRARY_BEFORE)
 class GraphManagerSupplier implements Supplier<Neo4JDatabaseManager> {
 
     private static final String DATABASE_DEFAULT = "neo4j";
@@ -42,12 +38,13 @@ class GraphManagerSupplier implements Supplier<Neo4JDatabaseManager> {
     @Override
     @Produces
     @ApplicationScoped
+    @Typed(Neo4JDatabaseManager.class)
     public Neo4JDatabaseManager get() {
         LOGGER.fine(() -> "Creating a Neo4JDatabaseManager bean");
         Settings settings = MicroProfileSettings.INSTANCE;
         var configuration = new Neo4JConfiguration();
-        Neo4JDatabaseManagerFactory managerFactory = configuration.apply(settings);
-        var database = settings.getOrDefault("database", DATABASE_DEFAULT);
+        var managerFactory = configuration.apply(settings);
+        var database = settings.getOrDefault(MappingConfigurations.GRAPH_DATABASE, DATABASE_DEFAULT);
         LOGGER.fine(() -> "Creating a Neo4JDatabaseManager bean with database: " + database);
         return managerFactory.apply(database);
     }

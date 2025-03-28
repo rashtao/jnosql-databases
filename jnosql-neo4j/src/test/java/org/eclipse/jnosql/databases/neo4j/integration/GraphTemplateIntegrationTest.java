@@ -17,10 +17,12 @@ package org.eclipse.jnosql.databases.neo4j.integration;
 import jakarta.inject.Inject;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.neo4j.communication.DatabaseContainer;
+import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfigurations;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.core.config.MappingConfigurations;
 import org.eclipse.jnosql.mapping.graph.Edge;
 import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -54,6 +56,8 @@ public class GraphTemplateIntegrationTest {
         DatabaseContainer.INSTANCE.host();
         System.setProperty(Neo4JConfigurations.URI.get(), DatabaseContainer.INSTANCE.host());
         System.setProperty(Neo4JConfigurations.DATABASE.get(), "neo4j");
+        System.setProperty(MappingConfigurations.GRAPH_PROVIDER.get(), Neo4JConfiguration.class.getName());
+        System.setProperty(MappingConfigurations.GRAPH_DATABASE.get(), "neo4j");
     }
 
     @Inject
