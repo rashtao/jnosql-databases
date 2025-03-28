@@ -295,6 +295,19 @@ class DefaultCouchDBDocumentManagerTest {
         });
     }
 
+    @Test
+    void shouldInsertByteArray() {
+        CommunicationEntity entity = CommunicationEntity.of("Failure");
+        entity.add(CouchDBConstant.ID, "id");
+        entity.add("data", new byte[]{'a','b','c','d'});
+        var communication = entityManager.insert(entity);
+
+        SoftAssertions.assertSoftly(soft -> {
+           soft.assertThat(communication).isNotNull();
+              soft.assertThat(communication.find("data").get().get()).isInstanceOf(byte[].class);
+        });
+    }
+
     private CommunicationEntity createDocumentList() {
         CommunicationEntity entity = CommunicationEntity.of("AppointmentBook");
         List<List<Element>> documents = new ArrayList<>();
