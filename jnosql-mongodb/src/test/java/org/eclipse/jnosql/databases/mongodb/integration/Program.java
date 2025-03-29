@@ -69,4 +69,8 @@ public class Program {
                 ", socialMedia=" + socialMedia +
                 '}';
     }
+
+    public static Program of(String name, Map<String, String> socialMedia) {
+        return new Program(name, socialMedia);
+    }
 }
