@@ -159,4 +159,9 @@ class TemplateIntegrationTest {
             soft.assertThat(result.availableTransitions().get(0).restrictedRoleGroups().get(0)).isEqualTo("ADMIN");
         });
     }
+
+    @Test
+    void shouldInsertEntityWithMap() {
+
+    }
 }
