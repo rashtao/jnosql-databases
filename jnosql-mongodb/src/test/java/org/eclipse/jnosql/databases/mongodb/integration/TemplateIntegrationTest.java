@@ -181,4 +181,25 @@ class TemplateIntegrationTest {
             soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia().get("twitter")).isEqualTo("x");
         });
     }
+
+    @Test
+    void shouldInsertEntityWithMapUsingRecord() {
+        var program = new ProgramRecord(
+                "Renamer",
+                Map.of("twitter", "x")
+        );
+        var computer = new ComputerRecord("Computer",Map.of("Renamer", program));
+
+        var result = this.template.insert(computer);
+
+        SoftAssertions.assertSoftly(soft ->{
+            soft.assertThat(result).isNotNull();
+            soft.assertThat(result.name()).isEqualTo("Computer");
+            soft.assertThat(result.programs()).hasSize(1);
+            soft.assertThat(result.programs().get("Renamer")).isNotNull();
+            soft.assertThat(result.programs().get("Renamer").name()).isEqualTo("Renamer");
+            soft.assertThat(result.programs().get("Renamer").socialMedia()).hasSize(1);
+            soft.assertThat(result.programs().get("Renamer").socialMedia().get("twitter")).isEqualTo("x");
+        });
+    }
 }
