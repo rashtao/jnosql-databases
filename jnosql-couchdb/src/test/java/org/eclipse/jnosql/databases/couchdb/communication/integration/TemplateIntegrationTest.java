@@ -136,6 +136,7 @@ class TemplateIntegrationTest {
            softly.assertThat(entity).isNotNull().isNotEmpty();
            softly.assertThat(entity).map(Failure::id).get().isEqualTo("test");
            softly.assertThat(entity).map(Failure::data).get().isEqualTo(failure.data());
+            softly.assertThat(entity).map(Failure::instant).get().isEqualTo(failure.instant());
         });
     }
 
