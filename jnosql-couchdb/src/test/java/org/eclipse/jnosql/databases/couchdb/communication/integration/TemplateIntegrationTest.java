@@ -33,6 +33,7 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,13 +129,14 @@ class TemplateIntegrationTest {
 
     @Test
     void shouldInsertByteArray() {
-        var failure = new Failure("test", new byte[]{'a','b','c','d'});
+        var failure = new Failure("test", new byte[]{'a','b','c','d'}, Instant.now());
         template.insert(failure);
         Optional<Failure> entity = template.find(Failure.class, "test");
         SoftAssertions.assertSoftly(softly -> {
            softly.assertThat(entity).isNotNull().isNotEmpty();
            softly.assertThat(entity).map(Failure::id).get().isEqualTo("test");
            softly.assertThat(entity).map(Failure::data).get().isEqualTo(failure.data());
+            softly.assertThat(entity).map(Failure::instant).get().isEqualTo(failure.instant());
         });
     }
 

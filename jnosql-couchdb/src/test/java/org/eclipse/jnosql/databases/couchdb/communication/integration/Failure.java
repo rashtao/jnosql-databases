@@ -18,9 +18,12 @@ import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 
+import java.time.Instant;
+
 @Entity
 public record Failure(
         @Id String id,
-        @Column byte[] data) {
+        @Column byte[] data,
+        @Column Instant instant) {
 
 }
