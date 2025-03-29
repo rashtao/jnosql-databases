@@ -38,7 +38,7 @@ final class CouchdbDeleteQuery implements SelectQuery {
 
     @Override
     public long limit() {
-        return 10;
+        return 0;
     }
 
     @Override

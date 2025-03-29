@@ -21,6 +21,7 @@ import org.eclipse.jnosql.communication.SettingsBuilder;
 import org.eclipse.jnosql.databases.couchdb.communication.CouchDBConfigurations;
 import org.eclipse.jnosql.databases.couchdb.communication.CouchDBDocumentConfiguration;
 import org.eclipse.jnosql.databases.couchdb.communication.CouchDBDocumentManagerFactory;
+import org.jetbrains.annotations.NotNull;
 import org.testcontainers.containers.GenericContainer;
 
 import java.util.function.Supplier;
@@ -40,10 +41,22 @@ public enum DocumentDatabase implements Supplier<CouchDBDocumentManagerFactory> 
     public CouchDBDocumentManagerFactory get() {
         CouchDBDocumentConfiguration configuration = new CouchDBDocumentConfiguration();
         SettingsBuilder builder = Settings.builder();
-        builder.put(CouchDBConfigurations.PORT, couchDB.getFirstMappedPort());
-        builder.put(CouchDBConfigurations.USER, "admin");
-        builder.put(CouchDBConfigurations.PASSWORD, "password");
+        builder.put(CouchDBConfigurations.PORT, getPort());
+        builder.put(CouchDBConfigurations.USER, getUser());
+        builder.put(CouchDBConfigurations.PASSWORD, getPassword());
         return configuration.apply(builder.build());
+    }
+
+    public String getPassword() {
+        return "password";
+    }
+
+    public String getUser() {
+        return "admin";
+    }
+
+    public Integer getPort() {
+        return couchDB.getFirstMappedPort();
     }
 
 }
