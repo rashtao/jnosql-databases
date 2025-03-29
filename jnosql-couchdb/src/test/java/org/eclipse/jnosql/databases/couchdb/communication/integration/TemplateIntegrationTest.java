@@ -133,8 +133,10 @@ class TemplateIntegrationTest {
         Optional<Failure> entity = template.find(Failure.class, "test");
         SoftAssertions.assertSoftly(softly -> {
            softly.assertThat(entity).isNotNull().isNotEmpty();
-              softly.assertThat(entity).get().isEqualTo(failure);
+           softly.assertThat(entity).map(Failure::id).get().isEqualTo("test");
+           softly.assertThat(entity).map(Failure::data).get().isEqualTo(failure.data());
         });
     }
 
 }
+
