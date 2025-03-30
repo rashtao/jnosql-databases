@@ -183,6 +183,33 @@ class TemplateIntegrationTest {
     }
 
     @Test
+    void shouldInsertEntityWithTwoMap() {
+        var program = Program.of(
+                "Renamer",
+                Map.of("twitter", "x")
+        );
+
+        var program2 = Program.of(
+                "Apple",
+                Map.of("instagram", "x")
+        );
+        var computer = Computer.of("Computer",Map.of("Renamer", program,
+                "Apple", program2));
+
+        var result = this.template.insert(computer);
+
+        SoftAssertions.assertSoftly(soft ->{
+            soft.assertThat(result).isNotNull();
+            soft.assertThat(result.getName()).isEqualTo("Computer");
+            soft.assertThat(result.getPrograms()).hasSize(1);
+            soft.assertThat(result.getPrograms().get("Renamer")).isNotNull();
+            soft.assertThat(result.getPrograms().get("Renamer").getName()).isEqualTo("Renamer");
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia()).hasSize(1);
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia().get("twitter")).isEqualTo("x");
+        });
+    }
+
+    @Test
     void shouldInsertEntityWithMapUsingRecord() {
         var program = new ProgramRecord(
                 "Renamer",
