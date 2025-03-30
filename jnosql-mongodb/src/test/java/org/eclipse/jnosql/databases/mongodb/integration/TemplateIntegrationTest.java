@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
@@ -157,6 +158,77 @@ class TemplateIntegrationTest {
             soft.assertThat(result.availableTransitions().get(0).mailTemplateKey()).isNull();
             soft.assertThat(result.availableTransitions().get(0).restrictedRoleGroups()).hasSize(1);
             soft.assertThat(result.availableTransitions().get(0).restrictedRoleGroups().get(0)).isEqualTo("ADMIN");
+        });
+    }
+
+    @Test
+    void shouldInsertEntityWithMap() {
+        var program = Program.of(
+                "Renamer",
+                Map.of("twitter", "x")
+        );
+        var id = "Computer" + randomUUID();
+        var computer = Computer.of(id,Map.of("Renamer", program));
+
+        var result = this.template.insert(computer);
+
+        SoftAssertions.assertSoftly(soft ->{
+            soft.assertThat(result).isNotNull();
+            soft.assertThat(result.getName()).isEqualTo(id);
+            soft.assertThat(result.getPrograms()).hasSize(1);
+            soft.assertThat(result.getPrograms().get("Renamer")).isNotNull();
+            soft.assertThat(result.getPrograms().get("Renamer").getName()).isEqualTo("Renamer");
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia()).hasSize(1);
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia().get("twitter")).isEqualTo("x");
+        });
+    }
+
+    @Test
+    void shouldInsertEntityWithTwoMap() {
+        var program = Program.of(
+                "Renamer",
+                Map.of("twitter", "x")
+        );
+
+        var program2 = Program.of(
+                "Apple",
+                Map.of("instagram", "x")
+        );
+        var id = "Computer" + randomUUID();
+        var computer = Computer.of(id,Map.of("Renamer", program,
+                "Apple", program2));
+
+        var result = this.template.insert(computer);
+
+        SoftAssertions.assertSoftly(soft ->{
+            soft.assertThat(result).isNotNull();
+            soft.assertThat(result.getName()).isEqualTo(id);
+            soft.assertThat(result.getPrograms()).hasSize(2);
+            soft.assertThat(result.getPrograms().get("Renamer")).isNotNull();
+            soft.assertThat(result.getPrograms().get("Renamer").getName()).isEqualTo("Renamer");
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia()).hasSize(1);
+            soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia().get("twitter")).isEqualTo("x");
+        });
+    }
+
+    @Test
+    void shouldInsertEntityWithMapUsingRecord() {
+        var program = new ProgramRecord(
+                "Renamer",
+                Map.of("twitter", "x")
+        );
+        var computer = new ComputerRecord("Computer",Map.of("Renamer", program));
+
+        var result = this.template.insert(computer);
+
+        SoftAssertions.assertSoftly(soft ->{
+            soft.assertThat(result).isNotNull();
+            soft.assertThat(result.name()).isEqualTo("Computer");
+            soft.assertThat(result.programs()).hasSize(1);
+            soft.assertThat(result.programs().get("Renamer")).isNotNull();
+            soft.assertThat(result.programs().get("Renamer").name()).isEqualTo("Renamer");
+            soft.assertThat(result.programs().get("Renamer").socialMedia()).hasSize(1);
+            soft.assertThat(result.programs().get("Renamer").socialMedia().get("twitter")).isEqualTo("x");
         });
     }
 }
