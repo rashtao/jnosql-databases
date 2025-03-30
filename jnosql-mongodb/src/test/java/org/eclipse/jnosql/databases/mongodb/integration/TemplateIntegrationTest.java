@@ -167,13 +167,14 @@ class TemplateIntegrationTest {
                 "Renamer",
                 Map.of("twitter", "x")
         );
-        var computer = Computer.of("Computer",Map.of("Renamer", program));
+        var id = "Computer" + randomUUID();
+        var computer = Computer.of(id,Map.of("Renamer", program));
 
         var result = this.template.insert(computer);
 
         SoftAssertions.assertSoftly(soft ->{
             soft.assertThat(result).isNotNull();
-            soft.assertThat(result.getName()).isEqualTo("Computer");
+            soft.assertThat(result.getName()).isEqualTo(id);
             soft.assertThat(result.getPrograms()).hasSize(1);
             soft.assertThat(result.getPrograms().get("Renamer")).isNotNull();
             soft.assertThat(result.getPrograms().get("Renamer").getName()).isEqualTo("Renamer");
@@ -193,15 +194,16 @@ class TemplateIntegrationTest {
                 "Apple",
                 Map.of("instagram", "x")
         );
-        var computer = Computer.of("Computer",Map.of("Renamer", program,
+        var id = "Computer" + randomUUID();
+        var computer = Computer.of(id,Map.of("Renamer", program,
                 "Apple", program2));
 
         var result = this.template.insert(computer);
 
         SoftAssertions.assertSoftly(soft ->{
             soft.assertThat(result).isNotNull();
-            soft.assertThat(result.getName()).isEqualTo("Computer");
-            soft.assertThat(result.getPrograms()).hasSize(1);
+            soft.assertThat(result.getName()).isEqualTo(id);
+            soft.assertThat(result.getPrograms()).hasSize(2);
             soft.assertThat(result.getPrograms().get("Renamer")).isNotNull();
             soft.assertThat(result.getPrograms().get("Renamer").getName()).isEqualTo("Renamer");
             soft.assertThat(result.getPrograms().get("Renamer").getSocialMedia()).hasSize(1);
