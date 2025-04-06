@@ -43,7 +43,7 @@ public enum DocumentDatabase implements Supplier<ElasticsearchDocumentManagerFac
     INSTANCE;
 
     private final GenericContainer es =
-            new GenericContainer("docker.elastic.co/elasticsearch/elasticsearch:8.5.0")
+            new GenericContainer("docker.io/elastic/elasticsearch:8.15.0")
                     .withReuse(true)
                     .withExposedPorts(9200, 9300)
                     .withEnv("discovery.type", "single-node")

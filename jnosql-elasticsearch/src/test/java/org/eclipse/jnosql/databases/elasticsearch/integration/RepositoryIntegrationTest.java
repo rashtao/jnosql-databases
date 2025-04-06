@@ -214,5 +214,39 @@ class RepositoryIntegrationTest {
                 .containsAll(allMagazines));
     }
 
+    @Test
+    public void shouldFindByEditionBetween() {
+        Author joshuaBloch = new Author("Joshua Bloch");
+        var magazine1 = new Magazine(randomUUID().toString(), "Effective Java", 1, joshuaBloch);
+        var magazine2 = magazine1.newEdition();
+        var magazine3 = magazine2.newEdition();
+        var magazine4 = magazine3.newEdition();
+        var magazine5 = magazine4.newEdition();
+        var magazine6 = magazine5.newEdition();
+        var magazine7 = magazine6.newEdition();
+
+        List<Magazine> allMagazines = List.of(
+                magazine1,
+                magazine2,
+                magazine3,
+                magazine4,
+                magazine5,
+                magazine6,
+                magazine7);
+
+        library.saveAll(allMagazines);
+
+        List<Magazine> magazinesGreaterThanEquals = allMagazines
+                .stream()
+                .dropWhile(m -> magazine3.edition() > m.edition())
+                .toList();
+
+        await().until(() ->
+                !library.findByEditionGreaterThanEqual(magazine3.edition()).toList().isEmpty());
+
+        var magazines = library.findByEditionGreaterThanEqual(magazine3.edition()).toList();
+        assertThat(magazines)
+                .containsAll(magazinesGreaterThanEquals);
+    }
 
 }

@@ -114,60 +114,65 @@ final class QueryConverter {
 
     private static Query.Builder getCondition(IndexMappingRecord indexMappingRecord, CriteriaCondition condition) {
         Element document = condition.element();
-
+        String fieldName = document.name();
+        JsonData value = JsonData.of(document.value().get());
         switch (condition.condition()) {
             case EQUALS:
-                if (supportTermQuery(indexMappingRecord, document.name())) {
+                if (supportTermQuery(indexMappingRecord, fieldName)) {
                     return (Query.Builder) new Query.Builder()
                             .term(TermQuery.of(tq -> tq
-                                    .field(document.name())
+                                    .field(fieldName)
                                     .value(v -> v
-                                            .anyValue(JsonData.of(document.value().get())))));
+                                            .anyValue(value))));
                 }
                 return (Query.Builder) new Query.Builder()
                         .match(MatchQuery.of(tq -> tq
-                                .field(document.name())
+                                .field(fieldName)
                                 .query(v -> v
-                                        .anyValue(JsonData.of(document.value().get())))));
+                                        .anyValue(value))));
             case LESSER_THAN:
                 return (Query.Builder) new Query.Builder()
                         .range(RangeQuery.of(rq -> rq
-                                .field(document.name())
-                                .lt(JsonData.of(document.value().get()))));
+                                .untyped(u -> u
+                                        .field(fieldName)
+                                        .lt(value))));
             case LESSER_EQUALS_THAN:
                 return (Query.Builder) new Query.Builder()
                         .range(RangeQuery.of(rq -> rq
-                                .field(document.name())
-                                .lte(JsonData.of(document.value().get()))));
+                                .untyped(u -> u
+                                        .field(fieldName)
+                                        .lte(value))));
             case GREATER_THAN:
                 return (Query.Builder) new Query.Builder()
                         .range(RangeQuery.of(rq -> rq
-                                .field(document.name())
-                                .gt(JsonData.of(document.value().get()))));
+                                .untyped(u -> u
+                                        .field(fieldName)
+                                        .gt(value))));
             case GREATER_EQUALS_THAN:
                 return (Query.Builder) new Query.Builder()
                         .range(RangeQuery.of(rq -> rq
-                                .field(document.name())
-                                .gte(JsonData.of(document.value().get()))));
+                                .untyped(u -> u
+                                        .field(fieldName)
+                                        .gte(value))));
             case LIKE:
                 return (Query.Builder) new Query.Builder()
                         .queryString(QueryStringQuery.of(rq -> rq
                                 .query(document.value().get(String.class))
                                 .allowLeadingWildcard(true)
-                                .fields(document.name())));
+                                .fields(fieldName)));
             case IN:
                 return (Query.Builder) ValueUtil.convertToList(document.value())
                         .stream()
                         .map(val -> {
-                            if (supportTermQuery(indexMappingRecord, document.name())) {
+                            if (supportTermQuery(indexMappingRecord, fieldName)) {
                                 return new Query.Builder()
                                         .term(TermQuery.of(tq -> tq
-                                                .field(document.name())
+                                                .field(fieldName)
                                                 .value(v -> v.anyValue(JsonData.of(val)))));
                             }
                             return new Query.Builder()
                                     .match(MatchQuery.of(tq -> tq
-                                            .field(document.name())
+                                            .field(fieldName)
                                             .query(v -> v.anyValue(JsonData.of(val)))));
                         })
                         .reduce((d1, d2) -> new Query.Builder()
