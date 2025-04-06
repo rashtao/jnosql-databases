@@ -26,9 +26,10 @@ import java.util.stream.Stream;
 @Repository
 public interface Library extends CrudRepository<Magazine, String> {
 
-    @Query("select * from Book where author.name = @name")
+    @Query("where author.name = :name")
     Stream<Magazine> findByAuthorName(@Param("name") String name);
 
     Stream<Magazine> findByTitleLike(String title);
 
+    Stream<Magazine> findByEditionGreaterThanEqual(int edition);
 }
