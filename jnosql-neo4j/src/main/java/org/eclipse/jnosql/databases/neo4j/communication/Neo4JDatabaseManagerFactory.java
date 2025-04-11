@@ -50,8 +50,8 @@ public class Neo4JDatabaseManagerFactory implements DatabaseManagerFactory {
 
     private final Driver driver;
 
-    private Neo4JDatabaseManagerFactory(Driver driver) {
-        this.driver = driver;
+    Neo4JDatabaseManagerFactory(Driver driver) {
+        this.driver = Objects.requireNonNull(driver, "driver is required");
     }
 
     /**
