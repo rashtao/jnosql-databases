@@ -14,5 +14,27 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
-public interface TinkerPopRepository {
+import org.eclipse.jnosql.mapping.NoSQLRepository;
+
+/**
+ * A repository interface for executing {@link Gremlin} queries
+ * using Apache TinkerPop (Gremlin).
+ * <p>
+ * This interface is meant to be extended by user-defined repositories that want to execute
+ * Gremlin traversals against a graph database such as JanusGraph, Neptune, or TinkerGraph.
+ *
+ * <p>
+ * Example usage:
+ * <pre>{@code
+ * public interface BookRepository extends TinkerPopRepository<Book, String> {
+ *
+ *     @Gremlin("g.V().hasLabel('Book').has('title', title)")
+ *     List<Book> findByTitle(@Param("title") String title);
+ * }
+ * }</pre>
+ *
+ * @param <T>  the entity type
+ * @param <ID> the ID type
+ */
+public interface TinkerPopRepository <T, ID> extends NoSQLRepository<T, ID> {
 }
