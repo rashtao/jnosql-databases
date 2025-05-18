@@ -19,6 +19,7 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessProducer;
 import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.query.TinkerpopRepositoryBean;
 import org.eclipse.jnosql.mapping.DatabaseMetadata;
 import org.eclipse.jnosql.mapping.Databases;
@@ -47,13 +48,9 @@ public class TinkerpopExtension implements Extension {
     void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery) {
 
         ClassScanner scanner = ClassScanner.load();
-        Set<Class<?>> crudTypes = scanner.repositoriesStandard();
+        Set<Class<?>> crudTypes = scanner.repositories(TinkerPopRepository.class);
 
 
-        Set<Class<?>> customRepositories = scanner.customRepositories();
-
-        LOGGER.info(String.format("Processing graph extension: %d databases crud %d found, custom repositories: %d",
-                databases.size(), crudTypes.size(), customRepositories.size()));
 
         LOGGER.info("Processing repositories as a Graph implementation: " + crudTypes);
         databases.forEach(type -> {
@@ -63,21 +60,7 @@ public class TinkerpopExtension implements Extension {
             }
         });
 
+        crudTypes.forEach(type -> afterBeanDiscovery.addBean(new TinkerpopRepositoryBean<>(type)));
 
-        crudTypes.forEach(type -> {
-            if (!databases.contains(DatabaseMetadata.DEFAULT_GRAPH)) {
-                afterBeanDiscovery.addBean(new TinkerpopRepositoryBean<>(type, ""));
-            }
-            databases.forEach(database -> afterBeanDiscovery
-                    .addBean(new TinkerpopRepositoryBean<>(type, database.getProvider())));
-        });
-
-        customRepositories.forEach(type -> {
-            if (!databases.contains(DatabaseMetadata.DEFAULT_DOCUMENT)) {
-                afterBeanDiscovery.addBean(new CustomRepositoryGraphBean<>(type, ""));
-            }
-            databases.forEach(database ->
-                    afterBeanDiscovery.addBean(new CustomRepositoryGraphBean<>(type, database.getProvider())));
-        });
     }
 }

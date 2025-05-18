@@ -56,7 +56,7 @@ public class TinkerpopRepositoryBean<T, K> extends AbstractBean<TinkerPopReposit
     private final Set<Annotation> qualifiers = Collections.singleton(new AnnotationLiteral<Default>() {
     });
 
-    TinkerpopRepositoryBean(Class<T> type) {
+    public TinkerpopRepositoryBean(Class<T> type) {
         this.type = type;
         this.types = Collections.singleton(type);
     }
