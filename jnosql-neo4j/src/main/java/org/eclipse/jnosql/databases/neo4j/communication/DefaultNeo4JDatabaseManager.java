@@ -189,6 +189,11 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
+    public Stream<CommunicationEntity> cypher(String cypher) {
+        return cypher(cypher, Collections.emptyMap());
+    }
+
+    @Override
     public Stream<CommunicationEntity> traverse(String startNodeId, String label, int depth) {
         Objects.requireNonNull(startNodeId, "Start node ID is required");
         Objects.requireNonNull(label, "Relationship type is required");
