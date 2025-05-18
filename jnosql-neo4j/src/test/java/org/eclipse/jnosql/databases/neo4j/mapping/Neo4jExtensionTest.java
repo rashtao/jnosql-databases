@@ -15,6 +15,8 @@
 package org.eclipse.jnosql.databases.neo4j.mapping;
 
 import jakarta.inject.Inject;
+import org.eclipse.jnosql.mapping.Database;
+import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 import org.eclipse.jnosql.mapping.graph.spi.GraphExtension;
@@ -33,12 +35,16 @@ import org.junit.jupiter.api.Test;
 @AddPackages(Reflections.class)
 public class Neo4jExtensionTest {
 
-
     @Inject
     private MusicRepository repository;
 
     @Inject
+    @Database(value = DatabaseType.GRAPH)
     private MusicStoreRepository repository2;
+
+    @Inject
+    @Database(value = DatabaseType.GRAPH)
+    private MusicStoreRepository repository3;
 
     @Test
     public void shouldCreteNeo4j() {
@@ -48,5 +54,6 @@ public class Neo4jExtensionTest {
     @Test
     public void shouldCreteGraph() {
         Assertions.assertNotNull(repository2);
+        Assertions.assertNotNull(repository3);
     }
 }
