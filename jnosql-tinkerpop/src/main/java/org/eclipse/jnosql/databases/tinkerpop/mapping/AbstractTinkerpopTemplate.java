@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -226,6 +227,13 @@ abstract class AbstractTinkerpopTemplate extends AbstractGraphTemplate implement
     public <T> Stream<T> gremlin(String gremlin) {
         requireNonNull(gremlin, "gremlin is required");
         return executor().executeGremlin(traversal(), gremlin);
+    }
+
+    @Override
+    public <T> Stream<T> gremlin(String gremlin, Map<String, Object> parameters) {
+        requireNonNull(gremlin, "gremlin is required");
+        requireNonNull(parameters, "parameters is required");
+        return executor().executeGremlin(traversal(), gremlin, parameters);
     }
 
     @Override
