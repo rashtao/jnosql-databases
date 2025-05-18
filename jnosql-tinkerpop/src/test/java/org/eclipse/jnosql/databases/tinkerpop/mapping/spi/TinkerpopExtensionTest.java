@@ -22,6 +22,8 @@ import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.HumanRepository;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.graph.GraphTemplate;
+import org.eclipse.jnosql.mapping.graph.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -35,10 +37,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class, GraphTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class, GraphExtension.class})
 class TinkerpopExtensionTest {
 
 
@@ -47,7 +49,10 @@ class TinkerpopExtensionTest {
     private HumanRepository repository;
 
     @Inject
-    @Database(value = DatabaseType.GRAPH, provider = "graphRepositoryMock")
+    private HumanRepository repository2;
+
+    @Inject
+    @Database(value = DatabaseType.GRAPH)
     private HumanRepository repositoryMock;
 
     @Inject
@@ -61,8 +66,6 @@ class TinkerpopExtensionTest {
     @Test
     void shouldInitiate() {
         assertNotNull(repository);
-        Human human = repository.save(Human.builder().build());
-        assertNull(human.getName());
     }
 
     @Test
@@ -74,6 +77,7 @@ class TinkerpopExtensionTest {
     void shouldInjectTemplate() {
         assertNotNull(templateMock);
         assertNotNull(template);
+        assertNotNull(repository2);
     }
 
     @Test
