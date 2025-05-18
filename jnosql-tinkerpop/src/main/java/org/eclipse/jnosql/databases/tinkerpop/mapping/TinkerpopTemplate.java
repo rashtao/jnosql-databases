@@ -21,6 +21,7 @@ import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -227,6 +228,15 @@ public interface TinkerpopTemplate extends GraphTemplate {
      * @throws NullPointerException when the gremlin is null
      */
     <T> Stream<T> gremlin(String gremlin);
+
+    /**
+     * Executes a Gremlin then bring the result as a {@link Stream} with parameter
+     * @param gremlin  the query gremlin
+     * @param parameters the parameters to be used in the query
+     * @return the result as {@link Stream}
+     * @param <T>  the entity type
+     */
+    <T> Stream<T> gremlin(String gremlin, Map<String, Object> parameters);
 
     /**
      * Executes a Gremlin query then bring the result as a unique result
