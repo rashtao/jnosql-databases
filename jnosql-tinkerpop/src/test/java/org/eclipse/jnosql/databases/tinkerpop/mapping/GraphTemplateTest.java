@@ -16,7 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.inject.Inject;
 import jakarta.nosql.Template;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.TinkerpopExtension;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
@@ -34,7 +34,7 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
 class GraphTemplateTest {
 
     @Inject

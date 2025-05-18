@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
-class GraphExtensionTest {
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
+class TinkerpopExtensionTest {
 
 
     @Inject

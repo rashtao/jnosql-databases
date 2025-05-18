@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
 class GraphCustomExtensionTest {
 
     @Inject

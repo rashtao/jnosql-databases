@@ -20,7 +20,7 @@ import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Transaction.Status;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.MagazineTemplate;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.GraphExtension;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.TinkerpopExtension;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
 class MagazineTemplateTest {
 
     @Inject

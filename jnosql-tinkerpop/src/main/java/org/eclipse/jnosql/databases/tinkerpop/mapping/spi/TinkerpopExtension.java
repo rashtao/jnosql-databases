@@ -34,9 +34,9 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
  * Extension to start up the GraphTemplate, Repository
  * from the {@link org.eclipse.jnosql.mapping.Database} qualifier
  */
-public class GraphExtension implements Extension {
+public class TinkerpopExtension implements Extension {
 
-    private static final Logger LOGGER = Logger.getLogger(GraphExtension.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TinkerpopExtension.class.getName());
 
     private final Set<DatabaseMetadata> databases = new HashSet<>();
 
