@@ -170,19 +170,35 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(parameters, "Parameters map is required");
 
         try (Transaction tx = session.beginTransaction()) {
-            var result = tx.run(cypher, Values.parameters(flattenMap(parameters)))
+            var result = tx.run(cypher, Values.parameters(flattenMap(parameters)));
+
+            List<CommunicationEntity> entities = result
                     .stream()
-                    .map(record ->
-                            record.keys().stream()
-                                    .filter(key -> record.get(key).hasType(TypeSystem.getDefault().NODE()))
-                                    .findFirst()
-                                    .map(key -> extractEntity(key, record, false))
-                                    .orElse(null)
+                    .map(record -> record.keys().stream()
+                            .map(key -> {
+                                var value = record.get(key);
+                                if (value.hasType(TypeSystem.getDefault().NODE())) {
+                                    return extractEntity(key, record, false);
+                                } else if (value.hasType(TypeSystem.getDefault().RELATIONSHIP())) {
+                                    var rel = value.asRelationship();
+                                    List<Element> elements = new ArrayList<>();
+                                    rel.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+                                    elements.add(Element.of(ID, rel.elementId()));
+                                    elements.add(Element.of("start", rel.startNodeElementId()));
+                                    elements.add(Element.of("end", rel.endNodeElementId()));
+                                    return CommunicationEntity.of(key, elements);
+                                }
+                                return null;
+                            })
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(null)
                     )
-                    .filter(Objects::nonNull);
+                    .filter(Objects::nonNull)
+                    .toList();
             LOGGER.fine("Executed Cypher query: " + cypher);
             tx.commit();
-            return result;
+            return entities.stream();
         } catch (Exception e) {
             throw new CommunicationException("Error executing Cypher query", e);
         }
