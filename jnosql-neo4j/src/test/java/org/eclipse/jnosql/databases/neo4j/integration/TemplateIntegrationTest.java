@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.neo4j.integration;
 
 import jakarta.inject.Inject;
+import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.neo4j.communication.DatabaseContainer;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfigurations;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,5 +111,33 @@ public class TemplateIntegrationTest {
 
         template.delete(Magazine.class).execute();
         assertThat(template.select(Magazine.class).result()).isEmpty();
+    }
+
+    @Test
+    void shouldFindUsingCypher() {
+        for (int index = 0; index < 5; index++) {
+            Magazine magazine = template.insert(new Magazine(null, "Effective Java", index));
+            assertThat(magazine).isNotNull();
+        }
+        var result = template.cypher("MATCH (m:Magazine) RETURN m").toList();
+        SoftAssertions.assertSoftly(soft -> {
+            assertThat(result).isNotNull();
+            assertThat(result).hasSize(5);
+        });
+    }
+
+    @Test
+    void shouldFindUsingCypherParameter() {
+        for (int index = 0; index < 5; index++) {
+            Magazine magazine = template.insert(new Magazine(null, "Effective Java", index));
+            assertThat(magazine).isNotNull();
+        }
+
+        Map<String, Object> parameters = Map.of("title", "Effective Java");
+        var result = template.cypher("MATCH (m:Magazine{title: $title}) RETURN m", parameters).toList();
+        SoftAssertions.assertSoftly(soft -> {
+            assertThat(result).isNotNull();
+            assertThat(result).hasSize(5);
+        });
     }
 }
