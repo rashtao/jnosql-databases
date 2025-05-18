@@ -70,6 +70,7 @@ class DefaultNeo4JTemplate extends AbstractGraphTemplate implements Neo4JTemplat
                 .map(e -> (T) converter.toEntity(e));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Stream<T> cypher(String cypher) {
         Objects.requireNonNull(cypher, "cypher is required");
