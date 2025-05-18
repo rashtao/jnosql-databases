@@ -28,7 +28,7 @@ import org.eclipse.jnosql.mapping.NoSQLRepository;
  * <pre>{@code
  * public interface BookRepository extends TinkerPopRepository<Book, String> {
  *
- *     @Gremlin("g.V().hasLabel('Book').has('title', title)")
+ *     @Gremlin("g.V().hasLabel('Book').has('title', @title)")
  *     List<Book> findByTitle(@Param("title") String title);
  * }
  * }</pre>
