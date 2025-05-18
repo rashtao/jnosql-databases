@@ -405,22 +405,45 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         return entitiesResult;
     }
 
-    private CommunicationEntity extractEntity(String entityName, org.neo4j.driver.Record record, boolean isFullNode) {
+    private CommunicationEntity extractEntity(String alias, org.neo4j.driver.Record record, boolean isFullNode) {
         List<Element> elements = new ArrayList<>();
 
         for (String key : record.keys()) {
             var value = record.get(key);
 
-            if (value.hasType(org.neo4j.driver.types.TypeSystem.getDefault().NODE())) {
+            if (value.hasType(TypeSystem.getDefault().NODE())) {
                 var node = value.asNode();
-                node.asMap().forEach((k, v) -> elements.add(Element.of(k, v))); // Extract properties
+
+                node.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+
                 elements.add(Element.of(ID, node.elementId()));
-            } else {
-                String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
-                elements.add(Element.of(fieldName, value.asObject()));
+                elements.add(Element.of("_alias", key));
+
+                var label = node.labels().iterator().hasNext()
+                        ? node.labels().iterator().next()
+                        : key;
+
+                return CommunicationEntity.of(label, elements);
             }
+
+            if (value.hasType(TypeSystem.getDefault().RELATIONSHIP())) {
+                var rel = value.asRelationship();
+
+                rel.asMap().forEach((k, v) -> elements.add(Element.of(k, v)));
+
+                elements.add(Element.of(ID, rel.elementId()));
+                elements.add(Element.of("start", rel.startNodeElementId()));
+                elements.add(Element.of("end", rel.endNodeElementId()));
+                elements.add(Element.of("_alias", key));
+
+                return CommunicationEntity.of(rel.type(), elements);
+            }
+
+            String fieldName = key.contains(".") ? key.substring(key.indexOf('.') + 1) : key;
+            elements.add(Element.of(fieldName, value.asObject()));
         }
 
-        return CommunicationEntity.of(entityName, elements);
+        // No node or relationship found: use alias as fallback
+        return CommunicationEntity.of(alias, elements);
     }
 }
