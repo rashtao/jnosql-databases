@@ -83,6 +83,7 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
