@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.neo4j.integration;
 
 
 import jakarta.inject.Inject;
+import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.neo4j.communication.DatabaseContainer;
 import org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfigurations;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JExtension;
@@ -28,6 +29,7 @@ import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -53,12 +55,43 @@ public class RepositoryIntegrationTest {
     @Inject
     private MagazineRepository repository;
 
+    @BeforeEach
+    void beforeEach() {
+        repository.deleteAll();
+    }
+
     @Test
     void shouldSave() {
         Magazine magazine = new Magazine(null, "Effective Java", 1);
         assertThat(repository.save(magazine))
                 .isNotNull();
 
+    }
+
+    @Test
+    void shouldFindAll() {
+        for (int index = 0; index < 5; index++) {
+            Magazine magazine = repository.save(new Magazine(null, "Effective Java", index));
+            assertThat(magazine).isNotNull();
+        }
+        var result = repository.findAllByCypher();
+        SoftAssertions.assertSoftly(soft -> {
+            assertThat(result).isNotNull();
+            assertThat(result).hasSize(5);
+        });
+    }
+
+    @Test
+    void shouldFindByName() {
+        for (int index = 0; index < 5; index++) {
+            Magazine magazine = repository.save(new Magazine(null, "Effective Java", index));
+            assertThat(magazine).isNotNull();
+        }
+        var result = repository.findByTitle("Effective Java");
+        SoftAssertions.assertSoftly(soft -> {
+            assertThat(result).isNotNull();
+            assertThat(result).hasSize(5);
+        });
     }
 
 }
