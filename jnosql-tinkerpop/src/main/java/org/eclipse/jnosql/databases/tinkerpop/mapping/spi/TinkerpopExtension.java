@@ -19,7 +19,7 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessProducer;
 import org.apache.tinkerpop.gremlin.structure.Graph;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.query.RepositoryGraphBean;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.query.TinkerpopRepositoryBean;
 import org.eclipse.jnosql.mapping.DatabaseMetadata;
 import org.eclipse.jnosql.mapping.Databases;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
@@ -66,10 +66,10 @@ public class TinkerpopExtension implements Extension {
 
         crudTypes.forEach(type -> {
             if (!databases.contains(DatabaseMetadata.DEFAULT_GRAPH)) {
-                afterBeanDiscovery.addBean(new RepositoryGraphBean<>(type, ""));
+                afterBeanDiscovery.addBean(new TinkerpopRepositoryBean<>(type, ""));
             }
             databases.forEach(database -> afterBeanDiscovery
-                    .addBean(new RepositoryGraphBean<>(type, database.getProvider())));
+                    .addBean(new TinkerpopRepositoryBean<>(type, database.getProvider())));
         });
 
         customRepositories.forEach(type -> {

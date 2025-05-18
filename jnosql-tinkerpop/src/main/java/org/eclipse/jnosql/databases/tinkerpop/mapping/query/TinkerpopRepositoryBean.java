@@ -44,7 +44,7 @@ import java.util.Set;
  * @param <T> the type of the repository
  * @see AbstractBean
  */
-public class RepositoryGraphBean<T extends DataRepository<T, ?>> extends AbstractBean<T> {
+public class TinkerpopRepositoryBean<T extends DataRepository<T, ?>> extends AbstractBean<T> {
 
     private final Class<T> type;
 
@@ -61,7 +61,7 @@ public class RepositoryGraphBean<T extends DataRepository<T, ?>> extends Abstrac
      * @param provider    the provider name, that must be a
      */
     @SuppressWarnings("unchecked")
-    public RepositoryGraphBean(Class<?> type, String provider) {
+    public TinkerpopRepositoryBean(Class<?> type, String provider) {
         this.type = (Class<T>) type;
         this.types = Collections.singleton(type);
         this.provider = provider;
