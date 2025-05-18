@@ -71,6 +71,13 @@ class DefaultNeo4JTemplate extends AbstractGraphTemplate implements Neo4JTemplat
     }
 
     @Override
+    public <T> Stream<T> cypher(String cypher) {
+        Objects.requireNonNull(cypher, "cypher is required");
+        return manager.get().cypher(cypher)
+                .map(e -> (T) converter.toEntity(e));
+    }
+
+    @Override
     public <T> Stream<T> traverse(String startNodeId, Supplier<String> relationship, int depth) {
         Objects.requireNonNull(startNodeId, "startNodeId is required");
         Objects.requireNonNull(relationship, "relationship is required");
