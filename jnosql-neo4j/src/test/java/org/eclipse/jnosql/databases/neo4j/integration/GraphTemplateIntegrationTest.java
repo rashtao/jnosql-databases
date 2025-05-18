@@ -160,7 +160,7 @@ public class GraphTemplateIntegrationTest {
 
         try {
             var entityManager = DatabaseContainer.INSTANCE.get("neo4j");
-            entityManager.executeQuery(cypher, new HashMap<>()).toList();
+            entityManager.cypher(cypher, new HashMap<>()).toList();
         } catch (Exception e) {
             throw new RuntimeException("Failed to remove edges before node deletion", e);
         }

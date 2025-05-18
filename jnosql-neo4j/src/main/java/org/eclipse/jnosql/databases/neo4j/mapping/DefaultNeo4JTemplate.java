@@ -66,7 +66,7 @@ class DefaultNeo4JTemplate extends AbstractGraphTemplate implements Neo4JTemplat
     public <T> Stream<T> cypher(String cypher, Map<String, Object> parameters) {
         Objects.requireNonNull(cypher, "cypher is required");
         Objects.requireNonNull(parameters, "parameters is required");
-        return manager.get().executeQuery(cypher, parameters)
+        return manager.get().cypher(cypher, parameters)
                 .map(e -> (T) converter.toEntity(e));
     }
 

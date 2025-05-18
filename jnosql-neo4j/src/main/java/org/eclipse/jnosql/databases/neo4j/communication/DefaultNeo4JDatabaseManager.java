@@ -25,6 +25,7 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Values;
+import org.neo4j.driver.types.TypeSystem;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -164,14 +165,21 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
     }
 
     @Override
-    public Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters) {
+    public Stream<CommunicationEntity> cypher(String cypher, Map<String, Object> parameters) {
         Objects.requireNonNull(cypher, "Cypher query is required");
         Objects.requireNonNull(parameters, "Parameters map is required");
 
         try (Transaction tx = session.beginTransaction()) {
-            Stream<CommunicationEntity> result = tx.run(cypher, Values.parameters(flattenMap(parameters)))
-                    .list(record -> extractEntity("QueryResult", record, false))
-                    .stream();
+            var result = tx.run(cypher, Values.parameters(flattenMap(parameters)))
+                    .stream()
+                    .map(record ->
+                            record.keys().stream()
+                                    .filter(key -> record.get(key).hasType(TypeSystem.getDefault().NODE()))
+                                    .findFirst()
+                                    .map(key -> extractEntity(key, record, false))
+                                    .orElse(null)
+                    )
+                    .filter(Objects::nonNull);
             LOGGER.fine("Executed Cypher query: " + cypher);
             tx.commit();
             return result;
