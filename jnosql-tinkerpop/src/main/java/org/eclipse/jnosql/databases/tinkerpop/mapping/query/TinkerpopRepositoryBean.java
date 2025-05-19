@@ -14,25 +14,19 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping.query;
 
-import jakarta.data.repository.DataRepository;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.util.AnnotationLiteral;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
-import org.eclipse.jnosql.mapping.DatabaseQualifier;
-import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.core.util.AnnotationLiteralUtil;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.semistructured.query.SemiStructuredRepositoryProxy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 
