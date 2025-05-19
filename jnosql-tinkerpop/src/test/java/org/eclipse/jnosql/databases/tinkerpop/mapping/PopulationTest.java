@@ -74,9 +74,22 @@ public class PopulationTest {
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(people).isNotNull();
             soft.assertThat(people).hasSize(3);
-            soft.assertThat(people.get(0)).isEqualTo(ada);
-            soft.assertThat(people.get(0)).isEqualTo(poliana);
-            soft.assertThat(people.get(0)).isEqualTo(otavio);
+            soft.assertThat(people).containsExactly(ada, otavio, poliana);
+        });
+    }
+
+    @Test
+    void shouldFindByNameQuery() {
+        var otavio = population.save(Human.builder().withAge().withName("Otavio").build());
+        var poliana = population.save(Human.builder().withAge().withName("Poliana").build());
+        var ada = population.save(Human.builder().withAge().withName("Ada").build());
+
+        List<Human> people = population.findByName("Otavio");
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(people).isNotNull();
+            soft.assertThat(people).hasSize(1);
+            soft.assertThat(people).containsExactly(otavio);
         });
     }
 }
