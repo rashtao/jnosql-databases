@@ -26,7 +26,7 @@ public interface Population extends TinkerPopRepository<Human, String> {
     @Gremlin("g.V().hasLabel('Human').order().by('name', Order.asc)")
     List<Human> allHumans();
 
-    @Gremlin("g.V().hasLabel('Human')")
+    @Gremlin("g.V().hasLabel('Human').has('name', @name)")
     List<Human> findByName (@Param("name") String name);
 
 }

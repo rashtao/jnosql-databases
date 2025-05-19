@@ -349,7 +349,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnErrorWhenGetEdgesHasNullId2() {
-            Human otavio = Human.builder().withAge().withName("Otavio").build();
+            Human otavio = Human.builder().withId(0L).withAge().withName("Otavio").build();
         Collection<EdgeEntity> edges = getGraphTemplate().edges(otavio, Direction.BOTH);
         assertThat(edges).isEmpty();
     }
