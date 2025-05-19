@@ -12,8 +12,10 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.neo4j.mapping;
+package org.eclipse.jnosql.databases.tinkerpop.mapping.query;
 
+import org.eclipse.jnosql.databases.tinkerpop.mapping.Gremlin;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.query.AbstractRepository;
 import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
@@ -31,11 +33,11 @@ import java.util.stream.Stream;
 
 import static org.eclipse.jnosql.mapping.core.repository.DynamicReturn.toSingleResult;
 
-class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<T, K> {
+class TinkerpopRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<T, K> {
 
     private final Class<T> typeClass;
 
-    private final Neo4JTemplate template;
+    private final TinkerpopTemplate template;
 
     private final AbstractRepository<T,K> repository;
 
@@ -45,8 +47,8 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
 
     private final Class<?> repositoryType;
 
-    Neo4JRepositoryProxy(Neo4JTemplate template, Class<?> repositoryType,
-                             Converters converters, EntitiesMetadata entitiesMetadata) {
+    TinkerpopRepositoryProxy(TinkerpopTemplate template, Class<?> repositoryType,
+                         Converters converters, EntitiesMetadata entitiesMetadata) {
 
         this.template = template;
         this.typeClass = Class.class.cast(ParameterizedType.class.cast(repositoryType.getGenericInterfaces()[0])
@@ -79,7 +81,7 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
     }
 
     @Override
-    protected Neo4JTemplate template() {
+    protected TinkerpopTemplate template() {
         return template;
     }
 
@@ -87,15 +89,15 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
-        Cypher cql = method.getAnnotation(Cypher.class);
+        Gremlin cql = method.getAnnotation(Gremlin.class);
         if (Objects.nonNull(cql)) {
 
             Stream<T> result;
             Map<String, Object> values = ParamConverterUtils.getValues(args, method);
             if (!values.isEmpty()) {
-                result = template.cypher(cql.value(), values);
+                result = template.gremlin(cql.value(), values);
             } else {
-                result = template.cypher(cql.value(), Collections.emptyMap());
+                result = template.gremlin(cql.value(), Collections.emptyMap());
             }
 
             return DynamicReturn.builder()

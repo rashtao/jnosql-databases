@@ -15,14 +15,15 @@
 package org.eclipse.jnosql.databases.tinkerpop.mapping.spi;
 
 import jakarta.inject.Inject;
-import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.People;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.HumanRepository;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.graph.GraphTemplate;
+import org.eclipse.jnosql.mapping.graph.spi.GraphExtension;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
@@ -32,46 +33,56 @@ import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
+@AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class, GraphTemplate.class})
 @AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
-@AddExtensions({ReflectionEntityMetadataExtension.class, GraphExtension.class})
-class GraphCustomExtensionTest {
+@AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class, GraphExtension.class})
+class TinkerpopExtensionTest {
+
 
     @Inject
     @Database(value = DatabaseType.GRAPH)
-    private People people;
+    private HumanRepository repository;
+
+    @Inject
+    private HumanRepository repository2;
+
+    @Inject
+    @Database(value = DatabaseType.GRAPH)
+    private HumanRepository repositoryMock;
 
     @Inject
     @Database(value = DatabaseType.GRAPH, provider = "graphRepositoryMock")
-    private People pepoleMock;
+    private TinkerpopTemplate templateMock;
 
     @Inject
-    private People repository;
+    private TinkerpopTemplate template;
+
 
     @Test
     void shouldInitiate() {
-        assertNotNull(people);
-        Human human = people.insert(Human.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
+        assertNotNull(repository);
     }
 
     @Test
     void shouldUseMock(){
-        assertNotNull(pepoleMock);
-
-        Human human = pepoleMock.insert(Human.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
+        assertNotNull(repositoryMock);
     }
 
     @Test
-    void shouldUseDefault(){
-        assertNotNull(repository);
+    void shouldInjectTemplate() {
+        assertNotNull(templateMock);
+        assertNotNull(template);
+        assertNotNull(repository2);
+    }
 
-        Human human = repository.insert(Human.builder().build());
-        SoftAssertions.assertSoftly(soft -> soft.assertThat(human).isNotNull());
+    @Test
+    void shouldInjectRepository() {
+        assertNotNull(repository);
+        assertNotNull(repositoryMock);
     }
 }

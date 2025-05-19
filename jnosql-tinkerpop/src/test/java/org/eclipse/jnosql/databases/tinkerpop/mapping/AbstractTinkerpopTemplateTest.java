@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -348,7 +349,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnErrorWhenGetEdgesHasNullId2() {
-            Human otavio = Human.builder().withAge().withName("Otavio").build();
+            Human otavio = Human.builder().withId(0L).withAge().withName("Otavio").build();
         Collection<EdgeEntity> edges = getGraphTemplate().edges(otavio, Direction.BOTH);
         assertThat(edges).isEmpty();
     }
@@ -410,6 +411,20 @@ public abstract class AbstractTinkerpopTemplateTest {
         List<Human> people = getGraphTemplate()
                 .<Human>gremlin("g.V().hasLabel('Human')")
                 .toList();
+        assertThat(people.stream().map(Human::getName).collect(toList())).contains("Otavio");
+    }
+
+
+    @Test
+    void shouldExecuteQueryWithParameter() {
+        Human human = Human.builder().withAge()
+                .withName("Otavio").build();
+        Map<String, Object> parameters = Collections.singletonMap("name", "Otavio");
+        getGraphTemplate().insert(human);
+        List<Human> people = getGraphTemplate()
+                .<Human>gremlin("g.V().hasLabel('Human').has('name', @name)", parameters)
+                .toList();
+
         assertThat(people.stream().map(Human::getName).collect(toList())).contains("Otavio");
     }
 

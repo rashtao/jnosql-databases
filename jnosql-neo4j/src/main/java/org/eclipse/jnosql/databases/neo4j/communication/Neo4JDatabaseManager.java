@@ -59,7 +59,16 @@ public interface Neo4JDatabaseManager extends GraphDatabaseManager {
      * @return a stream of {@link CommunicationEntity} representing the query result.
      * @throws NullPointerException if {@code cypher} or {@code parameters} is null.
      */
-    Stream<CommunicationEntity> executeQuery(String cypher, Map<String, Object> parameters);
+    Stream<CommunicationEntity> cypher(String cypher, Map<String, Object> parameters);
+
+    /**
+     * Executes a custom Cypher query without parameters and returns a stream of {@link CommunicationEntity}.
+     *
+     * @param cypher     the Cypher query to execute.
+     * @return a stream of {@link CommunicationEntity} representing the query result.
+     * @throws NullPointerException if {@code cypher} is null.
+     */
+    Stream<CommunicationEntity> cypher(String cypher);
 
     /**
      * Traverses the graph starting from a node and follows the specified label type up to a given depth.

@@ -19,7 +19,8 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessProducer;
 import org.apache.tinkerpop.gremlin.structure.Graph;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.query.RepositoryGraphBean;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.query.TinkerpopRepositoryBean;
 import org.eclipse.jnosql.mapping.DatabaseMetadata;
 import org.eclipse.jnosql.mapping.Databases;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
@@ -34,9 +35,9 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
  * Extension to start up the GraphTemplate, Repository
  * from the {@link org.eclipse.jnosql.mapping.Database} qualifier
  */
-public class GraphExtension implements Extension {
+public class TinkerpopExtension implements Extension {
 
-    private static final Logger LOGGER = Logger.getLogger(GraphExtension.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TinkerpopExtension.class.getName());
 
     private final Set<DatabaseMetadata> databases = new HashSet<>();
 
@@ -47,13 +48,9 @@ public class GraphExtension implements Extension {
     void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery) {
 
         ClassScanner scanner = ClassScanner.load();
-        Set<Class<?>> crudTypes = scanner.repositoriesStandard();
+        Set<Class<?>> crudTypes = scanner.repositories(TinkerPopRepository.class);
 
 
-        Set<Class<?>> customRepositories = scanner.customRepositories();
-
-        LOGGER.info(String.format("Processing graph extension: %d databases crud %d found, custom repositories: %d",
-                databases.size(), crudTypes.size(), customRepositories.size()));
 
         LOGGER.info("Processing repositories as a Graph implementation: " + crudTypes);
         databases.forEach(type -> {
@@ -63,21 +60,7 @@ public class GraphExtension implements Extension {
             }
         });
 
+        crudTypes.forEach(type -> afterBeanDiscovery.addBean(new TinkerpopRepositoryBean<>(type)));
 
-        crudTypes.forEach(type -> {
-            if (!databases.contains(DatabaseMetadata.DEFAULT_GRAPH)) {
-                afterBeanDiscovery.addBean(new RepositoryGraphBean<>(type, ""));
-            }
-            databases.forEach(database -> afterBeanDiscovery
-                    .addBean(new RepositoryGraphBean<>(type, database.getProvider())));
-        });
-
-        customRepositories.forEach(type -> {
-            if (!databases.contains(DatabaseMetadata.DEFAULT_DOCUMENT)) {
-                afterBeanDiscovery.addBean(new CustomRepositoryGraphBean<>(type, ""));
-            }
-            databases.forEach(database ->
-                    afterBeanDiscovery.addBean(new CustomRepositoryGraphBean<>(type, database.getProvider())));
-        });
     }
 }

@@ -81,7 +81,7 @@ class DefaultNeo4JTemplateTest {
         Map<String, Object> parameters = Collections.emptyMap();
         CommunicationEntity entity = CommunicationEntity.of("Music");
         entity.add(Element.of("name", "Ada"));
-        when(manager.executeQuery(cypher, parameters)).thenReturn(Stream.of(entity));
+        when(manager.cypher(cypher, parameters)).thenReturn(Stream.of(entity));
 
         Stream<Music> result = template.cypher(cypher, parameters);
         assertNotNull(result);

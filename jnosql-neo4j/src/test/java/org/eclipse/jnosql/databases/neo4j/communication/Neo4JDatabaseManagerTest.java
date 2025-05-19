@@ -463,10 +463,11 @@ class Neo4JDatabaseManagerTest {
         entityManager.insert(entity);
 
         String cypher = "MATCH (e:person) RETURN e";
-        var result = entityManager.executeQuery(cypher, new HashMap<>()).toList();
+        var result = entityManager.cypher(cypher, new HashMap<>()).toList();
 
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(result).isNotEmpty();
+            softly.assertThat(result.get(0).name()).isEqualTo(COLLECTION_NAME);
             softly.assertThat(result.get(0).find("name")).isPresent();
             softly.assertThat(result.get(0).find("city")).isPresent();
             softly.assertThat(result.get(0).find("_id")).isPresent(); // Ensuring _id exists
@@ -524,7 +525,7 @@ class Neo4JDatabaseManagerTest {
                 "id2", person2Id
         );
 
-        var result = entityManager.executeQuery(cypher, parameters).toList();
+        var result = entityManager.cypher(cypher, parameters).toList();
         SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isNotEmpty());
 
         entityManager.remove(person1, "FRIEND", person2);
@@ -546,7 +547,7 @@ class Neo4JDatabaseManagerTest {
         String cypher = "MATCH (p1:person { _id: $_id1 })-[r:FRIEND]-(p2:person { _id: $_id2 }) RETURN r";
         Map<String, Object> parameters = Map.of("_id1", startNodeId, "_id2", targetNodeId);
 
-        var result = entityManager.executeQuery(cypher, parameters).toList();
+        var result = entityManager.cypher(cypher, parameters).toList();
         SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
@@ -564,7 +565,7 @@ class Neo4JDatabaseManagerTest {
         String cypher = "MATCH ()-[r]-() WHERE elementId(r) = $id RETURN r";
         Map<String, Object> parameters = Map.of("id", edgeId);
 
-        var result = entityManager.executeQuery(cypher, parameters).toList();
+        var result = entityManager.cypher(cypher, parameters).toList();
         SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
@@ -598,7 +599,7 @@ class Neo4JDatabaseManagerTest {
                 "WHERE elementId(r) = $edgeId RETURN r";
         Map<String, Object> parameters = Map.of("edgeId", edge.id());
 
-        var result = entityManager.executeQuery(cypher, parameters).toList();
+        var result = entityManager.cypher(cypher, parameters).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(result).isNotEmpty();
             softly.assertThat(edge.properties()).containsEntry("since", 2019);
@@ -623,7 +624,7 @@ class Neo4JDatabaseManagerTest {
         String cypher = "MATCH ()-[r]-() DELETE r";
 
         try {
-            entityManager.executeQuery(cypher, new HashMap<>()).toList();
+            entityManager.cypher(cypher, new HashMap<>()).toList();
         } catch (Exception e) {
             throw new RuntimeException("Failed to remove edges before node deletion", e);
         }

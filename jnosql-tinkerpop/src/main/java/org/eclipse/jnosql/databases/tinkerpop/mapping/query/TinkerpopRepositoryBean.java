@@ -14,22 +14,19 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping.query;
 
-import jakarta.data.repository.DataRepository;
 import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.util.AnnotationLiteral;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
-import org.eclipse.jnosql.mapping.DatabaseQualifier;
-import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.core.util.AnnotationLiteralUtil;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.semistructured.query.SemiStructuredRepositoryProxy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -44,35 +41,18 @@ import java.util.Set;
  * @param <T> the type of the repository
  * @see AbstractBean
  */
-public class RepositoryGraphBean<T extends DataRepository<T, ?>> extends AbstractBean<T> {
+public class TinkerpopRepositoryBean<T, K> extends AbstractBean<TinkerPopRepository<T, K>> {
 
     private final Class<T> type;
 
     private final Set<Type> types;
 
-    private final String provider;
+    private final Set<Annotation> qualifiers = Collections.singleton(new AnnotationLiteral<Default>() {
+    });
 
-    private final Set<Annotation> qualifiers;
-
-    /**
-     * Constructor
-     *
-     * @param type        the tye
-     * @param provider    the provider name, that must be a
-     */
-    @SuppressWarnings("unchecked")
-    public RepositoryGraphBean(Class<?> type, String provider) {
-        this.type = (Class<T>) type;
+    public TinkerpopRepositoryBean(Class<T> type) {
+        this.type = type;
         this.types = Collections.singleton(type);
-        this.provider = provider;
-        if (provider.isEmpty()) {
-            this.qualifiers = new HashSet<>();
-            qualifiers.add(DatabaseQualifier.ofGraph());
-            qualifiers.add(AnnotationLiteralUtil.DEFAULT_ANNOTATION);
-            qualifiers.add(AnnotationLiteralUtil.ANY_ANNOTATION);
-        } else {
-            this.qualifiers = Collections.singleton(DatabaseQualifier.ofGraph(provider));
-        }
     }
 
     @Override
@@ -80,18 +60,15 @@ public class RepositoryGraphBean<T extends DataRepository<T, ?>> extends Abstrac
         return type;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public T create(CreationalContext<T> context) {
-        EntitiesMetadata entities = getInstance(EntitiesMetadata.class);
-        var template = provider.isEmpty() ? getInstance(TinkerpopTemplate.class) :
-                getInstance(TinkerpopTemplate.class, DatabaseQualifier.ofGraph(provider));
-
+    @Override
+    public TinkerPopRepository<T, K> create(CreationalContext<TinkerPopRepository<T, K>> creationalContext) {
+        TinkerpopTemplate template = getInstance(TinkerpopTemplate.class);
         Converters converters = getInstance(Converters.class);
-
-        var handler = new SemiStructuredRepositoryProxy<>(template,
-                entities, type, converters);
-        return (T) Proxy.newProxyInstance(type.getClassLoader(),
+        EntitiesMetadata entitiesMetadata = getInstance(EntitiesMetadata.class);
+        TinkerpopRepositoryProxy<T, K> handler = new TinkerpopRepositoryProxy<>(template, type,
+                converters, entitiesMetadata);
+        return (TinkerPopRepository<T, K>) Proxy.newProxyInstance(type.getClassLoader(),
                 new Class[]{type},
                 handler);
     }
@@ -109,7 +86,6 @@ public class RepositoryGraphBean<T extends DataRepository<T, ?>> extends Abstrac
 
     @Override
     public String getId() {
-        return type.getName() + '@' + DatabaseType.GRAPH + "-" + provider;
+        return type.getName() + "@tinkerpop";
     }
-
 }

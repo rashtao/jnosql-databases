@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023 Contributors to the Eclipse Foundation
+ *  Copyright (c) 2025 Contributors to the Eclipse Foundation
  *   All rights reserved. This program and the accompanying materials
  *   are made available under the terms of the Eclipse Public License v1.0
  *   and Apache License v2.0 which accompanies this distribution.
@@ -10,24 +10,23 @@
  *
  *   Contributors:
  *
- *   Maximillian Arruda
+ *   Otavio Santana
  */
-
-package org.eclipse.jnosql.databases.neo4j.integration;
+package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
-import org.eclipse.jnosql.databases.neo4j.mapping.Cypher;
-import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JRepository;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 
 import java.util.List;
 
 @Repository
-public interface MagazineRepository extends Neo4JRepository<Magazine, String> {
+public interface Population extends TinkerPopRepository<Human, String> {
 
-    @Cypher("MATCH (m:Magazine) RETURN m")
-    List<Magazine> findAllByCypher();
+    @Gremlin("g.V().hasLabel('Human').order().by('name', Order.asc)")
+    List<Human> allHumans();
 
-    @Cypher("MATCH (m:Magazine{title: $title}) RETURN m")
-    List<Magazine> findByTitle(@Param("title") String title);
+    @Gremlin("g.V().hasLabel('Human').has('name', @name)")
+    List<Human> findByName (@Param("name") String name);
+
 }

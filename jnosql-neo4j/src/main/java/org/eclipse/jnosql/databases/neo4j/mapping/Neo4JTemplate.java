@@ -30,6 +30,7 @@ import java.util.stream.Stream;
  *
  */
 public interface Neo4JTemplate extends GraphTemplate {
+
     /**
      * Executes a Cypher query and returns a stream of results mapped to the given entity type.
      *
@@ -40,6 +41,16 @@ public interface Neo4JTemplate extends GraphTemplate {
      * @throws NullPointerException if {@code cypher} or {@code parameters} is null.
      */
     <T> Stream<T> cypher(String cypher, Map<String, Object> parameters);
+
+    /**
+     * Executes a Cypher query and returns a stream of results mapped to the given entity type.
+     *
+     * @param cypher The Cypher query string.
+     * @param <T> The entity type representing nodes or relationships within the graph database.
+     * @return A stream of entities representing the query result.
+     * @throws NullPointerException if {@code cypher} is null.
+     */
+    <T> Stream<T> cypher(String cypher);
 
     /**
      * Traverses relationships from a given start node up to a specified depth.

@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Graph;
@@ -31,6 +32,7 @@ import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 @Default
 @ApplicationScoped
 @Database(GRAPH)
+@Typed(TinkerpopTemplate.class)
 class DefaultTinkerpopTemplate extends AbstractTinkerpopTemplate {
 
     private EntityConverter converter;

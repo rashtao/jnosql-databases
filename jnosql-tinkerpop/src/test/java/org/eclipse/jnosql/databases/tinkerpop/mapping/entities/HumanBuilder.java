@@ -17,7 +17,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping.entities;
 import java.util.List;
 
 public class HumanBuilder {
-    private long id;
+    private Long id;
     private String name;
     private int age;
     private List<String> phones;
