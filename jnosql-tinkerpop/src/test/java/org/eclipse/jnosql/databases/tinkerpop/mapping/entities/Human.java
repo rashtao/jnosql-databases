@@ -28,7 +28,7 @@ import java.util.Objects;
 public class Human {
 
     @Id
-    private long id;
+    private Long id;
 
     @Column
     private String name;
@@ -42,7 +42,7 @@ public class Human {
     private String ignore;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -69,7 +69,7 @@ public class Human {
     Human() {
     }
 
-    Human(long id, String name, int age, List<String> phones, String ignore) {
+    Human(Long id, String name, int age, List<String> phones, String ignore) {
         this.id = id;
         this.name = name;
         this.age = age;
