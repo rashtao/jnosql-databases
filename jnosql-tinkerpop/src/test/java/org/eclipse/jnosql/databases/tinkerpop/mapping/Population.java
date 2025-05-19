@@ -14,7 +14,9 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
-import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
+import jakarta.data.repository.Repository;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 
-public interface Newsstand extends TinkerPopRepository<Magazine, String> {
+@Repository
+public interface Population extends TinkerPopRepository<Human, String> {
 }
