@@ -27,9 +27,6 @@ import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 
-import java.util.Map;
-import java.util.stream.Stream;
-
 import static org.eclipse.jnosql.mapping.DatabaseType.GRAPH;
 
 @Default
