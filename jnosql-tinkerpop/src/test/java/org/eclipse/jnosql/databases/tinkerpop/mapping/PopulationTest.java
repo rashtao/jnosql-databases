@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
 
 import jakarta.inject.Inject;
+import org.apache.tinkerpop.gremlin.process.traversal.Order;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.TinkerpopExtension;
@@ -30,6 +31,8 @@ import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class, GraphTemplate.class})
@@ -62,6 +65,18 @@ public class PopulationTest {
 
     @Test
     void shouldFindByQuery() {
+        var otavio = population.save(Human.builder().withAge().withName("Otavio").build());
+        var poliana = population.save(Human.builder().withAge().withName("Poliana").build());
+        var ada = population.save(Human.builder().withAge().withName("Ada").build());
 
+        List<Human> people = population.allHumans();
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(people).isNotNull();
+            soft.assertThat(people).hasSize(3);
+            soft.assertThat(people.get(0)).isEqualTo(ada);
+            soft.assertThat(people.get(0)).isEqualTo(poliana);
+            soft.assertThat(people.get(0)).isEqualTo(otavio);
+        });
     }
 }
