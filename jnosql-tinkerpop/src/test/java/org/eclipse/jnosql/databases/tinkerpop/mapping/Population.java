@@ -14,9 +14,19 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.mapping;
 
+import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Human;
 
+import java.util.List;
+
 @Repository
 public interface Population extends TinkerPopRepository<Human, String> {
+
+    @Gremlin("g.V().hasLabel('Human')")
+    List<Human> allHumans();
+
+    @Gremlin("g.V().hasLabel('Human')")
+    List<Human> findByName (@Param("name") String name);
+
 }
