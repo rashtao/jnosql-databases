@@ -23,7 +23,7 @@ import java.util.List;
 @Repository
 public interface Population extends TinkerPopRepository<Human, String> {
 
-    @Gremlin("g.V().hasLabel('Human')")
+    @Gremlin("g.V().hasLabel('Human').order().by('name', Order.asc)")
     List<Human> allHumans();
 
     @Gremlin("g.V().hasLabel('Human')")
