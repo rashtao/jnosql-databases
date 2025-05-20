@@ -25,7 +25,7 @@ import org.eclipse.jnosql.mapping.reflection.Reflections;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH_PROVIDER;
+import static org.eclipse.jnosql.databases.tinkerpop.communication.DatabaseConfigurationAdapter.TINKERPOP_PROVIDER;
 
 
 @ApplicationScoped
@@ -40,7 +40,7 @@ class GraphSupplier implements Supplier<Graph> {
     public Graph get(){
         var settings = MicroProfileSettings.INSTANCE;
         LOGGER.fine("Loading the Graph configuration");
-        var configuration = settings.get(GRAPH_PROVIDER, Class.class)
+        var configuration = settings.get(TINKERPOP_PROVIDER, Class.class)
                 .filter(GraphConfiguration.class::isAssignableFrom)
                 .map(c -> (GraphConfiguration) Reflections.newInstance(c)).orElseGet(GraphConfiguration::getConfiguration);
         LOGGER.fine("The Graph configuration loaded successfully with: " + configuration.getClass());
