@@ -19,8 +19,11 @@ import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.communication.semistructured.DatabaseConfiguration;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManagerFactory;
+import org.eclipse.jnosql.mapping.reflection.Reflections;
 
 import java.util.logging.Logger;
+
+import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH_PROVIDER;
 
 /**
  * Adapter class that integrates both DatabaseConfiguration and GraphConfiguration.
@@ -32,10 +35,14 @@ public class DatabaseConfigurationAdapter implements DatabaseConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseConfigurationAdapter.class.getName());
 
+    @SuppressWarnings("unchecked")
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
         LOGGER.fine(() -> "Creating graph database manager based on settings and GraphConfiguration SPI");
-        var configuration = GraphConfiguration.getConfiguration();
+        GraphConfiguration configuration = settings.get("jnosql.graph.tinkerpop.provider", Class.class)
+                .filter(GraphConfiguration.class::isAssignableFrom)
+                .map(c -> (GraphConfiguration) Reflections.newInstance(c))
+                .orElseGet(GraphConfiguration::getConfiguration);
         var graph = configuration.apply(settings);
         return GraphDatabaseManagerFactory.of(graph);
     }
