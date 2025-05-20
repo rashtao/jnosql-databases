@@ -1949,7 +1949,7 @@ You can define the database settings using the https://microprofile.io/microprof
 
 [source,properties]
 ----
-jnosql.graph.provider=<CLASS-DRIVER>
+jnosql.graph.tinkerpop.provider=<CLASS-DRIVER>
 jnosql.provider.host=<HOST>
 jnosql.provider.user=<USER>
 jnosql.provider.password=<PASSWORD>
