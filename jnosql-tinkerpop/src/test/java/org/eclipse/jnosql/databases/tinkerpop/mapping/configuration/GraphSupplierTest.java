@@ -16,6 +16,7 @@ package org.eclipse.jnosql.databases.tinkerpop.mapping.configuration;
 
 import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.eclipse.jnosql.databases.tinkerpop.communication.DatabaseConfigurationAdapter;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.GraphProducer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.TinkerpopExtension;
@@ -51,7 +52,7 @@ class GraphSupplierTest {
 
     @Test
     void shouldGetGraph() {
-        System.setProperty(GRAPH_PROVIDER.get(), GraphConfigurationMock.class.getName());
+        System.setProperty(DatabaseConfigurationAdapter.TINKERPOP_PROVIDER, GraphConfigurationMock.class.getName());
         Graph graph = supplier.get();
         Assertions.assertNotNull(graph);
         assertThat(graph).isInstanceOf(GraphConfigurationMock.GraphMock.class);
