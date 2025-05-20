@@ -23,8 +23,6 @@ import org.eclipse.jnosql.mapping.reflection.Reflections;
 
 import java.util.logging.Logger;
 
-import static org.eclipse.jnosql.mapping.core.config.MappingConfigurations.GRAPH_PROVIDER;
-
 /**
  * Adapter class that integrates both DatabaseConfiguration and GraphConfiguration.
  * This class is responsible for creating a DatabaseManagerFactory based on the provided settings.
