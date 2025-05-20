@@ -32,12 +32,13 @@ public class DatabaseConfigurationAdapter implements DatabaseConfiguration {
 
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseConfigurationAdapter.class.getName());
+    public static final String TINKERPOP_PROVIDER = "jnosql.graph.tinkerpop.provider";
 
     @SuppressWarnings("unchecked")
     @Override
     public DatabaseManagerFactory apply(Settings settings) {
         LOGGER.fine(() -> "Creating graph database manager based on settings and GraphConfiguration SPI");
-        GraphConfiguration configuration = settings.get("jnosql.graph.tinkerpop.provider", Class.class)
+        GraphConfiguration configuration = settings.get(TINKERPOP_PROVIDER, Class.class)
                 .filter(GraphConfiguration.class::isAssignableFrom)
                 .map(c -> (GraphConfiguration) Reflections.newInstance(c))
                 .orElseGet(GraphConfiguration::getConfiguration);
