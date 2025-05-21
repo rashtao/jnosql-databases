@@ -8,8 +8,6 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
-== [1.1.7] - 2025-05-08
-
 === Changed
 
 - Update Elasticsearch driver to 8.17.4
@@ -17,6 +15,11 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Neo4J driver to 5.28.5
 - Update OrientDB driver to 3.2.39
 - Update Couchbase driver to 3.8.1
+
+== [1.1.7] - 2025-05-08
+
+=== Changed
+
 - Changed Neo4JDatabaseManagerFactory's constructor visibility to protected
 
 === Fixed
