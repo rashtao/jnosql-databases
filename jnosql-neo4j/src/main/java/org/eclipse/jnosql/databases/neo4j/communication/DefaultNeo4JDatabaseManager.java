@@ -330,11 +330,19 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
                 "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "WITH s, t " +
-                "WHERE NOT EXISTS { MATCH (s)-[r:" + label + "]->(t) } " +
-                "CREATE (s)-[r:" + label + " $props]->(t) " +
+                "OPTIONAL MATCH (s)-[existing:" + label + "]->(t) " +
+                "WITH s, t, existing " +
+                "CALL { " +
+                "  WITH s, t, existing " +
+                "  WHERE existing IS NULL " +
+                "  CREATE (s)-[r:" + label + " $props]->(t) " +
+                "  RETURN r " +
+                "  UNION " +
+                "  RETURN existing AS r " +
+                "} " +
                 "RETURN r";
 
+        LOGGER.fine(() -> "Creating edge with Cypher query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
             var sourceId = source.find(ID).orElseThrow(() ->
                     new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
