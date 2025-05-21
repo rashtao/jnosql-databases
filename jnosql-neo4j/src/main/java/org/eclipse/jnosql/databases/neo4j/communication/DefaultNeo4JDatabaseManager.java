@@ -328,37 +328,45 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         source = ensureEntityExists(source);
         target = ensureEntityExists(target);
 
-        String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
-                "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "OPTIONAL MATCH (s)-[existing:" + label + "]->(t) " +
-                "WITH s, t, existing " +
-                "CALL { " +
-                "  WITH s, t, existing " +
-                "  WHERE existing IS NULL " +
-                "  CREATE (s)-[r:" + label + " $props]->(t) " +
-                "  RETURN r " +
-                "  UNION " +
-                "  RETURN existing AS r " +
-                "} " +
-                "RETURN r";
+        var sourceId = source.find(ID).orElseThrow(() ->
+                new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
+        var targetId = target.find(ID).orElseThrow(() ->
+                new EdgeCommunicationException("The target entity should have the " + ID + " property")).get();
 
-        LOGGER.fine(() -> "Creating edge with Cypher query: " + cypher);
         try (Transaction tx = session.beginTransaction()) {
-            var sourceId = source.find(ID).orElseThrow(() ->
-                    new EdgeCommunicationException("The source entity should have the " + ID + " property")).get();
-            var targetId = target.find(ID).orElseThrow(() ->
-                    new EdgeCommunicationException("The target entity should have the " + ID + " property")).get();
 
-            var result = tx.run(cypher, Values.parameters(
+            String findEdge = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
+                    "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                    "MATCH (s)-[r:" + label + "]->(t) RETURN r";
+
+            LOGGER.fine(() -> "Finding existing edge with ID: " + sourceId + " to " + targetId);
+            LOGGER.fine(() -> "Cypher Query: " + findEdge);
+            var result = tx.run(findEdge, Values.parameters(
                     "sourceElementId", sourceId,
-                    "targetElementId", targetId,
-                    "props", properties
+                    "targetElementId", targetId
             ));
 
-            var relationship = result.single().get("r").asRelationship();
-            LOGGER.fine(() -> "Created edge with ID: " + relationship.elementId());
-            tx.commit();
+            org.neo4j.driver.types.Relationship relationship;
 
+            if (result.hasNext()) {
+                relationship = result.single().get("r").asRelationship();
+                LOGGER.fine(() -> "Found existing edge with ID: " + relationship.elementId());
+            } else {
+                String createEdge = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
+                        "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                        "CREATE (s)-[r:" + label + " $props]->(t) RETURN r";
+
+                LOGGER.fine(() -> "Creating new edge with ID: " + sourceId + " to " + targetId);
+                LOGGER.fine(() -> "Cypher Query: " + createEdge);
+                var createResult = tx.run(createEdge, Values.parameters(
+                        "sourceElementId", sourceId,
+                        "targetElementId", targetId,
+                        "props", properties
+                ));
+                relationship = createResult.single().get("r").asRelationship();
+                LOGGER.fine(() -> "Created new edge with ID: " + relationship.elementId());
+            }
+            tx.commit();
             return new Neo4jCommunicationEdge(relationship.elementId(), source, target, label, properties);
         }
     }
