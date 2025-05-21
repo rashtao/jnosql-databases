@@ -330,7 +330,10 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
 
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
                 "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "CREATE (s)-[r:" + label + " $props]->(t) RETURN r";
+                "WITH s, t " +
+                "WHERE NOT EXISTS { MATCH (s)-[r:" + label + "]->(t) } " +
+                "CREATE (s)-[r:" + label + " $props]->(t) " +
+                "RETURN r";
 
         try (Transaction tx = session.beginTransaction()) {
             var sourceId = source.find(ID).orElseThrow(() ->
