@@ -13,6 +13,8 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 === Changed
 
 - Update Elasticsearch driver to 8.17.4
+- Update Oracle NoSQL driver to 5.4.17
+- Update Neo4J driver to 5.28.5
 - Changed Neo4JDatabaseManagerFactory's constructor visibility to protected
 
 === Fixed
