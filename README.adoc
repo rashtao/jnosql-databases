@@ -1872,6 +1872,8 @@ jnosql.neo4j.uri=bolt://localhost:7687
 jnosql.neo4j.username=neo4j
 jnosql.neo4j.password=yourpassword
 jnosql.neo4j.database=neo4j
+jnosql.graph.provider=org.eclipse.jnosql.databases.neo4j.communication.Neo4JConfiguration
+jnosql.graph.database=neo4j
 ----
 
 === Template API
