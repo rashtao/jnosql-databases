@@ -349,7 +349,19 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
             org.neo4j.driver.types.Relationship relationship;
 
             if (result.hasNext()) {
-                relationship = result.single().get("r").asRelationship();
+                String updateQuery = "MATCH (s)-[r:" + label + "]->(t) " +
+                        "WHERE elementId(s) = $sourceElementId AND elementId(t) = $targetElementId " +
+                        "SET r += $props " +
+                        "RETURN r";
+                LOGGER.fine(() -> "Updating existing edge with ID: " + sourceId + " to " + targetId);
+                LOGGER.fine(() -> "Cypher Query: " + updateQuery);
+                var updateResult = tx.run(updateQuery, Values.parameters(
+                        "sourceElementId", sourceId,
+                        "targetElementId", targetId,
+                        "props", properties
+                ));
+
+                relationship = updateResult.single().get("r").asRelationship();
                 LOGGER.fine(() -> "Found existing edge with ID: " + relationship.elementId());
             } else {
                 String createEdge = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
