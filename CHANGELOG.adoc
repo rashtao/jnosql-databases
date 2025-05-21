@@ -15,6 +15,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Elasticsearch driver to 8.17.4
 - Update Oracle NoSQL driver to 5.4.17
 - Update Neo4J driver to 5.28.5
+- Update OrientDB driver to 3.2.39
 - Changed Neo4JDatabaseManagerFactory's constructor visibility to protected
 
 === Fixed
