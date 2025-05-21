@@ -235,8 +235,10 @@ class DefaultNeo4JDatabaseManager implements Neo4JDatabaseManager {
         Objects.requireNonNull(label, "Relationship type is required");
 
         String cypher = "MATCH (s) WHERE elementId(s) = $sourceElementId " +
-                "MATCH (t) WHERE elementId(t) = $targetElementId " +
-                "CREATE (s)-[r:" + label + "]->(t)";
+                        "MATCH (t) WHERE elementId(t) = $targetElementId " +
+                        "WITH s, t " +
+                        "WHERE NOT EXISTS { MATCH (s)-[r:" + label + "]->(t) } " +
+                        "CREATE (s)-[r:" + label + "]->(t)";
 
         try (Transaction tx = session.beginTransaction()) {
             var sourceId = source.find(ID).orElseThrow(() ->
