@@ -94,8 +94,8 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
         ((Iterable<?>) document.get()).forEach(values::add);
 
         query.append(name).append(" BETWEEN ? AND ? ");
-        FieldValue fieldValue = FieldValueConverter.INSTANCE.of(values.get(ORIGIN));
-        FieldValue fieldValue2 = FieldValueConverter.INSTANCE.of(values.get(1));
+        FieldValue fieldValue = FieldValueConverter.of(values.get(ORIGIN));
+        FieldValue fieldValue2 = FieldValueConverter.of(values.get(1));
         params.add(fieldValue);
         params.add(fieldValue2);
     }
