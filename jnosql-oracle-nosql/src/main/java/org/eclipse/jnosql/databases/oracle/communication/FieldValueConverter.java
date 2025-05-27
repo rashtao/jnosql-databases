@@ -27,6 +27,7 @@ import oracle.nosql.driver.values.NumberValue;
 import oracle.nosql.driver.values.StringValue;
 
 import java.lang.reflect.Array;
+import java.util.Enumeration;
 import java.util.Map;
 
 enum FieldValueConverter {
@@ -59,9 +60,10 @@ enum FieldValueConverter {
             return entries((Map<String, ?>) value);
         }else if (value instanceof FieldValue) {
             return (FieldValue) value;
-        } else {
-            throw new UnsupportedOperationException("There is not support to: " + value.getClass());
+        } else if(value instanceof Enum<?> enumeration) {
+            return new StringValue(enumeration.name());
         }
+        throw new UnsupportedOperationException("There is not support to: " + value.getClass());
     }
 
     Object toObject(FieldValue value) {
