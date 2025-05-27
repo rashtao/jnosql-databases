@@ -189,7 +189,7 @@ class FieldValueConverter {
         public FieldValue toFieldValue(Object value) {
             ArrayValue array = new ArrayValue();
             for (Object item : (Iterable<?>) value) {
-                array.add(FieldValueConverter.toFieldValue(item));
+                array.add(FieldValueConverter.of(item));
             }
             return array;
         }
@@ -204,7 +204,7 @@ class FieldValueConverter {
             int length = Array.getLength(value);
             ArrayValue array = new ArrayValue();
             for (int i = 0; i < length; i++) {
-                array.add(FieldValueConverter.toFieldValue(Array.get(value, i)));
+                array.add(FieldValueConverter.of(Array.get(value, i)));
             }
             return array;
         }
@@ -223,7 +223,7 @@ class FieldValueConverter {
                 if (!(key instanceof String keyStr)) {
                     throw new IllegalArgumentException("Map keys must be strings. Found: " + key);
                 }
-                mapValue.put(keyStr, FieldValueConverter.toFieldValue(entry.getValue()));
+                mapValue.put(keyStr, FieldValueConverter.of(entry.getValue()));
             }
             return mapValue;
         }
