@@ -27,49 +27,48 @@ import oracle.nosql.driver.values.NumberValue;
 import oracle.nosql.driver.values.StringValue;
 
 import java.lang.reflect.Array;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
-enum FieldValueConverter {
+class FieldValueConverter {
+    private static final List<FieldValueMapper> MAPPERS = List.of(
+            new FieldValuePassthroughMapper(),
+            new StringValueMapper(),
+            new IntegerValueMapper(),
+            new LongValueMapper(),
+            new DoubleValueMapper(),
+            new BooleanValueMapper(),
+            new NumberValueMapper(),
+            new ByteArrayValueMapper(),
+            new EnumValueMapper(),
+            new IterableValueMapper(),
+            new ArrayValueMapper(),
+            new MapValueMapper()
+    );
 
-    INSTANCE;
-
-    FieldValue of(Object value){
-        if(value == null){
-            return NullValue.getInstance();
-        }
-        if (value instanceof String string) {
-            return new StringValue(string);
-        } else if (value instanceof Integer integer) {
-            return new IntegerValue(integer);
-        } else if (value instanceof Long longValue) {
-            return new LongValue(longValue);
-        } else if (value instanceof Double doubleValue) {
-            return new DoubleValue(doubleValue);
-        } else if (value instanceof Boolean booleanValue) {
-            return Boolean.TRUE.equals(booleanValue) ? BooleanValue.trueInstance() : BooleanValue.falseInstance();
-        } else if (value instanceof Number) {
-            return new NumberValue(value.toString());
-        }  else if (value instanceof byte[]) {
-            return new BinaryValue((byte[]) value);
-        } else if (value instanceof Iterable<?> values) {
-            return createList(values);
-        } else if (value.getClass().isArray()) {
-            return createArray(value);
-        } else if (value instanceof Map<?,?>) {
-            return entries((Map<String, ?>) value);
-        }else if (value instanceof FieldValue) {
-            return (FieldValue) value;
-        } else if(value instanceof Enum<?> enumeration) {
-            return new StringValue(enumeration.name());
-        }
-        throw new UnsupportedOperationException("There is not support to: " + value.getClass());
+    private FieldValueConverter() {
+        throw new AssertionError("Utility class");
     }
 
-    Object toObject(FieldValue value) {
-        if (value.isNull()) {
+    static FieldValue of(Object value) {
+        if (value == null) {
+            return NullValue.getInstance();
+        }
+
+        for (FieldValueMapper mapper : MAPPERS) {
+            if (mapper.supports(value)) {
+                return mapper.toFieldValue(value);
+            }
+        }
+
+        throw new UnsupportedOperationException("Unsupported value type: " + value.getClass());
+    }
+
+    public static Object toJavaObject(FieldValue value) {
+        if (value == null || value.isNull()) {
             return null;
         }
+
         return switch (value.getType()) {
             case STRING -> value.asString();
             case INTEGER -> value.asInteger();
@@ -80,31 +79,153 @@ enum FieldValueConverter {
             case BINARY -> value.asBinary();
             case ARRAY -> value.asArray();
             case MAP -> value.asMap();
-            default -> throw new UnsupportedOperationException("There is not support to: " + value.getType());
+            default -> throw new UnsupportedOperationException("Unsupported FieldValue type: " + value.getType());
         };
     }
-    private MapValue entries(Map<String, ?> value) {
-        MapValue mapValue = new MapValue();
-        for (Map.Entry<String, ?> entry : value.entrySet()) {
-            mapValue.put(entry.getKey(), of(entry.getValue()));
-        }
-        return mapValue;
+
+    private interface FieldValueMapper {
+        boolean supports(Object value);
+        FieldValue toFieldValue(Object value);
     }
 
-    private ArrayValue createArray(Object value) {
-        var arrayValue = new ArrayValue();
-        int length = Array.getLength(value);
-        for (int i = 0; i < length; i ++) {
-            arrayValue.add(of(Array.get(value, i)));
+    private static final class FieldValuePassthroughMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof FieldValue;
         }
-        return arrayValue;
+
+        public FieldValue toFieldValue(Object value) {
+            return (FieldValue) value;
+        }
     }
 
-    private ArrayValue createList(Iterable<?> values) {
-        var arrayValue = new ArrayValue();
-        for (Object value : values) {
-            arrayValue.add(of(value));
+    private static final class StringValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof String;
         }
-        return arrayValue;
+
+        public FieldValue toFieldValue(Object value) {
+            return new StringValue((String) value);
+        }
+    }
+
+    private static final class IntegerValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Integer;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new IntegerValue((Integer) value);
+        }
+    }
+
+    private static final class LongValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Long;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new LongValue((Long) value);
+        }
+    }
+
+    private static final class DoubleValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Double;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new DoubleValue((Double) value);
+        }
+    }
+
+    private static final class BooleanValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Boolean;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return Boolean.TRUE.equals(value)
+                    ? BooleanValue.trueInstance()
+                    : BooleanValue.falseInstance();
+        }
+    }
+
+    private static final class NumberValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Number &&
+                    !(value instanceof Integer || value instanceof Long || value instanceof Double);
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new NumberValue(value.toString());
+        }
+    }
+
+    private static final class ByteArrayValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof byte[];
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new BinaryValue((byte[]) value);
+        }
+    }
+
+    private static final class EnumValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Enum<?>;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            return new StringValue(((Enum<?>) value).name());
+        }
+    }
+
+    private static final class IterableValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Iterable<?>;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            ArrayValue array = new ArrayValue();
+            for (Object item : (Iterable<?>) value) {
+                array.add(FieldValueConverter.toFieldValue(item));
+            }
+            return array;
+        }
+    }
+
+    private static final class ArrayValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value != null && value.getClass().isArray();
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            int length = Array.getLength(value);
+            ArrayValue array = new ArrayValue();
+            for (int i = 0; i < length; i++) {
+                array.add(FieldValueConverter.toFieldValue(Array.get(value, i)));
+            }
+            return array;
+        }
+    }
+
+    private static final class MapValueMapper implements FieldValueMapper {
+        public boolean supports(Object value) {
+            return value instanceof Map<?, ?>;
+        }
+
+        public FieldValue toFieldValue(Object value) {
+            Map<?, ?> map = (Map<?, ?>) value;
+            MapValue mapValue = new MapValue();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                Object key = entry.getKey();
+                if (!(key instanceof String keyStr)) {
+                    throw new IllegalArgumentException("Map keys must be strings. Found: " + key);
+                }
+                mapValue.put(keyStr, FieldValueConverter.toFieldValue(entry.getValue()));
+            }
+            return mapValue;
+        }
     }
 }
