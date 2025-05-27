@@ -575,7 +575,7 @@ class OracleNoSQLDocumentManagerTest {
         var query = select().from(COLLECTION_NAME)
                 .where("_id").eq(id).build();
         Optional<CommunicationEntity> optional = entityManager.select(query).findFirst();
-       SoftAssertions.assertSoftly(soft -> {);
+       SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(optional).isPresent();
             CommunicationEntity documentEntity = optional.get();
             soft.assertThat(documentEntity.find("name").orElseThrow().get(String.class)).isEqualTo("Test Name");
