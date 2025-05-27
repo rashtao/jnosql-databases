@@ -563,6 +563,27 @@ class OracleNoSQLDocumentManagerTest {
         assertThat(names).contains("Poliana");
     }
 
+    @Test
+    void shouldInsertAndRetrieveWithEnum() {
+        var entity = CommunicationEntity.of(COLLECTION_NAME);
+        String id = UUID.randomUUID().toString();
+        entity.add("_id", id);
+        entity.add("name", "Test Name");
+        entity.add("contact_type", ContactType.EMAIL);
+        entityManager.insert(entity);
+
+        var query = select().from(COLLECTION_NAME)
+                .where("_id").eq(id).build();
+        Optional<CommunicationEntity> optional = entityManager.select(query).findFirst();
+       SoftAssertions.assertSoftly(soft -> {);
+            soft.assertThat(optional).isPresent();
+            CommunicationEntity documentEntity = optional.get();
+            soft.assertThat(documentEntity.find("name").orElseThrow().get(String.class)).isEqualTo("Test Name");
+            soft.assertThat(documentEntity.find("contact_type").orElseThrow().get(ContactType.class))
+                    .isEqualTo(ContactType.EMAIL);
+        });
+    }
+
     private CommunicationEntity createDocumentList() {
         var entity = CommunicationEntity.of("AppointmentBook");
         entity.add(Element.of("_id", new Random().nextInt()));
