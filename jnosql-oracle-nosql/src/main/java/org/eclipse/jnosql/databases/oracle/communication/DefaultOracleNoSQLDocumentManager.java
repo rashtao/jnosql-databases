@@ -247,7 +247,7 @@ final class DefaultOracleNoSQLDocumentManager implements OracleNoSQLDocumentMana
     public Stream<CommunicationEntity> sql(String query, Object... params) {
         Objects.requireNonNull(query, "query is required");
         Objects.requireNonNull(params, "params is required");
-        List<FieldValue> fields = Arrays.stream(params).map(FieldValueConverter.INSTANCE::of).toList();
+        List<FieldValue> fields = Arrays.stream(params).map(FieldValueConverter::of).toList();
         return executeSQL(query, fields).stream();
     }
 
@@ -274,7 +274,7 @@ final class DefaultOracleNoSQLDocumentManager implements OracleNoSQLDocumentMana
                 }
                 for (Map.Entry<String, FieldValue> entry : result) {
                     if (isNotOracleField(entry)) {
-                        entity.add(Element.of(entry.getKey(), FieldValueConverter.INSTANCE.of(entry.getValue())));
+                        entity.add(Element.of(entry.getKey(), FieldValueConverter.of(entry.getValue())));
                     }
                 }
                 var id = result.get(ORACLE_ID).asString().getValue().split(":")[1];
