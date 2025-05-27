@@ -8,6 +8,10 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+=== Fixed
+
+- Update query at Oracle NoSQL to support parameter with enum type
+
 == [1.1.8] - 2025-05-21
 
 === Changed
