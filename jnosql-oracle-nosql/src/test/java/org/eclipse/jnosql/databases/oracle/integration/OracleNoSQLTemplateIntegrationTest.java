@@ -57,6 +57,9 @@ class OracleNoSQLTemplateIntegrationTest {
     @Inject
     private OracleNoSQLTemplate template;
 
+    @Inject
+    private ContactRepository contactRepository;
+
     static {
         System.setProperty(OracleNoSQLConfigurations.HOST.get(), Database.INSTANCE.host());
         System.setProperty(MappingConfigurations.DOCUMENT_DATABASE.get(), "library");
@@ -147,6 +150,21 @@ class OracleNoSQLTemplateIntegrationTest {
         template.insert(contact);
 
         List<Contact> entities = template.select(Contact.class).where("type").eq(type).result();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).isNotNull();
+            softly.assertThat(entities).allMatch(e -> e.type().equals(type));
+        });
+
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.EnumSource(ContactType.class)
+    void shouldFindByTypeUsingRepository(ContactType type){
+        var contact = new Contact(randomUUID().toString(), "Otavio Santana", type);
+        contactRepository.save(contact);
+
+        List<Contact> entities = contactRepository.findByType(type);
 
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).isNotNull();
