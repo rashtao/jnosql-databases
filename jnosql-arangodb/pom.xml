@@ -29,7 +29,6 @@
 
     <properties>
         <arango.driver>7.21.0</arango.driver>
-
     </properties>
 
     <dependencies>
