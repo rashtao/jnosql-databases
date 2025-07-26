@@ -16,6 +16,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 - Changes on the document entities persistence operations at the Eclipse JNoSQL DynamoDB Database
 - Update Apache solr driver to 9.9.0
+- Update Jedis to version 6.0.0
 
 
 == [1.1.8] - 2025-05-21
