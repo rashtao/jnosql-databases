@@ -21,7 +21,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update  MongoDB driver to 5.5.1
 - Update Infinispan driver to 15.2.5.Final
 - Update Couchbase driver to 3.8.3
-
+- Update ArangoDB driver to 7.21.0
 
 == [1.1.8] - 2025-05-21
 
