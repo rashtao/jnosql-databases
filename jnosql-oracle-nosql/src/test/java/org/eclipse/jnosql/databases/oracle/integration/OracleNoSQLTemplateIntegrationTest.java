@@ -17,6 +17,7 @@ package org.eclipse.jnosql.databases.oracle.integration;
 
 import jakarta.inject.Inject;
 import org.assertj.core.api.SoftAssertions;
+import org.eclipse.jnosql.databases.oracle.communication.ContactType;
 import org.eclipse.jnosql.databases.oracle.communication.Database;
 import org.eclipse.jnosql.databases.oracle.communication.OracleNoSQLConfigurations;
 import org.eclipse.jnosql.databases.oracle.mapping.OracleNoSQLTemplate;
@@ -32,7 +33,9 @@ import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.params.ParameterizedTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
@@ -53,6 +56,9 @@ class OracleNoSQLTemplateIntegrationTest {
 
     @Inject
     private OracleNoSQLTemplate template;
+
+    @Inject
+    private ContactRepository contactRepository;
 
     static {
         System.setProperty(OracleNoSQLConfigurations.HOST.get(), Database.INSTANCE.host());
@@ -135,6 +141,36 @@ class OracleNoSQLTemplateIntegrationTest {
             softly.assertThat(optional).get().extracting(Magazine::title).isNull();
             softly.assertThat(optional).get().extracting(Magazine::edition).isEqualTo(2);
         });
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.EnumSource(ContactType.class)
+    void shouldFindByType(ContactType type){
+        var contact = new Contact(randomUUID().toString(), "Otavio Santana", type);
+        template.insert(contact);
+
+        List<Contact> entities = template.select(Contact.class).where("type").eq(type).result();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).isNotNull();
+            softly.assertThat(entities).allMatch(e -> e.type().equals(type));
+        });
+
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.EnumSource(ContactType.class)
+    void shouldFindByTypeUsingRepository(ContactType type){
+        var contact = new Contact(randomUUID().toString(), "Otavio Santana", type);
+        contactRepository.save(contact);
+
+        List<Contact> entities = contactRepository.findByType(type);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(entities).isNotNull();
+            softly.assertThat(entities).allMatch(e -> e.type().equals(type));
+        });
+
     }
     
 
