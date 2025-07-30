@@ -29,6 +29,7 @@
     </properties>
 
     <artifactId>jnosql-couchdb</artifactId>
+    <name>JNoSQL Couchdb Driver</name>
     <description>The Eclipse JNoSQL layer to Couchdb</description>
 
     <dependencies>
