@@ -16,6 +16,20 @@ package org.eclipse.jnosql.communication.driver;
 
 import java.util.Objects;
 
+
+/**
+ * Represents strategies for matching string values in database queries,
+ * typically for SQL {@code LIKE} clauses or NoSQL regex-like searches.
+ * <p>
+ * Each constant defines a specific way to wrap the given value
+ * with wildcard symbols ({@code %}) to produce a matching pattern.
+ * </p>
+ * <p>
+ * Example usage:
+ * <pre>{@code
+ * String pattern = StringMatch.CONTAINS.format("Ota"); // "%Ota%"
+ * }</pre>
+ */
 public enum StringMatch {
 
     DEFAULT {
