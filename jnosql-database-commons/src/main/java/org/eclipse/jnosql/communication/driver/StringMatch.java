@@ -14,5 +14,39 @@
  */
 package org.eclipse.jnosql.communication.driver;
 
-public class StringMatch {
+import java.util.Objects;
+
+public enum StringMatch {
+
+    DEFAULT {
+        @Override
+        public String apply(String value) {
+            return value;
+        }
+    },
+    CONTAINS {
+        @Override
+        public String apply(String value) {
+            return "%" + value + "%";
+        }
+    },
+    STARTS_WITH {
+        @Override
+        public String apply(String value) {
+            return value + "%";
+        }
+    },
+    ENDS_WITH {
+        @Override
+        public String apply(String value) {
+            return "%" + value;
+        }
+    };
+
+    public abstract String apply(String value);
+
+    public String format(String value) {
+        Objects.requireNonNull(value, "value cannot be null");
+        return apply(value);
+    }
 }
