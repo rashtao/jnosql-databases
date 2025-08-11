@@ -56,6 +56,9 @@ final class DocumentQueryConversor {
                 yield Filters.nor(convert(criteriaCondition));
             }
             case LIKE -> Filters.regex(document.name(), Pattern.compile(prepareRegexValue(value.toString())));
+            case CONTAINS -> Filters.regex(document.name(), Pattern.compile(prepareContains(value.toString())));
+            case STARTS_WITH -> Filters.regex(document.name(), Pattern.compile(prepareStartsWith(value.toString())));
+            case ENDS_WITH -> Filters.regex(document.name(), Pattern.compile(prepareEndsWith(value.toString())));
             case AND -> {
                 List<CriteriaCondition> andConditions = condition.element().value().get(new TypeReference<>() {
                 });
@@ -79,25 +82,34 @@ final class DocumentQueryConversor {
         };
     }
 
-    public static String prepareRegexValue(String rawData) {
-        if (rawData == null) {
-            return "(?!)"; // matches nothing
+     static String prepareRegexValue(String likePattern) {
+        if (likePattern == null) {
+            return "(?!)"; // never matches
         }
         StringBuilder sb = new StringBuilder("^");
-        for (char c : rawData.toCharArray()) {
+        for (char c : likePattern.toCharArray()) {
             switch (c) {
-                case '%': // SQL LIKE: zero or more
-                    sb.append(".*");
-                    break;
-                case '_': // SQL LIKE: exactly one
-                    sb.append('.');
-                    break;
-                default:  // escape all regex meta characters
-                    sb.append(Pattern.quote(String.valueOf(c)));
+                case '%': sb.append(".*"); break; // zero or more
+                case '_': sb.append('.');  break; // exactly one
+                default:  sb.append(Pattern.quote(String.valueOf(c)));
             }
         }
         sb.append('$');
         return sb.toString();
+    }
+
+    static String prepareStartsWith(String raw) {
+        if (raw == null) return "(?!)";
+        return "^" + Pattern.quote(raw) + ".*$";
+    }
+    static String prepareEndsWith(String raw) {
+        if (raw == null) return "(?!)";
+        return "^.*" + Pattern.quote(raw) + "$";
+    }
+
+    static String prepareContains(String raw) {
+        if (raw == null) return "(?!)";
+        return "^.*" + Pattern.quote(raw) + ".*$";
     }
 
 }

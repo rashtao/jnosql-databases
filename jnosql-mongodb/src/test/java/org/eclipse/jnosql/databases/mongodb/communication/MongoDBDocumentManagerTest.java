@@ -249,7 +249,7 @@ class MongoDBDocumentManagerTest {
         List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
 
         var query = select().from(COLLECTION_NAME)
-                .where("name").like("Lu")
+                .where("name").like("Lu%")
                 .and("type").eq("V")
                 .build();
 
