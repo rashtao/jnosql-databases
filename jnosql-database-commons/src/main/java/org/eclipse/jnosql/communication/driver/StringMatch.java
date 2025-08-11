@@ -97,7 +97,7 @@ public enum StringMatch {
      * @param value the value to be transformed into a pattern
      * @return the pattern string, with wildcards applied according to the match strategy
      */
-    public abstract String apply(String value);
+    abstract String apply(String value);
 
     /**
      * Formats the given value by applying the match strategy.
