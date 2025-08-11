@@ -12,6 +12,10 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 - Update ArangoDB driver to 7.22.0
 
+=== Added
+
+- Include support to Contains, StartsWith, EndsWith for NoSQL databases
+
 == [1.1.9] - 2025-07-30
 
 === Fixed
