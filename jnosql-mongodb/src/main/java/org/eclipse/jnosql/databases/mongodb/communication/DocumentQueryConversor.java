@@ -80,11 +80,24 @@ final class DocumentQueryConversor {
     }
 
     public static String prepareRegexValue(String rawData) {
-        if (rawData == null)
-            return "^$";
-        return "^" + rawData
-                .replaceAll("_", ".{1}")
-                .replaceAll("%", ".{1,}");
+        if (rawData == null) {
+            return "(?!)"; // matches nothing
+        }
+        StringBuilder sb = new StringBuilder("^");
+        for (char c : rawData.toCharArray()) {
+            switch (c) {
+                case '%': // SQL LIKE: zero or more
+                    sb.append(".*");
+                    break;
+                case '_': // SQL LIKE: exactly one
+                    sb.append('.');
+                    break;
+                default:  // escape all regex meta characters
+                    sb.append(Pattern.quote(String.valueOf(c)));
+            }
+        }
+        sb.append('$');
+        return sb.toString();
     }
 
 }
