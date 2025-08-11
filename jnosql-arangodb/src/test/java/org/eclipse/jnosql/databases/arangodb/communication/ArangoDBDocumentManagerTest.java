@@ -413,7 +413,7 @@ public class ArangoDBDocumentManagerTest {
 
         entityManager.insert(entity);
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.contains(Element.of("name",
-                "liana")), COLLECTION_NAME, Collections.emptyList());
+                "lia")), COLLECTION_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
@@ -424,12 +424,32 @@ public class ArangoDBDocumentManagerTest {
 
     @Test
     void shouldStartsWith() {
+        var entity = getEntity();
 
+        entityManager.insert(entity);
+        var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.startsWith(Element.of("name",
+                "Pol")), COLLECTION_NAME, Collections.emptyList());
+
+        var result = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(1);
+            softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
+        });
     }
 
     @Test
     void shouldEndsWith() {
+        var entity = getEntity();
 
+        entityManager.insert(entity);
+        var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.endsWith(Element.of("name",
+                "ana")), COLLECTION_NAME, Collections.emptyList());
+
+        var result = entityManager.select(query).toList();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(1);
+            softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
+        });
     }
 
     private CommunicationEntity getEntity() {
