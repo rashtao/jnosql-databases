@@ -141,7 +141,7 @@ enum Neo4JQueryBuilder {
 
     private Object value(Object value, Condition condition) {
         if(Condition.LIKE.equals(condition)) {
-            return toCypherRegex(value.toString());
+            return LikeToCypherRegex.INSTANCE.toCypherRegex(value.toString());
         }
         return value;
     }
