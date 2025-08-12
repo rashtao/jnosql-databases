@@ -321,7 +321,7 @@ class Neo4JDatabaseManagerTest {
         var entity = getEntity();
         entity.add("name", "Ada Lovelace");
         entityManager.insert(entity);
-        var query = select().from(COLLECTION_NAME).where("name").like("Love").build();
+        var query = select().from(COLLECTION_NAME).where("name").like("%Love%").build();
         var entities = entityManager.select(query).toList();
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entities).hasSize(1);

@@ -111,7 +111,7 @@ enum Neo4JQueryBuilder {
             case CONTAINS:
             case IN:
                 String paramName = INTERNAL_ID.equals(fieldName) ? "id" : fieldName; // Ensure valid parameter name
-                parameters.put(paramName, element.get());
+                parameters.put(paramName, value(element.get(), condition.condition()));
                 cypher.append(queryField).append(" ")
                         .append(getConditionOperator(condition.condition()))
                         .append(" $").append(paramName);
@@ -139,6 +139,13 @@ enum Neo4JQueryBuilder {
         }
     }
 
+    private Object value(Object value, Condition condition) {
+        if(Condition.LIKE.equals(condition)) {
+            return toCypherRegex(value.toString());
+        }
+        return value;
+    }
+
     private String translateField(String field) {
         if (INTERNAL_ID.equals(field)) {
             return "elementId(e)";
@@ -149,7 +156,6 @@ enum Neo4JQueryBuilder {
         return "e." + field;
     }
 
-
     private String getConditionOperator(Condition condition) {
         return switch (condition) {
             case EQUALS -> "=";
@@ -157,7 +163,7 @@ enum Neo4JQueryBuilder {
             case GREATER_EQUALS_THAN -> ">=";
             case LESSER_THAN -> "<";
             case LESSER_EQUALS_THAN -> "<=";
-            case LIKE -> "CONTAINS";
+            case LIKE  -> "=~";
             case IN -> "IN";
             case AND -> "AND";
             case OR -> "OR";
