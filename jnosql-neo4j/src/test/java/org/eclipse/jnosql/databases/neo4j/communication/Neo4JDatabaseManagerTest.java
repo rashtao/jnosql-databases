@@ -613,7 +613,7 @@ class Neo4JDatabaseManagerTest {
     @Test
     void shouldFindContains() {
         var entity = getEntity();
-
+        entity.add("name", "Poliana");
         entityManager.insert(entity);
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.contains(Element.of("name",
                 "lia")), COLLECTION_NAME, Collections.emptyList());
@@ -628,7 +628,7 @@ class Neo4JDatabaseManagerTest {
     @Test
     void shouldStartsWith() {
         var entity = getEntity();
-
+        entity.add("name", "Poliana");
         entityManager.insert(entity);
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.startsWith(Element.of("name",
                 "Pol")), COLLECTION_NAME, Collections.emptyList());
@@ -643,7 +643,7 @@ class Neo4JDatabaseManagerTest {
     @Test
     void shouldEndsWith() {
         var entity = getEntity();
-
+        entity.add("name", "Poliana");
         entityManager.insert(entity);
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.endsWith(Element.of("name",
                 "ana")), COLLECTION_NAME, Collections.emptyList());
