@@ -106,6 +106,9 @@ enum Neo4JQueryBuilder {
             case LESSER_THAN:
             case LESSER_EQUALS_THAN:
             case LIKE:
+            case STARTS_WITH:
+            case ENDS_WITH:
+            case CONTAINS:
             case IN:
                 String paramName = INTERNAL_ID.equals(fieldName) ? "id" : fieldName; // Ensure valid parameter name
                 parameters.put(paramName, element.get());
@@ -121,7 +124,8 @@ enum Neo4JQueryBuilder {
             case AND:
             case OR:
                 cypher.append("(");
-                List<CriteriaCondition> conditions = element.get(new TypeReference<>() {});
+                List<CriteriaCondition> conditions = element.get(new TypeReference<>() {
+                });
                 for (int index = 0; index < conditions.size(); index++) {
                     if (index > 0) {
                         cypher.append(" ").append(getConditionOperator(condition.condition())).append(" ");
