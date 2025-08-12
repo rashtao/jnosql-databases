@@ -157,6 +157,9 @@ enum Neo4JQueryBuilder {
             case IN -> "IN";
             case AND -> "AND";
             case OR -> "OR";
+            case STARTS_WITH -> "STARTS WITH";
+            case ENDS_WITH -> "ENDS WITH";
+            case CONTAINS -> "CONTAINS";
             default -> throw new CommunicationException("Unsupported operator: " + condition);
         };
     }
