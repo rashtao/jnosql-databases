@@ -43,14 +43,13 @@ final class TraversalExecutor {
                 return __.has(name, P.eq(value));
             }
             case LIKE -> {
-                TextP.
-                return __.has(name, P.test(v -> v instanceof String && ((String) v).matches(regex)));
+                return  __.has(name, TextP.regex(value == null ? "" : value.toString()));
             }
             case ENDS_WITH -> {
                 return  __.has(name, TextP.endingWith(value == null ? "" : value.toString()));
             }
             case STARTS_WITH -> {
-                __.has(name, TextP.startingWith(value == null ? "" : value.toString()));
+                return __.has(name, TextP.startingWith(value == null ? "" : value.toString()));
             }
             case CONTAINS -> {
                 return __.has(name, TextP.containing(value == null ? "" : value.toString()));
