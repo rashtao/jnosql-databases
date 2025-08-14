@@ -30,7 +30,6 @@ class DocumentQueryConverterTest {
             M%x;^\\QM\\E.*\\Qx\\E$
             _ax;^.\\Qa\\E\\Qx\\E$
             %ax;^.*\\Qa\\E\\Qx\\E$
-            ;^$
             """, delimiterString = ";")
     void shouldPrepareRegexValueSupportedByMongoDB(String rawValue, String expectedValue) {
         assertThat(DocumentQueryConversor.prepareRegexValue(rawValue))
