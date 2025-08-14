@@ -20,30 +20,30 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DocumentQueryConversorTest {
+class DocumentQueryConverterTest {
 
     @ParameterizedTest
     @CsvSource(textBlock = """
-            Max_;^Max.{1}
-            Max%;^Max.{1,}
-            M_x;^M.{1}x
-            M%x;^M.{1,}x
-            _ax;^.{1}ax
-            %ax;^.{1,}ax
+            Max_;^\\QM\\E\\Qa\\E\\Qx\\E.$
+            Max%;^\\QM\\E\\Qa\\E\\Qx\\E.*$
+            M_x;^\\QM\\E.\\Qx\\E$
+            M%x;^\\QM\\E.*\\Qx\\E$
+            _ax;^.\\Qa\\E\\Qx\\E$
+            %ax;^.*\\Qa\\E\\Qx\\E$
             ;^$
             """, delimiterString = ";")
     void shouldPrepareRegexValueSupportedByMongoDB(String rawValue, String expectedValue) {
         assertThat(DocumentQueryConversor.prepareRegexValue(rawValue))
                 .as("The value should be prepared to be used in a MongoDB regex query: " +
-                        "the '_' character should matches any single character, and " +
-                        "the '%' character should matches any sequence of characters.")
+                        "the '_' character should match any single character, and " +
+                        "the '%' character should match any sequence of characters.")
                 .isEqualTo(expectedValue);
     }
 
     @Test
-    void shouldReturnEmptyRegexWhenRawValueIsNull() {
+    void shouldReturnNeverMatchingRegexWhenRawValueIsNull() {
         assertThat(DocumentQueryConversor.prepareRegexValue(null))
-                .as("should return an empty regex when the raw value is null")
-                .isEqualTo("^$");
+                .as("should return a never-matching regex when the raw value is null")
+                .isEqualTo("(?!)");
     }
 }
