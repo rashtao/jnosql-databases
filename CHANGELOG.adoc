@@ -17,6 +17,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update OrientDB driver to 3.2.43
 - Update Elasticsearch driver to 8.19.1
 - Update Apache Hbase to version 2.6.3
+- Update Jedis version to 6.1.0
 
 === Added
 
