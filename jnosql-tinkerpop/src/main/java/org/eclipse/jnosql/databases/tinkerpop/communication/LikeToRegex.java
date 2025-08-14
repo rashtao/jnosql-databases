@@ -14,9 +14,11 @@
  */
 package org.eclipse.jnosql.databases.tinkerpop.communication;
 
-import java.util.regex.Pattern;
 
-public enum LikeToRegex {
+/**
+ * The like to regex converter
+ */
+enum LikeToRegex {
     INSTANCE;
 
 
@@ -25,7 +27,7 @@ public enum LikeToRegex {
      * @param text the like pattern to convert
      * @return the regex pattern
      */
-    private static String LikeToRegex(Object text) {
+    String likeToRegex(Object text) {
         String like = text== null? null: text.toString();
         if (like == null) {
             return "(?!)";
