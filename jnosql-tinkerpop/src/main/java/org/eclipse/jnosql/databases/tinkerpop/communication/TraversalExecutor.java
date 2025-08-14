@@ -15,6 +15,7 @@
 package org.eclipse.jnosql.databases.tinkerpop.communication;
 
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.TextP;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
@@ -40,6 +41,19 @@ final class TraversalExecutor {
         switch (operator) {
             case EQUALS -> {
                 return __.has(name, P.eq(value));
+            }
+            case LIKE -> {
+                TextP.
+                return __.has(name, P.test(v -> v instanceof String && ((String) v).matches(regex)));
+            }
+            case ENDS_WITH -> {
+                return  __.has(name, TextP.endingWith(value == null ? "" : value.toString()));
+            }
+            case STARTS_WITH -> {
+                __.has(name, TextP.startingWith(value == null ? "" : value.toString()));
+            }
+            case CONTAINS -> {
+                return __.has(name, TextP.containing(value == null ? "" : value.toString()));
             }
             case GREATER_THAN -> {
                 return __.has(name, P.gt(value));
@@ -79,6 +93,7 @@ final class TraversalExecutor {
                         .reduce(GraphTraversal::or)
                         .orElseThrow(() -> new UnsupportedOperationException("There is an inconsistency at the OR operator"));
             }
+
             default ->
                     throw new UnsupportedOperationException("There is not support to the type " + operator + " in graph");
         }

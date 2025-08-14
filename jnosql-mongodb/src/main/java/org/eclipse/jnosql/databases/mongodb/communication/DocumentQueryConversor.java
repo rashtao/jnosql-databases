@@ -82,16 +82,21 @@ final class DocumentQueryConversor {
         };
     }
 
-     static String prepareRegexValue(String likePattern) {
+    static String prepareRegexValue(String likePattern) {
         if (likePattern == null) {
             return "(?!)"; // never matches
         }
         StringBuilder sb = new StringBuilder("^");
         for (char c : likePattern.toCharArray()) {
             switch (c) {
-                case '%': sb.append(".*"); break; // zero or more
-                case '_': sb.append('.');  break; // exactly one
-                default:  sb.append(Pattern.quote(String.valueOf(c)));
+                case '%':
+                    sb.append(".*");
+                    break;
+                case '_':
+                    sb.append('.');
+                    break;
+                default:
+                    sb.append(Pattern.quote(String.valueOf(c)));
             }
         }
         sb.append('$');

@@ -20,20 +20,32 @@ public enum LikeToRegex {
     INSTANCE;
 
 
-    private static String LikeToRegex(String likePattern) {
-        if (likePattern == null) {
-            return "a^";
-        } // match nothing
-        StringBuilder sb = new StringBuilder("^");
-        for (char c : likePattern.toCharArray()) {
-            switch (c) {
-                case '%': sb.append(".*"); break;
-                case '_': sb.append('.'); break;
-                default: sb.append(Pattern.quote(String.valueOf(c)));
+    /**
+     * Converts like pattern to regex pattern.
+     * @param text the like pattern to convert
+     * @return the regex pattern
+     */
+    private static String LikeToRegex(Object text) {
+        String like = text== null? null: text.toString();
+        if (like == null) {
+            return "(?!)";
+        }
+        StringBuilder rx = new StringBuilder("^");
+        StringBuilder lit = new StringBuilder();
+        for (int i = 0; i < like.length(); i++) {
+            char c = like.charAt(i);
+            if (c == '%' || c == '_') {
+                if (!lit.isEmpty()) { rx.append(java.util.regex.Pattern.quote(lit.toString())); lit.setLength(0); }
+                rx.append(c == '%' ? ".*" : ".");
+            } else {
+                lit.append(c);
             }
         }
-        sb.append('$');
-        return sb.toString();
+        if (!lit.isEmpty()) {
+            rx.append(java.util.regex.Pattern.quote(lit.toString()));
+        }
+        rx.append('$');
+        return rx.toString();
     }
 
 }
