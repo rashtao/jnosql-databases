@@ -18,6 +18,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Elasticsearch driver to 8.19.1
 - Update Apache Hbase to version 2.6.3
 - Update Jedis version to 6.1.0
+- Update Apache Tinkerpop core to 3.7.4
 
 === Added
 
