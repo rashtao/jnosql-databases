@@ -14,35 +14,40 @@
  */
 package org.eclipse.jnosql.databases.oracle.communication;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 enum OracleNoSqlLikeConverter {
     INSTANCE;
 
+    // Regex metacharacters that must be escaped for Oracle NoSQL regex_like
+    private static final Set<Character> META = Set.of(
+            '.', '^', '$', '*', '+', '?', '(', ')', '[', ']', '{', '}', '\\', '|'
+    );
+
+    /**
+     * SQL LIKE (%, _) -> Oracle NoSQL regex_like pattern.
+     * Examples:
+     *   "Lu%"   -> "Lu.*"
+     *   "%Lu"   -> ".*Lu"
+     *   "%Lu%"  -> ".*Lu.*"
+     *   "Lu"    -> "Lu"        // exact match equivalent in regex_like
+     *   "a.c"   -> "a\\.c"     // '.' escaped
+     */
     static String convert(Object value) {
-
-        String like = value == null ? null : value.toString();
-
-        if (like == null) {
-            return "";
-        }
+        if (value == null) return ""; // let caller decide behavior for empty
+        String like = value.toString();
         StringBuilder out = new StringBuilder(like.length());
-        StringBuilder literal = new StringBuilder();
 
         for (int i = 0; i < like.length(); i++) {
             char c = like.charAt(i);
-            if (c == '%' || c == '_') {
-                if (!literal.isEmpty()) {
-                    out.append(Pattern.quote(literal.toString()));
-                    literal.setLength(0);
-                }
-                out.append(c == '%' ? ".*" : ".");
-            } else {
-                literal.append(c);
+            switch (c) {
+                case '%': out.append(".*"); break; // zero or more
+                case '_': out.append('.');  break; // exactly one
+                default:
+                    if (META.contains(c)) out.append('\\');
+                    out.append(c);
             }
-        }
-        if (!literal.isEmpty()) {
-            out.append(Pattern.quote(literal.toString()));
         }
         return out.toString();
     }
