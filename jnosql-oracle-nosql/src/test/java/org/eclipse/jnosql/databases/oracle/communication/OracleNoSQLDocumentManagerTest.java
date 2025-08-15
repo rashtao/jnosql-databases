@@ -17,6 +17,7 @@ package org.eclipse.jnosql.databases.oracle.communication;
 import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.TypeReference;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
+import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
 import org.junit.jupiter.api.Assertions;
@@ -604,6 +605,24 @@ class OracleNoSQLDocumentManagerTest {
                     .isEqualTo(ContactType.EMAIL);
         });
     }
+
+    @Test
+    void shouldFindDocumentLike() {
+        DeleteQuery deleteQuery = delete().from(COLLECTION_NAME).where("type").eq("V").build();
+        entityManager.delete(deleteQuery);
+        Iterable<CommunicationEntity> entitiesSaved = entityManager.insert(getEntitiesWithValues());
+        List<CommunicationEntity> entities = StreamSupport.stream(entitiesSaved.spliterator(), false).toList();
+
+        var query = select().from(COLLECTION_NAME)
+                .where("name").like("Lu%")
+                .and("type").eq("V")
+                .build();
+
+        List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
+        assertEquals(2, entitiesFound.size());
+        assertThat(entitiesFound).contains(entities.get(0), entities.get(2));
+    }
+
 
     private CommunicationEntity createDocumentList() {
         var entity = CommunicationEntity.of("AppointmentBook");
