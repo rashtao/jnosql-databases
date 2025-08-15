@@ -15,7 +15,6 @@
 package org.eclipse.jnosql.databases.oracle.communication;
 
 import java.util.Set;
-import java.util.regex.Pattern;
 
 enum OracleNoSqlLikeConverter {
     INSTANCE;
