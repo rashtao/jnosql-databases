@@ -36,19 +36,19 @@ class OracleNoSqlLikeConverterTest {
         """, delimiter = ';')
     @DisplayName("Converts SQL LIKE to Oracle NoSQL regex_like pattern (%, _ and literal quoting)")
     void shouldConvertSqlLikeToOracleNoSqlRegex(String like, String expected) {
-        String actual = OracleNoSqlLikeConverter.convert(like);
+        String actual = OracleNoSqlLikeConverter.INSTANCE.convert(like);
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("Returns empty string for null input")
     void shouldReturnEmptyForNull() {
-        assertThat(OracleNoSqlLikeConverter.convert(null)).isEqualTo("");
+        assertThat(OracleNoSqlLikeConverter.INSTANCE.convert(null)).isEqualTo("");
     }
 
     @Test
     @DisplayName("Returns empty string for empty input")
     void shouldReturnEmptyForEmptyString() {
-        assertThat(OracleNoSqlLikeConverter.convert("")).isEqualTo("");
+        assertThat(OracleNoSqlLikeConverter.INSTANCE.convert("")).isEqualTo("");
     }
 }
