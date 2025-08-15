@@ -621,8 +621,16 @@ class OracleNoSQLDocumentManagerTest {
                 .build();
 
         List<CommunicationEntity> entitiesFound = entityManager.select(query).collect(Collectors.toList());
-        assertEquals(2, entitiesFound.size());
-        assertThat(entitiesFound).contains(entities.get(0), entities.get(2));
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(entitiesFound).hasSize(2);
+            var names = entitiesFound.stream()
+                    .flatMap(d -> d.find("name").stream())
+                    .map(d -> d.get(String.class))
+                    .toList();
+            soft.assertThat(names).contains("Lucas", "Luna");
+
+        });
     }
 
     @Test

@@ -65,7 +65,10 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
                 predicate(query, " >= ", document, params);
                 return;
             case LIKE:
-                predicate(query, " LIKE ", document, params);
+            case CONTAINS:
+            case STARTS_WITH:
+            case ENDS_WITH:
+                predicateLike(query, document, params);
                 return;
             case NOT:
                 query.append(" NOT ");
@@ -132,6 +135,14 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
             query.append(name).append(condition).append(" ? ");
         }
         params.add(fieldValue);
+    }
+
+    protected void predicateLike(StringBuilder query,
+                             Element document,
+                             List<FieldValue> params) {
+        String name = identifierOf(document.name());
+        Object value = OracleNoSqlLikeConverter.INSTANCE.convert(document.get());
+        query.append("regex_like(").append(name).append(", \"").append(value).append("\")");
     }
 
     protected String identifierOf(String name) {
