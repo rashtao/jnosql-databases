@@ -64,9 +64,9 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
             case GREATER_EQUALS_THAN:
                 predicate(query, " >= ", document, params);
                 return;
-/*            case LIKE:
+            case LIKE:
                 predicate(query, " LIKE ", document, params);
-                return;*/
+                return;
             case NOT:
                 query.append(" NOT ");
                 condition(document.get(CriteriaCondition.class), query, params, ids);
