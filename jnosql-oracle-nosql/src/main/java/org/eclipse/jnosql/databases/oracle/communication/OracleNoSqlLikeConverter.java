@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 enum OracleNoSqlLikeConverter {
     INSTANCE;
 
-    // Regex metacharacters that must be escaped for Oracle NoSQL regex_like
     private static final Set<Character> META = Set.of(
             '.', '^', '$', '*', '+', '?', '(', ')', '[', ']', '{', '}', '\\', '|'
     );
@@ -34,7 +33,7 @@ enum OracleNoSqlLikeConverter {
      *   "Lu"    -> "Lu"        // exact match equivalent in regex_like
      *   "a.c"   -> "a\\.c"     // '.' escaped
      */
-    static String convert(Object value) {
+    String convert(Object value) {
         if (value == null) return ""; // let caller decide behavior for empty
         String like = value.toString();
         StringBuilder out = new StringBuilder(like.length());

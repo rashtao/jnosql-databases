@@ -17,27 +17,47 @@ package org.eclipse.jnosql.databases.oracle.communication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class OracleNoSqlLikeConverterTest {
 
+
     @ParameterizedTest(name = "LIKE \"{0}\" -> pattern \"{1}\"")
-    @CsvSource(textBlock = """
-        %Ota%;.*\\QOta\\E.*
-        Ota%;\\QOta\\E.*
-        %Ota;.*\\QOta\\E
-        Ota;\\QOta\\E
-        Ot_;\\QOt\\E.
-        _ta;.\\Qta\\E
-        %t_a%;.*\\Qt\\E.\\Qa\\E.*
-        .+;\\Q.+\\E
-        """, delimiter = ';')
-    @DisplayName("Converts SQL LIKE to Oracle NoSQL regex_like pattern (%, _ and literal quoting)")
+    @MethodSource("cases")
+    @DisplayName("Converts SQL LIKE to Oracle NoSQL regex_like pattern (no anchors)")
     void shouldConvertSqlLikeToOracleNoSqlRegex(String like, String expected) {
         String actual = OracleNoSqlLikeConverter.INSTANCE.convert(like);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> cases() {
+        return Stream.of(
+                // starts / ends / contains / exact
+                arguments("Lu%", "Lu.*"),
+                arguments("%Lu", ".*Lu"),
+                arguments("%Lu%", ".*Lu.*"),
+                arguments("Lu", "Lu"),
+
+                // single-char wildcard
+                arguments("Ot_", "Ot."),
+                arguments("_ta", ".ta"),
+
+                // escaping of regex metacharacters
+                arguments("%a.c%", ".*a\\.c.*"),
+                arguments("100% match", "100.* match"),
+
+                // edge cases
+                arguments("", ""),          // empty LIKE -> empty pattern
+                arguments("%%", ".*.*"),    // only wildcards
+                arguments("__", "..")
+        );
     }
 
     @Test
