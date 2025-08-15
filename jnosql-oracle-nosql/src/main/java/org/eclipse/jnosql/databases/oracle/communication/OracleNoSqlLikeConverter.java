@@ -50,4 +50,29 @@ enum OracleNoSqlLikeConverter {
         }
         return out.toString();
     }
+
+    /** Contains: equivalent to SQL LIKE %term% */
+    String contains(String term) {
+        return ".*" + escape(term) + ".*";
+    }
+
+    /** Starts with: equivalent to SQL LIKE term% */
+    String startsWith(String term) {
+        return escape(term) + ".*";
+    }
+
+    /** Ends with: equivalent to SQL LIKE %term */
+    String endsWith(String term) {
+        return ".*" + escape(term);
+    }
+
+
+    private String escape(String s) {
+        StringBuilder out = new StringBuilder(s.length());
+        for (char c : s.toCharArray()) {
+            if (META.contains(c)) out.append('\\');
+            out.append(c);
+        }
+        return out.toString();
+    }
 }
