@@ -14,5 +14,36 @@
  */
 package org.eclipse.jnosql.databases.oracle.communication;
 
+import java.util.regex.Pattern;
+
 enum OracleNoSqlLikeConverter {
+    INSTANCE;
+
+    static String convert(Object value) {
+
+        String like = value == null ? null : value.toString();
+
+        if (like == null) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder(like.length());
+        StringBuilder literal = new StringBuilder();
+
+        for (int i = 0; i < like.length(); i++) {
+            char c = like.charAt(i);
+            if (c == '%' || c == '_') {
+                if (!literal.isEmpty()) {
+                    out.append(Pattern.quote(literal.toString()));
+                    literal.setLength(0);
+                }
+                out.append(c == '%' ? ".*" : ".");
+            } else {
+                literal.append(c);
+            }
+        }
+        if (!literal.isEmpty()) {
+            out.append(Pattern.quote(literal.toString()));
+        }
+        return out.toString();
+    }
 }
