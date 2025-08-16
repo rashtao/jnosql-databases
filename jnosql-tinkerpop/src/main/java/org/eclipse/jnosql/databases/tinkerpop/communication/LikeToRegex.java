@@ -24,11 +24,12 @@ enum LikeToRegex {
 
     /**
      * Converts like pattern to regex pattern.
+     *
      * @param text the like pattern to convert
      * @return the regex pattern
      */
     String likeToRegex(Object text) {
-        String like = text== null? null: text.toString();
+        String like = text == null ? null : text.toString();
         if (like == null) {
             return "(?!)";
         }
@@ -37,7 +38,10 @@ enum LikeToRegex {
         for (int i = 0; i < like.length(); i++) {
             char c = like.charAt(i);
             if (c == '%' || c == '_') {
-                if (!lit.isEmpty()) { rx.append(java.util.regex.Pattern.quote(lit.toString())); lit.setLength(0); }
+                if (!lit.isEmpty()) {
+                    rx.append(java.util.regex.Pattern.quote(lit.toString()));
+                    lit.setLength(0);
+                }
                 rx.append(c == '%' ? ".*" : ".");
             } else {
                 lit.append(c);
