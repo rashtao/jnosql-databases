@@ -65,10 +65,16 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
                 predicate(query, " >= ", document, params);
                 return;
             case LIKE:
+                predicateLike(query, document);
+                return;
             case CONTAINS:
+                predicateContains(query, document);
+                return;
             case STARTS_WITH:
+                predicateStartsWith(query, document);
+                return;
             case ENDS_WITH:
-                predicateLike(query, document, params);
+                predicateEndsWith(query, document);
                 return;
             case NOT:
                 query.append(" NOT ");
@@ -138,11 +144,31 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
     }
 
     protected void predicateLike(StringBuilder query,
-                             Element document,
-                             List<FieldValue> params) {
+                             Element document) {
         String name = identifierOf(document.name());
         Object value = OracleNoSqlLikeConverter.INSTANCE.convert(document.get());
         query.append("regex_like(").append(name).append(", \"").append(value).append("\")");
+    }
+
+    protected void predicateStartsWith(StringBuilder query,
+                                 Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append(value).append("*").append("\")");
+    }
+
+    protected void predicateEndsWith(StringBuilder query,
+                                       Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append("*").append(value).append("\")");
+    }
+
+    protected void predicateContains(StringBuilder query,
+                                     Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append("*").append(value).append("*").append("\")");
     }
 
     protected String identifierOf(String name) {
