@@ -64,9 +64,18 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
             case GREATER_EQUALS_THAN:
                 predicate(query, " >= ", document, params);
                 return;
-/*            case LIKE:
-                predicate(query, " LIKE ", document, params);
-                return;*/
+            case LIKE:
+                predicateLike(query, document);
+                return;
+            case CONTAINS:
+                predicateContains(query, document);
+                return;
+            case STARTS_WITH:
+                predicateStartsWith(query, document);
+                return;
+            case ENDS_WITH:
+                predicateEndsWith(query, document);
+                return;
             case NOT:
                 query.append(" NOT ");
                 condition(document.get(CriteriaCondition.class), query, params, ids);
@@ -132,6 +141,37 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
             query.append(name).append(condition).append(" ? ");
         }
         params.add(fieldValue);
+    }
+
+    protected void predicateLike(StringBuilder query,
+                             Element document) {
+        String name = identifierOf(document.name());
+        Object value = OracleNoSqlLikeConverter.INSTANCE.convert(document.get());
+        query.append("regex_like(").append(name).append(", \"").append(value).append("\")");
+    }
+
+    protected void predicateStartsWith(StringBuilder query,
+                                 Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.startsWith(value)).append(
+                "\")");
+    }
+
+    protected void predicateEndsWith(StringBuilder query,
+                                       Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.endsWith(value)).append(
+                "\")");
+    }
+
+    protected void predicateContains(StringBuilder query,
+                                     Element document) {
+        String name = identifierOf(document.name());
+        var value = document.get() == null ? "" : document.get(String.class);
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.contains(value)).append(
+                "\")");
     }
 
     protected String identifierOf(String name) {

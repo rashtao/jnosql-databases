@@ -106,9 +106,12 @@ enum Neo4JQueryBuilder {
             case LESSER_THAN:
             case LESSER_EQUALS_THAN:
             case LIKE:
+            case STARTS_WITH:
+            case ENDS_WITH:
+            case CONTAINS:
             case IN:
                 String paramName = INTERNAL_ID.equals(fieldName) ? "id" : fieldName; // Ensure valid parameter name
-                parameters.put(paramName, element.get());
+                parameters.put(paramName, value(element.get(), condition.condition()));
                 cypher.append(queryField).append(" ")
                         .append(getConditionOperator(condition.condition()))
                         .append(" $").append(paramName);
@@ -121,7 +124,8 @@ enum Neo4JQueryBuilder {
             case AND:
             case OR:
                 cypher.append("(");
-                List<CriteriaCondition> conditions = element.get(new TypeReference<>() {});
+                List<CriteriaCondition> conditions = element.get(new TypeReference<>() {
+                });
                 for (int index = 0; index < conditions.size(); index++) {
                     if (index > 0) {
                         cypher.append(" ").append(getConditionOperator(condition.condition())).append(" ");
@@ -135,6 +139,13 @@ enum Neo4JQueryBuilder {
         }
     }
 
+    private Object value(Object value, Condition condition) {
+        if(Condition.LIKE.equals(condition)) {
+            return LikeToCypherRegex.INSTANCE.toCypherRegex(value.toString());
+        }
+        return value;
+    }
+
     private String translateField(String field) {
         if (INTERNAL_ID.equals(field)) {
             return "elementId(e)";
@@ -145,7 +156,6 @@ enum Neo4JQueryBuilder {
         return "e." + field;
     }
 
-
     private String getConditionOperator(Condition condition) {
         return switch (condition) {
             case EQUALS -> "=";
@@ -153,10 +163,13 @@ enum Neo4JQueryBuilder {
             case GREATER_EQUALS_THAN -> ">=";
             case LESSER_THAN -> "<";
             case LESSER_EQUALS_THAN -> "<=";
-            case LIKE -> "CONTAINS";
+            case LIKE  -> "=~";
             case IN -> "IN";
             case AND -> "AND";
             case OR -> "OR";
+            case STARTS_WITH -> "STARTS WITH";
+            case ENDS_WITH -> "ENDS WITH";
+            case CONTAINS -> "CONTAINS";
             default -> throw new CommunicationException("Unsupported operator: " + condition);
         };
     }

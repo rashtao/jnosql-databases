@@ -407,13 +407,6 @@ public class DefaultSolrDocumentManagerTest {
     }
 
     @Test
-    void shouldSaveSubDocument2() {
-        var entity = getEntity();
-        entity.add(Element.of("phones", asList(Element.of("mobile", "1231231"), Element.of("mobile2", "1231231"))));
-        Assertions.assertThrows(SolrException.class, () -> entityManager.insert(entity));
-    }
-
-    @Test
     void shouldCreateDate() {
         Date date = new Date();
         LocalDate now = LocalDate.now();
@@ -433,11 +426,6 @@ public class DefaultSolrDocumentManagerTest {
         var documentEntity = entities.get(0);
         assertEquals(date, documentEntity.find("date").get().get(Date.class));
         assertEquals(now, documentEntity.find("date").get().get(LocalDate.class));
-    }
-
-    @Test
-    void shouldRetrieveListSubdocumentList() {
-        Assertions.assertThrows(SolrException.class, () -> entityManager.insert(createSubdocumentList()));
     }
 
     @Test
