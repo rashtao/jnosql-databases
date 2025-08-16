@@ -154,21 +154,24 @@ abstract class AbstractQueryBuilder implements Supplier<OracleQuery> {
                                  Element document) {
         String name = identifierOf(document.name());
         var value = document.get() == null ? "" : document.get(String.class);
-        query.append("regex_like(").append(name).append(", \"").append(value).append("*").append("\")");
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.startsWith(value)).append(
+                "\")");
     }
 
     protected void predicateEndsWith(StringBuilder query,
                                        Element document) {
         String name = identifierOf(document.name());
         var value = document.get() == null ? "" : document.get(String.class);
-        query.append("regex_like(").append(name).append(", \"").append("*").append(value).append("\")");
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.endsWith(value)).append(
+                "\")");
     }
 
     protected void predicateContains(StringBuilder query,
                                      Element document) {
         String name = identifierOf(document.name());
         var value = document.get() == null ? "" : document.get(String.class);
-        query.append("regex_like(").append(name).append(", \"").append("*").append(value).append("*").append("\")");
+        query.append("regex_like(").append(name).append(", \"").append(OracleNoSqlLikeConverter.INSTANCE.contains(value)).append(
+                "\")");
     }
 
     protected String identifierOf(String name) {
