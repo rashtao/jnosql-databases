@@ -678,8 +678,6 @@ class OracleNoSQLDocumentManagerTest {
         });
     }
 
-
-
     private CommunicationEntity createDocumentList() {
         var entity = CommunicationEntity.of("AppointmentBook");
         entity.add(Element.of("_id", new Random().nextInt()));
