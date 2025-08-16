@@ -71,4 +71,77 @@ class OracleNoSqlLikeConverterTest {
     void shouldReturnEmptyForEmptyString() {
         assertThat(OracleNoSqlLikeConverter.INSTANCE.convert("")).isEqualTo("");
     }
+
+    @ParameterizedTest(name = "contains(\"{0}\") -> \"{1}\"")
+    @MethodSource("containsCases")
+    @DisplayName("contains(term) escapes meta and wraps with .* … .*")
+    void shouldContains(String term, String expected) {
+        String actual = OracleNoSqlLikeConverter.INSTANCE.contains(term);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> containsCases() {
+        return Stream.of(
+                arguments("Lu", ".*Lu.*"),
+                arguments("a.c", ".*a\\.c.*"),
+                arguments("price$", ".*price\\$.*"),
+                arguments("(hello)", ".*\\(hello\\).*"),
+                arguments("", ".*.*")
+        );
+    }
+
+    @ParameterizedTest(name = "startsWith(\"{0}\") -> \"{1}\"")
+    @MethodSource("startsWithCases")
+    @DisplayName("startsWith(term) escapes meta and appends .*")
+    void shouldStartsWith(String term, String expected) {
+        String actual = OracleNoSqlLikeConverter.INSTANCE.startsWith(term);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> startsWithCases() {
+        return Stream.of(
+                arguments("Lu", "Lu.*"),
+                arguments("a.c", "a\\.c.*"),
+                arguments("price$", "price\\$.*"),
+                arguments("(hello)", "\\(hello\\).*"),
+                arguments("", ".*")
+        );
+    }
+
+
+    @ParameterizedTest(name = "endsWith(\"{0}\") -> \"{1}\"")
+    @MethodSource("endsWithCases")
+    @DisplayName("endsWith(term) escapes meta and prefixes .*")
+    void shouldEndsWith(String term, String expected) {
+        String actual = OracleNoSqlLikeConverter.INSTANCE.endsWith(term);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> endsWithCases() {
+        return Stream.of(
+                arguments("Lu", ".*Lu"),
+                arguments("a.c", ".*a\\.c"),
+                arguments("price$", ".*price\\$"),
+                arguments("(hello)", ".*\\(hello\\)"),
+                arguments("", ".*")
+        );
+    }
+
+    @Test
+    @DisplayName("All regex metacharacters are escaped in contains/startsWith/endsWith")
+    void escapesAllMetaCharacters() {
+        String term = ".^$*+?()[]{}\\|";
+        // Expected escaped chunk: \.\^\$\*\+\?\(\)\[\]\{\}\\\|
+        String escaped = "\\.\\^\\$\\*\\+\\?\\(\\)\\[\\]\\{\\}\\\\\\|";
+
+        assertThat(OracleNoSqlLikeConverter.INSTANCE.contains(term))
+                .isEqualTo(".*" + escaped + ".*");
+
+        assertThat(OracleNoSqlLikeConverter.INSTANCE.startsWith(term))
+                .isEqualTo(escaped + ".*");
+
+        assertThat(OracleNoSqlLikeConverter.INSTANCE.endsWith(term))
+                .isEqualTo(".*" + escaped);
+    }
+
 }
