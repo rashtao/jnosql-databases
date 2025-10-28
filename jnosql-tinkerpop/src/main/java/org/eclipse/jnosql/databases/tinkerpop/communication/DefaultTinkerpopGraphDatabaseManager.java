@@ -259,6 +259,7 @@ public class DefaultTinkerpopGraphDatabaseManager implements TinkerpopGraphDatab
         ).toArray();
         Vertex vertex = graph.addVertex(args);
         entity.add(ID, vertex.id());
+        GraphTransactionUtil.transaction(graph);
         return vertex;
     }
 
