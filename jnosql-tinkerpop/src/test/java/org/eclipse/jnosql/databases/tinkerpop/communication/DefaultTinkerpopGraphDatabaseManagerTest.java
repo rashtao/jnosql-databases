@@ -25,7 +25,9 @@ import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
+import org.eclipse.jnosql.databases.tinkerpop.cdi.TestGraphSupplier;
 import org.eclipse.jnosql.mapping.semistructured.MappingQuery;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,24 +44,47 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.jnosql.communication.semistructured.DeleteQuery.delete;
 import static org.eclipse.jnosql.communication.semistructured.SelectQuery.select;
+import static org.eclipse.jnosql.databases.tinkerpop.communication.TinkerpopGraphDatabaseManager.ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DefaultTinkerpopGraphDatabaseManagerTest {
+abstract class DefaultTinkerpopGraphDatabaseManagerTest {
 
-    public static final String COLLECTION_NAME = "person";
+    static class ArangoDBTest extends DefaultTinkerpopGraphDatabaseManagerTest {
+        @Override
+        Graph graph() {
+            return TestGraphSupplier.ARANGODB.get();
+        }
+    }
+
+    static class Neo4jTest extends DefaultTinkerpopGraphDatabaseManagerTest {
+        @Override
+        Graph graph() {
+            return TestGraphSupplier.NEO4J.get();
+        }
+    }
+
+    static class TinkerGraphTest extends DefaultTinkerpopGraphDatabaseManagerTest {
+        @Override
+        Graph graph() {
+            return TestGraphSupplier.TINKER_GRAPH.get();
+        }
+    }
+
+    static final String COLLECTION_NAME = "Person";
 
     private TinkerpopGraphDatabaseManager entityManager;
 
     private final Faker faker = new Faker();
 
+    abstract Graph graph();
+
     @BeforeEach
-    void setUp(){
-        Graph graph = GraphSupplier.INSTANCE.get();
-        this.entityManager = TinkerpopGraphDatabaseManager.of(graph);
+    void setUp() {
+        this.entityManager = TinkerpopGraphDatabaseManager.of(graph());
     }
 
     @BeforeEach
@@ -67,8 +92,13 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         delete().from(COLLECTION_NAME).delete(entityManager);
     }
 
+    @AfterEach
+    void close() {
+        entityManager.close();
+    }
+
     @Test
-    void shouldInsertEntity(){
+    void shouldInsertEntity() {
         String name = faker.name().fullName();
         var age = faker.number().randomDigit();
         var entity = CommunicationEntity.of("Person");
@@ -80,12 +110,12 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(communicationEntity.find("name", String.class)).get().isEqualTo(name);
             softly.assertThat(communicationEntity.find("age", int.class)).get().isEqualTo(age);
-            softly.assertThat(communicationEntity.find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntity.find(ID)).isPresent();
         });
     }
 
     @Test
-    void shouldInsertEntities(){
+    void shouldInsertEntities() {
         String name = faker.name().fullName();
         var age = faker.number().randomDigit();
         var entity = CommunicationEntity.of("Person");
@@ -106,11 +136,11 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
             softly.assertThat(communicationEntities).hasSize(2);
             softly.assertThat(communicationEntities.get(0).find("name", String.class)).get().isEqualTo(name);
             softly.assertThat(communicationEntities.get(0).find("age", int.class)).get().isEqualTo(age);
-            softly.assertThat(communicationEntities.get(0).find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntities.get(0).find(ID)).isPresent();
 
             softly.assertThat(communicationEntities.get(1).find("name", String.class)).get().isEqualTo(name2);
             softly.assertThat(communicationEntities.get(1).find("age", int.class)).get().isEqualTo(age2);
-            softly.assertThat(communicationEntities.get(1).find(DefaultTinkerpopGraphDatabaseManager.ID_PROPERTY)).isPresent();
+            softly.assertThat(communicationEntities.get(1).find(ID)).isPresent();
         });
 
     }
@@ -119,7 +149,7 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
     void shouldInsert() {
         var entity = getEntity();
         var documentEntity = entityManager.insert(entity);
-        assertTrue(documentEntity.elements().stream().map(Element::name).anyMatch(s -> s.equals("_id")));
+        assertTrue(documentEntity.elements().stream().map(Element::name).anyMatch(s -> s.equals(ID)));
     }
 
     @Test
@@ -142,11 +172,11 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
     void shouldRemoveEntity() {
         var documentEntity = entityManager.insert(getEntity());
 
-        Optional<Element> id = documentEntity.find("_id");
+        Optional<Element> id = documentEntity.find(ID);
         var query = select().from(COLLECTION_NAME)
-                .where("_id").eq(id.orElseThrow().get())
+                .where(ID).eq(id.orElseThrow().get())
                 .build();
-        var deleteQuery = delete().from(COLLECTION_NAME).where("_id")
+        var deleteQuery = delete().from(COLLECTION_NAME).where(ID)
                 .eq(id.get().get())
                 .build();
 
@@ -157,10 +187,10 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
     @Test
     void shouldFindDocument() {
         var entity = entityManager.insert(getEntity());
-        Optional<Element> id = entity.find("_id");
+        Optional<Element> id = entity.find(ID);
 
         var query = select().from(COLLECTION_NAME)
-                .where("_id").eq(id.orElseThrow().get())
+                .where(ID).eq(id.orElseThrow().get())
                 .build();
 
         var entities = entityManager.select(query).collect(Collectors.toList());
@@ -171,11 +201,12 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
     @Test
     void shouldFindDocument2() {
         var entity = entityManager.insert(getEntity());
-        Optional<Element> id = entity.find("_id");
+        Optional<Element> id = entity.find(ID);
 
         var query = select().from(COLLECTION_NAME)
                 .where("name").eq("Poliana")
-                .and("city").eq("Salvador").and("_id").eq(id.orElseThrow().get())
+                .and("city").eq("Salvador")
+                .and(ID).eq(id.orElseThrow().get())
                 .build();
 
         List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
@@ -186,11 +217,11 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
     @Test
     void shouldFindDocument3() {
         var entity = entityManager.insert(getEntity());
-        Optional<Element> id = entity.find("_id");
+        Optional<Element> id = entity.find(ID);
         var query = select().from(COLLECTION_NAME)
                 .where("name").eq("Poliana")
                 .or("city").eq("Salvador")
-                .and(id.orElseThrow().name()).eq(id.get().get())
+                .and(ID).eq(id.orElseThrow().get())
                 .build();
 
         List<CommunicationEntity> entities = entityManager.select(query).collect(Collectors.toList());
@@ -302,7 +333,6 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
             softly.assertThat(entities).extracting(e -> e.find("name").orElseThrow().get(String.class))
                     .contains("Luna", "Lucas");
         });
-
 
 
     }
@@ -426,7 +456,7 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         assertEquals(3, entity.size());
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(entity.find("name")).isPresent();
-            softly.assertThat(entity.find("_id")).isPresent();
+            softly.assertThat(entity.find(ID)).isPresent();
             softly.assertThat(entity.find("city")).isPresent();
         });
     }
@@ -436,15 +466,15 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         var person1 = entityManager.insert(getEntity());
         var person2 = entityManager.insert(getEntity());
 
-        String label = "FRIEND";
+        String label = "friend";
         Map<String, Object> properties = Map.of("since", 2023);
 
         var edge = entityManager.edge(person1, label, person2, properties);
 
         assertNotNull(edge);
         assertEquals(label, edge.label());
-        assertEquals(person1.find("_id").orElseThrow().get(), edge.source().find("_id").orElseThrow().get());
-        assertEquals(person2.find("_id").orElseThrow().get(), edge.target().find("_id").orElseThrow().get());
+        assertEquals(person1.find(ID).orElseThrow().get(), edge.source().find(ID).orElseThrow().get());
+        assertEquals(person2.find(ID).orElseThrow().get(), edge.target().find(ID).orElseThrow().get());
         assertEquals(properties, edge.properties());
     }
 
@@ -453,9 +483,9 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         var person1 = entityManager.insert(getEntity());
         var person2 = entityManager.insert(getEntity());
 
-        CommunicationEdge communicationEdge = entityManager.edge(person1, "FRIEND", person2, Map.of());
+        CommunicationEdge communicationEdge = entityManager.edge(person1, "friend", person2, Map.of());
 
-        entityManager.remove(person1, "FRIEND", person2);
+        entityManager.remove(person1, "friend", person2);
 
         var edges = entityManager.findEdgeById(communicationEdge.id());
 
@@ -467,7 +497,7 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         var person1 = entityManager.insert(getEntity());
         var person2 = entityManager.insert(getEntity());
 
-        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of());
+        var edge = entityManager.edge(person1, "friend", person2, Map.of());
 
         entityManager.deleteEdge(edge.id());
 
@@ -480,15 +510,15 @@ class DefaultTinkerpopGraphDatabaseManagerTest {
         var person1 = entityManager.insert(getEntity());
         var person2 = entityManager.insert(getEntity());
 
-        var edge = entityManager.edge(person1, "FRIEND", person2, Map.of("since", 2023));
+        var edge = entityManager.edge(person1, "friend", person2, Map.of("since", 2023));
 
         Optional<CommunicationEdge> foundEdge = entityManager.findEdgeById(edge.id());
 
         assertTrue(foundEdge.isPresent());
         assertEquals(edge.id(), foundEdge.get().id());
         assertEquals(edge.label(), foundEdge.get().label());
-        assertEquals(edge.source().find("_id").orElseThrow().get(), foundEdge.get().source().find("_id").orElseThrow().get());
-        assertEquals(edge.target().find("_id").orElseThrow().get(), foundEdge.get().target().find("_id").orElseThrow().get());
+        assertEquals(edge.source().find(ID).orElseThrow().get(), foundEdge.get().source().find(ID).orElseThrow().get());
+        assertEquals(edge.target().find(ID).orElseThrow().get(), foundEdge.get().target().find(ID).orElseThrow().get());
     }
 
     @Test
