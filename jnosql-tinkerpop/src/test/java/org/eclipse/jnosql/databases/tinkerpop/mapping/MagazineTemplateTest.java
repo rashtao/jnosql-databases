@@ -18,6 +18,9 @@ import jakarta.inject.Inject;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Transaction.Status;
+import org.eclipse.jnosql.databases.tinkerpop.cdi.arangodb.ArangoDBGraphProducer;
+import org.eclipse.jnosql.databases.tinkerpop.cdi.neo4j.Neo4jGraphProducer;
+import org.eclipse.jnosql.databases.tinkerpop.cdi.tinkergraph.TinkerGraphProducer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.Magazine;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.entities.MagazineTemplate;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.spi.TinkerpopExtension;
@@ -34,16 +37,28 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.apache.tinkerpop.gremlin.structure.Transaction.Status.COMMIT;
 import static org.apache.tinkerpop.gremlin.structure.Transaction.Status.ROLLBACK;
+import static org.junit.Assume.assumeTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, TinkerpopTemplate.class})
-@AddPackages(GraphProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({ReflectionEntityMetadataExtension.class, TinkerpopExtension.class})
-class MagazineTemplateTest {
+abstract class MagazineTemplateTest {
+
+    @AddPackages(ArangoDBGraphProducer.class)
+    static class ArangoDBTest extends MagazineTemplateTest {
+    }
+
+    @AddPackages(Neo4jGraphProducer.class)
+    static class Neo4jTest extends MagazineTemplateTest {
+    }
+
+    @AddPackages(TinkerGraphProducer.class)
+    static class TinkerGraphTest extends MagazineTemplateTest {
+    }
 
     @Inject
     private MagazineTemplate template;
@@ -53,6 +68,8 @@ class MagazineTemplateTest {
 
     @Test
     void shouldSaveWithTransaction() {
+        assumeTrue("transactions not supported", graph.features().graph().supportsTransactions());
+
         AtomicReference<Status> status = new AtomicReference<>();
 
         Magazine magazine = Magazine.builder().withName("The Book").build();
@@ -65,6 +82,8 @@ class MagazineTemplateTest {
 
     @Test
     void shouldSaveWithRollback() {
+        assumeTrue("transactions not supported", graph.features().graph().supportsTransactions());
+
         AtomicReference<Status> status = new AtomicReference<>();
 
         Magazine magazine = Magazine.builder().withName("The Book").build();
@@ -83,6 +102,8 @@ class MagazineTemplateTest {
 
     @Test
     void shouldUseAutomaticNormalTransaction() {
+        assumeTrue("transactions not supported", graph.features().graph().supportsTransactions());
+
         AtomicReference<Status> status = new AtomicReference<>();
 
         Magazine magazine = Magazine.builder().withName("The Book").build();

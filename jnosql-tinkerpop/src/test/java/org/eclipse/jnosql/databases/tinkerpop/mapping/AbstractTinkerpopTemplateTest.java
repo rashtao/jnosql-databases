@@ -42,6 +42,7 @@ import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assume.assumeTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -119,7 +120,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldGetErrorWhenIdIsNullWhenUpdate() {
-        assertThrows(EmptyResultException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             Human human = Human.builder().withAge()
                     .withName("Otavio").build();
             getGraphTemplate().update(human);
@@ -130,7 +131,7 @@ public abstract class AbstractTinkerpopTemplateTest {
     void shouldGetErrorWhenEntityIsNotSavedYet() {
         assertThrows(EmptyResultException.class, () -> {
             Human human = Human.builder().withAge()
-                    .withId(10L)
+                    .withId("10")
                     .withName("Otavio").build();
 
             getGraphTemplate().update(human);
@@ -212,7 +213,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldNotFindAnEntity() {
-        Optional<Human> personFound = getGraphTemplate().find(0L);
+        Optional<Human> personFound = getGraphTemplate().find("0");
         assertFalse(personFound.isPresent());
     }
 
@@ -275,12 +276,12 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnErrorWhenGetEdgesIdHasNullDirection() {
-        assertThrows(NullPointerException.class, () -> getGraphTemplate().edgesById(10, null));
+        assertThrows(NullPointerException.class, () -> getGraphTemplate().edgesById("10", null));
     }
 
     @Test
     void shouldReturnEmptyWhenVertexDoesNotExist() {
-        Collection<EdgeEntity> edges = getGraphTemplate().edgesById(10, Direction.BOTH);
+        Collection<EdgeEntity> edges = getGraphTemplate().edgesById("10", Direction.BOTH);
         assertTrue(edges.isEmpty());
     }
 
@@ -349,7 +350,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnErrorWhenGetEdgesHasNullId2() {
-            Human otavio = Human.builder().withId(0L).withAge().withName("Otavio").build();
+        Human otavio = Human.builder().withId("0").withAge().withName("Otavio").build();
         Collection<EdgeEntity> edges = getGraphTemplate().edges(otavio, Direction.BOTH);
         assertThat(edges).isEmpty();
     }
@@ -365,7 +366,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnEmptyWhenEntityDoesNotExist() {
-        Human otavio = Human.builder().withAge().withName("Otavio").withId(10L).build();
+        Human otavio = Human.builder().withAge().withName("Otavio").withId("10").build();
         Collection<EdgeEntity> edges = getGraphTemplate().edges(otavio, Direction.BOTH);
         assertTrue(edges.isEmpty());
     }
@@ -399,6 +400,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldGetTransaction() {
+        assumeTrue("transactions not supported", getGraph().features().graph().supportsTransactions());
         Transaction transaction = getGraphTemplate().transaction();
         assertNotNull(transaction);
     }
@@ -430,7 +432,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnEmpty() {
-        Optional<Human> person = getGraphTemplate().gremlinSingleResult("g.V().hasLabel('Person')");
+        Optional<Human> person = getGraphTemplate().gremlinSingleResult("g.V().hasLabel('person')");
         assertFalse(person.isPresent());
     }
 
@@ -541,8 +543,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
     @Test
     void shouldReturnEmptyWhenFindByIdNotFound() {
-
-        final Optional<Human> person = getGraphTemplate().find(Human.class, -2L);
+        final Optional<Human> person = getGraphTemplate().find(Human.class, "-2");
         assertNotNull(person);
         assertFalse(person.isPresent());
     }
@@ -567,12 +568,12 @@ public abstract class AbstractTinkerpopTemplateTest {
         final Human poliana = getGraphTemplate().insert(Human.builder().withAge()
                 .withName("Poliana").build());
 
-        var edge = org.eclipse.jnosql.mapping.graph.Edge.source(otavio).label("LOVES").target(poliana).build();
+        var edge = org.eclipse.jnosql.mapping.graph.Edge.source(otavio).label("loves").target(poliana).build();
         var edgeEntity = getGraphTemplate().edge(edge);
 
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(edgeEntity).isNotNull();
-            softly.assertThat(edgeEntity.label()).isEqualTo("LOVES");
+            softly.assertThat(edgeEntity.label()).isEqualTo("loves");
             softly.assertThat(edgeEntity.source()).isEqualTo(otavio);
             softly.assertThat(edgeEntity.target()).isEqualTo(poliana);
         });
@@ -587,7 +588,7 @@ public abstract class AbstractTinkerpopTemplateTest {
                 .withName("Poliana").build());
 
         var edge = org.eclipse.jnosql.mapping.graph.Edge.source(otavio)
-                .label("LOVES")
+                .label("loves")
                 .target(poliana)
                 .property("when", "2017")
                 .property("where", "Brazil")
@@ -596,7 +597,7 @@ public abstract class AbstractTinkerpopTemplateTest {
 
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(edgeEntity).isNotNull();
-            softly.assertThat(edgeEntity.label()).isEqualTo("LOVES");
+            softly.assertThat(edgeEntity.label()).isEqualTo("loves");
             softly.assertThat(edgeEntity.source()).isEqualTo(otavio);
             softly.assertThat(edgeEntity.target()).isEqualTo(poliana);
             softly.assertThat(edgeEntity.properties()).hasSize(2);
