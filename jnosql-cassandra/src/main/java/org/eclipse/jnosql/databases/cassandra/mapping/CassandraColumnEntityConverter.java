@@ -25,6 +25,7 @@ import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
 import org.eclipse.jnosql.mapping.semistructured.AttributeFieldValue;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.ProjectorConverter;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +44,9 @@ class CassandraColumnEntityConverter extends EntityConverter {
     @Inject
     private Converters converters;
 
+    @Inject
+    private ProjectorConverter projectorConverter;
+
 
     @Override
     protected EntitiesMetadata entities() {
@@ -52,6 +56,11 @@ class CassandraColumnEntityConverter extends EntityConverter {
     @Override
     protected Converters converters() {
         return converters;
+    }
+
+    @Override
+    protected ProjectorConverter projectorConverter() {
+        return projectorConverter;
     }
 
     @Override
