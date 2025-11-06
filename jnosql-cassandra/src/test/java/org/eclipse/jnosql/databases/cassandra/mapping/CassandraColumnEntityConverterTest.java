@@ -283,13 +283,13 @@ public class CassandraColumnEntityConverterTest {
         address.setCity("California");
         address.setStreet("Street");
 
-        Contact contact = new Contact();
+        ContactCassandra contact = new ContactCassandra();
         contact.setAge(10);
         contact.setName("Ada");
         contact.setHome(address);
 
         var entity = converter.toCommunication(contact);
-        assertEquals("Contact", entity.name());
+        assertEquals("ContactCassandra", entity.name());
         Element column = entity.find("home").get();
         UDT udt = UDT.class.cast(column);
 
@@ -303,7 +303,7 @@ public class CassandraColumnEntityConverterTest {
 
     @Test
     public void shouldSupportUDTToEntity() {
-        var entity = CommunicationEntity.of("Contact");
+        var entity = CommunicationEntity.of("ContactCassandra");
         entity.add(Element.of("name", "Poliana"));
         entity.add(Element.of("age", 20));
         List<Element> columns = asList(Element.of("city", "Salvador"),
@@ -312,7 +312,7 @@ public class CassandraColumnEntityConverterTest {
                 .addUDT(columns).build();
         entity.add(udt);
 
-        Contact contact = converter.toEntity(entity);
+        ContactCassandra contact = converter.toEntity(entity);
         assertNotNull(contact);
         Address home = contact.getHome();
         assertEquals("Poliana", contact.getName());
