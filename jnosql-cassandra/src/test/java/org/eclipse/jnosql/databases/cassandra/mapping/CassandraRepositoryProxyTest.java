@@ -69,9 +69,9 @@ public class CassandraRepositoryProxyTest {
         CassandraRepositoryProxy handler = new CassandraRepositoryProxy(template,
                 HumanRepository.class, converters, entitiesMetadata);
 
-        when(template.insert(any(Contact.class))).thenReturn(new Contact());
-        when(template.insert(any(Contact.class), any(Duration.class))).thenReturn(new Contact());
-        when(template.update(any(Contact.class))).thenReturn(new Contact());
+        when(template.insert(any(ContactCassandra.class))).thenReturn(new ContactCassandra());
+        when(template.insert(any(ContactCassandra.class), any(Duration.class))).thenReturn(new ContactCassandra());
+        when(template.update(any(ContactCassandra.class))).thenReturn(new ContactCassandra());
         this.personRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
                 new Class[]{HumanRepository.class},
                 handler);
@@ -114,15 +114,15 @@ public class CassandraRepositoryProxyTest {
 
     @Test
     public void shouldSaveUsingInsert() {
-        Contact contact = new Contact("Ada", 10);
+        ContactCassandra contact = new ContactCassandra("Ada", 10);
         personRepository.save(contact);
         verify(template).insert(eq(contact));
     }
 
     @Test
     public void shouldSaveUsingUpdate() {
-        Contact contact = new Contact("Ada-2", 10);
-        when(template.find(Contact.class, "Ada-2")).thenReturn(Optional.of(contact));
+        ContactCassandra contact = new ContactCassandra("Ada-2", 10);
+        when(template.find(ContactCassandra.class, "Ada-2")).thenReturn(Optional.of(contact));
         personRepository.save(contact);
         verify(template).update(eq(contact));
     }
@@ -130,29 +130,29 @@ public class CassandraRepositoryProxyTest {
     @Test
     public void shouldDelete(){
         personRepository.deleteById("id");
-        verify(template).delete(Contact.class, "id");
+        verify(template).delete(ContactCassandra.class, "id");
     }
 
 
     @Test
     public void shouldDeleteEntity(){
-        Contact contact = new Contact("Ada", 10);
+        ContactCassandra contact = new ContactCassandra("Ada", 10);
         personRepository.delete(contact);
-        verify(template).delete(Contact.class, contact.getName());
+        verify(template).delete(ContactCassandra.class, contact.getName());
     }
 
-    interface HumanRepository extends CassandraRepository<Contact, String> {
+    interface HumanRepository extends CassandraRepository<ContactCassandra, String> {
 
         void deleteByName(String namel);
 
         @CQL("select * from Person")
-        List<Contact> findAllQuery();
+        List<ContactCassandra> findAllQuery();
 
         @CQL("select * from Person where name = ?")
-        List<Contact> findByName(String name);
+        List<ContactCassandra> findByName(String name);
 
         @CQL("select * from Person where name = :name")
-        List<Contact> findByName2(@Param("name") String name);
+        List<ContactCassandra> findByName2(@Param("name") String name);
     }
 
 }

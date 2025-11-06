@@ -283,7 +283,7 @@ public class CassandraColumnEntityConverterTest {
         address.setCity("California");
         address.setStreet("Street");
 
-        Contact contact = new Contact();
+        ContactCassandra contact = new ContactCassandra();
         contact.setAge(10);
         contact.setName("Ada");
         contact.setHome(address);
@@ -312,7 +312,7 @@ public class CassandraColumnEntityConverterTest {
                 .addUDT(columns).build();
         entity.add(udt);
 
-        Contact contact = converter.toEntity(entity);
+        ContactCassandra contact = converter.toEntity(entity);
         assertNotNull(contact);
         Address home = contact.getHome();
         assertEquals("Poliana", contact.getName());

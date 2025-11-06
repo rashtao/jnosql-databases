@@ -18,5 +18,5 @@ package org.eclipse.jnosql.databases.cassandra.mapping;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface ContactRepository extends CassandraRepository<Contact, String> {
+public interface ContactRepository extends CassandraRepository<ContactCassandra, String> {
 }
