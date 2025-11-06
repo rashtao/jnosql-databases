@@ -14,6 +14,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Couchbase driver to 3.9.2
 - Update Neo4J driver to 6.0.2
 - Update ArangoDB version to 7.23.0
+- Update Cassandra version to 4.19.1
 
 == [1.1.10] - 2025-08-19
 
