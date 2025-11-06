@@ -12,6 +12,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 - Update OrientDB driver to 3.2.44
 - Update Couchbase driver to 3.9.2
+- Update Neo4J driver to 6.0.2
 
 == [1.1.10] - 2025-08-19
 
