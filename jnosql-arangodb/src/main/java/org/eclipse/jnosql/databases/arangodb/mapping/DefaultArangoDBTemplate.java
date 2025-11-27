@@ -19,11 +19,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
-import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
+import org.eclipse.jnosql.communication.graph.GraphDatabaseManager;
 import org.eclipse.jnosql.databases.arangodb.communication.ArangoDBDocumentManager;
 import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.graph.AbstractGraphTemplate;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.semistructured.AbstractSemiStructuredTemplate;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 
@@ -37,17 +37,17 @@ import static java.util.Objects.requireNonNull;
  */
 @Typed(ArangoDBTemplate.class)
 @ApplicationScoped
-class DefaultArangoDBTemplate extends AbstractSemiStructuredTemplate implements ArangoDBTemplate {
+class DefaultArangoDBTemplate extends AbstractGraphTemplate implements ArangoDBTemplate {
 
     private final Instance<ArangoDBDocumentManager> manager;
 
-    private final  EntityConverter converter;
+    private final EntityConverter converter;
 
-    private final  EventPersistManager eventManager;
+    private final EventPersistManager eventManager;
 
-    private final  EntitiesMetadata entities;
+    private final EntitiesMetadata entities;
 
-    private final  Converters converters;
+    private final Converters converters;
 
     @Inject
     DefaultArangoDBTemplate(Instance<ArangoDBDocumentManager> manager,
@@ -72,7 +72,7 @@ class DefaultArangoDBTemplate extends AbstractSemiStructuredTemplate implements 
     }
 
     @Override
-    protected DatabaseManager manager() {
+    protected GraphDatabaseManager manager() {
         return manager.get();
     }
 
@@ -108,4 +108,5 @@ class DefaultArangoDBTemplate extends AbstractSemiStructuredTemplate implements 
     public <T> Stream<T> aql(String query, Class<T> type) {
         return manager.get().aql(query, type);
     }
+
 }

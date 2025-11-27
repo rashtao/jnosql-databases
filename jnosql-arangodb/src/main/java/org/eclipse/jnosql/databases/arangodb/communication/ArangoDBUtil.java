@@ -16,8 +16,10 @@
 package org.eclipse.jnosql.databases.arangodb.communication;
 
 
+import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoDB;
-import com.arangodb.entity.CollectionEntity;
+import com.arangodb.entity.CollectionType;
+import com.arangodb.model.CollectionCreateOptions;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
@@ -30,13 +32,10 @@ import org.eclipse.jnosql.communication.ValueUtil;
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.Element;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
@@ -49,11 +48,16 @@ public final class ArangoDBUtil {
     public static final String KEY = "_key";
     public static final String ID = "_id";
     public static final String REV = "_rev";
+    public static final String FROM = "_from";
+    public static final String TO = "_to";
+    private static final Set<String> META_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            ID, KEY, REV, FROM, TO
+    )));
+
     private static final Logger LOGGER = Logger.getLogger(ArangoDBUtil.class.getName());
 
     private ArangoDBUtil() {
     }
-
 
     static void checkDatabase(String database, ArangoDB arangoDB) {
         Objects.requireNonNull(database, "database is required");
@@ -67,14 +71,21 @@ public final class ArangoDBUtil {
         }
     }
 
-    public static void checkCollection(String bucketName, ArangoDB arangoDB, String namespace) {
-        checkDatabase(bucketName, arangoDB);
-        List<String> collections = arangoDB.db(bucketName)
-                .getCollections().stream()
-                .map(CollectionEntity::getName)
-                .toList();
-        if (!collections.contains(namespace)) {
-            arangoDB.db(bucketName).createCollection(namespace);
+    public static void checkCollection(String dbName, ArangoDB arangoDB, String collectionName) {
+        checkDatabase(dbName, arangoDB);
+        ArangoCollection collection = arangoDB.db(dbName).collection(collectionName);
+        if (!collection.exists()) {
+            collection.create();
+        }
+    }
+
+    public static void checkEdgeCollection(String dbName, ArangoDB arangoDB, String collectionName) {
+        checkDatabase(dbName, arangoDB);
+        ArangoCollection collection = arangoDB.db(dbName).collection(collectionName);
+        if (!collection.exists()) {
+            collection.create(new CollectionCreateOptions().type(CollectionType.EDGES));
+        } else if (collection.getInfo().getType() != CollectionType.EDGES) {
+            throw new IllegalStateException(String.format("The collection %s is not an edge collection", collectionName));
         }
     }
 
@@ -85,8 +96,25 @@ public final class ArangoDBUtil {
         documents.add(Element.of(KEY, jsonObject.getString(KEY)));
         documents.add(Element.of(ID, id));
         documents.add(Element.of(REV, jsonObject.getString(REV)));
+        if (jsonObject.containsKey(FROM)) {
+            documents.add(Element.of(FROM, jsonObject.getString(FROM)));
+        }
+        if (jsonObject.containsKey(TO)) {
+            documents.add(Element.of(TO, jsonObject.getString(TO)));
+        }
         String collection = id.split("/")[0];
         return CommunicationEntity.of(collection, documents);
+    }
+
+    static ArangoDBCommunicationEdge toEdge(JsonObject edge, JsonObject from, JsonObject to) {
+        String id = edge.getString(ID);
+        String label = id.split("/")[0];
+        Map<String, Object> properties = edge.entrySet().stream()
+                .filter(e -> !META_FIELDS.contains(e.getKey()))
+                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), toDocuments(e.getValue())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return new ArangoDBCommunicationEdge(id, toEntity(edge), toEntity(from), label, properties);
     }
 
     static JsonObject toJsonObject(CommunicationEntity entity) {
