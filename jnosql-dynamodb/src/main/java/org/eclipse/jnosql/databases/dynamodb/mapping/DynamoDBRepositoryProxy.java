@@ -96,9 +96,10 @@ class DynamoDBRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryProx
 
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(resultSupplier)
-                    .singleResult(toSingleResult(method).apply(resultSupplier::get))
+                    .singleResult(toSingleResult(method.getName()).apply(resultSupplier::get))
                     .build().execute();
         }
         return super.invoke(instance, method, args);
