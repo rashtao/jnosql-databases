@@ -104,6 +104,7 @@ class OracleDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposito
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
