@@ -104,6 +104,7 @@ class OracleDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposito
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
@@ -118,9 +119,10 @@ class OracleDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposito
             }
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(() -> result)
-                    .singleResult(toSingleResult(method).apply(() -> result))
+                    .singleResult(toSingleResult(method.getName()).apply(() -> result))
                     .build().execute();
         }
         return super.invoke(instance, method, args);

@@ -93,6 +93,7 @@ class CassandraRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryPro
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
@@ -110,9 +111,10 @@ class CassandraRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryPro
             }
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(() -> result)
-                    .singleResult(toSingleResult(method).apply(() -> result))
+                    .singleResult(toSingleResult(method.getName()).apply(() -> result))
                     .build().execute();
         }
 

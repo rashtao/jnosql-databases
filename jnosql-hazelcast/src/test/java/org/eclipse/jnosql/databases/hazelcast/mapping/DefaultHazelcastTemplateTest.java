@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({ReflectionEntityMetadataExtension.class,
-        KeyValueExtension.class, HazelcastExtension.class})
+        KeyValueExtension.class})
 public class DefaultHazelcastTemplateTest {
 
     @Inject
