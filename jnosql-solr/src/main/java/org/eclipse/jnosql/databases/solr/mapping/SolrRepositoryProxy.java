@@ -92,6 +92,7 @@ class SolrRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryProxy<T,
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
