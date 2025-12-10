@@ -108,9 +108,10 @@ class Neo4JRepositoryProxy <T, K> extends AbstractSemiStructuredRepositoryProxy<
 
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(() -> result)
-                    .singleResult(toSingleResult(method).apply(() -> result))
+                    .singleResult(toSingleResult(method.getName()).apply(() -> result))
                     .build().execute();
         }
 
