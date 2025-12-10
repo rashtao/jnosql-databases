@@ -107,9 +107,11 @@ class SolrRepositoryProxy<T, K> extends AbstractSemiStructuredRepositoryProxy<T,
 
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(result::stream)
-                    .singleResult(toSingleResult(method).apply(result::stream))
+                    .singleResult(toSingleResult(method.getName())
+                            .apply(result::stream))
                     .build().execute();
         }
         return super.invoke(instance, method, args);
