@@ -93,6 +93,7 @@ class CouchbaseDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredRepos
         return template;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
 
@@ -108,9 +109,10 @@ class CouchbaseDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredRepos
 
             return DynamicReturn.builder()
                     .classSource(typeClass)
-                    .methodSource(method)
+                    .methodName(method.getName())
+                    .returnType(method.getReturnType())
                     .result(() -> result)
-                    .singleResult(toSingleResult(method).apply(() -> result))
+                    .singleResult(toSingleResult(method.getName()).apply(() -> result))
                     .build().execute();
         }
         return super.invoke(instance, method, args);
