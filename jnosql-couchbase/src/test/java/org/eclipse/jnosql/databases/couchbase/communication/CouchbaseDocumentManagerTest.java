@@ -17,7 +17,6 @@ package org.eclipse.jnosql.databases.couchbase.communication;
 import com.couchbase.client.core.error.DocumentNotFoundException;
 import com.couchbase.client.java.json.JsonObject;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.SoftAssertions;
 import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.communication.TypeReference;
 import org.eclipse.jnosql.communication.keyvalue.BucketManager;
@@ -44,6 +43,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.awaitility.Awaitility.await;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.MATCHES;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
@@ -80,7 +80,7 @@ public class CouchbaseDocumentManagerTest {
 
     @BeforeEach
     @AfterEach
-   void cleanUpData() throws InterruptedException {
+    void cleanUpData() throws InterruptedException {
         try {
             keyValueEntityManagerForPerson.delete("id");
             keyValueEntityManagerForPerson.delete("id2");
@@ -206,11 +206,29 @@ public class CouchbaseDocumentManagerTest {
     }
 
     @Test
-   void shouldCount() {
-        CommunicationEntity entity = getEntity();
-        entityManager.insert(entity);
-        long counted = entityManager.count(COLLECTION_PERSON_NAME);
-        assertTrue(counted > 0);
+    void shouldCount() {
+        CommunicationEntity entity = entityManager.insert(createSubdocumentList());
+        Element key = entity.find("_id").get();
+        var query = select().from(COLLECTION_APP_NAME).where(key.name()).eq(key.get()).build();
+
+        assertSoftly(softly -> {
+            softly.assertThat(entityManager.count(entity.name()))
+                    .as("must return more than zero for person collection")
+                    .isEqualTo(1L);
+
+            softly.assertThat(entityManager.count(query))
+                    .isEqualTo(1L);
+
+            softly.assertThatThrownBy(()->
+                    entityManager.count((String) null))
+                    .isInstanceOf(NullPointerException.class);
+
+            softly.assertThatThrownBy(()->
+                    entityManager.count((SelectQuery) null))
+                    .isInstanceOf(NullPointerException.class);
+
+        });
+
     }
 
     private CommunicationEntity createSubdocumentList() {
@@ -277,7 +295,7 @@ public class CouchbaseDocumentManagerTest {
         entity.add(Element.of("name", null));
         CommunicationEntity documentEntity = entityManager.insert(entity);
         Optional<Element> name = documentEntity.find("name");
-        SoftAssertions.assertSoftly(soft -> {
+        assertSoftly(soft -> {
             soft.assertThat(name).isPresent();
             soft.assertThat(name).get().extracting(Element::name).isEqualTo("name");
             soft.assertThat(name).get().extracting(Element::get).isNull();
@@ -290,7 +308,7 @@ public class CouchbaseDocumentManagerTest {
         entity.add(Element.of("name", null));
         var documentEntity = entityManager.update(entity);
         Optional<Element> name = documentEntity.find("name");
-        SoftAssertions.assertSoftly(soft -> {
+        assertSoftly(soft -> {
             soft.assertThat(name).isPresent();
             soft.assertThat(name).get().extracting(Element::name).isEqualTo("name");
             soft.assertThat(name).get().extracting(Element::get).isNull();
@@ -302,11 +320,16 @@ public class CouchbaseDocumentManagerTest {
         var entity = getEntity();
 
         entityManager.insert(entity);
+
+        await().until(
+                () -> !(entityManager.select(select().from(entity.name()).build()).toList().isEmpty())
+        );
+
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.contains(Element.of("name",
                 "lia")), COLLECTION_PERSON_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
@@ -317,11 +340,15 @@ public class CouchbaseDocumentManagerTest {
         var entity = getEntity();
 
         entityManager.insert(entity);
+        await().until(
+                () -> !(entityManager.select(select().from(entity.name()).build()).toList().isEmpty())
+        );
+
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.startsWith(Element.of("name",
                 "Pol")), COLLECTION_PERSON_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
@@ -332,11 +359,16 @@ public class CouchbaseDocumentManagerTest {
         var entity = getEntity();
 
         entityManager.insert(entity);
+
+        await().until(
+                () -> !(entityManager.select(select().from(entity.name()).build()).toList().isEmpty())
+        );
+
         var query = new MappingQuery(Collections.emptyList(), 0L, 0L, CriteriaCondition.endsWith(Element.of("name",
                 "ana")), COLLECTION_PERSON_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
