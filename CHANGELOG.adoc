@@ -8,6 +8,14 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+=== Added
+
+- Add count method to MongoDB Document Manager for optimized count queries
+- Add count method to Cassandra Column Manager with consistency level support
+- Add count method to Cassandra Template with entity mapping
+- Add count method to ArangoDB Document Manager using AQL LENGTH function
+- Add count method to Couchbase Document Manager using N1QL COUNT queries
+
 === Changed
 
 - Update OrientDB driver to 3.2.44
@@ -20,6 +28,9 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Hazelcast to version 5.6.0
 - Update Redis driver to version 7.0.0
 - Update Oracle driver to version 5.4.18
+- Enhance QueryAQLConverter to support count query generation for ArangoDB
+- Enhance N1QLBuilder to support count query generation for Couchbase
+- Enhance QueryExecutor in Cassandra to support count operations
 
 == [1.1.10] - 2025-08-19
 

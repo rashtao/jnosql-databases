@@ -46,6 +46,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.MATCHES;
 import static org.eclipse.jnosql.communication.driver.IntegrationTest.NAMED;
 import static org.eclipse.jnosql.communication.semistructured.DeleteQuery.delete;
@@ -226,6 +227,22 @@ public class ArangoDBDocumentManagerTest {
     }
 
     @Test
+    void shouldCountWithSelectQuery() {
+        CommunicationEntity entity = entityManager.insert(createDocumentListNotHavingId());
+        Element key = entity.find(KEY_NAME).get();
+        SelectQuery query = select().from("AppointmentBook").where(key.name()).eq(key.get()).build();
+
+        assertSoftly(softly -> {
+            softly.assertThat(entityManager.count(query))
+                    .as("should count documents matching the query")
+                    .isEqualTo(1L);
+            softly.assertThatThrownBy(() -> entityManager.count((SelectQuery) null))
+                    .as("must not accept null query")
+                    .isInstanceOf(NullPointerException.class);
+        });
+    }
+
+    @Test
     void shouldReadFromDifferentBaseDocumentUsingInstance() {
         entityManager.insert(getEntity());
         ArangoDB arangoDB = DefaultArangoDBDocumentManager.class.cast(entityManager).getArangoDB();
@@ -273,7 +290,7 @@ public class ArangoDBDocumentManagerTest {
         entity.add(Element.of("name", null));
         CommunicationEntity documentEntity = entityManager.insert(entity);
         Optional<Element> name = documentEntity.find("name");
-        SoftAssertions.assertSoftly(soft -> {
+        assertSoftly(soft -> {
             soft.assertThat(name).isPresent();
             soft.assertThat(name).get().extracting(Element::name).isEqualTo("name");
             soft.assertThat(name).get().extracting(Element::get).isNull();
@@ -286,7 +303,7 @@ public class ArangoDBDocumentManagerTest {
         entity.add(Element.of("name", null));
         var documentEntity = entityManager.update(entity);
         Optional<Element> name = documentEntity.find("name");
-        SoftAssertions.assertSoftly(soft -> {
+        assertSoftly(soft -> {
             soft.assertThat(name).isPresent();
             soft.assertThat(name).get().extracting(Element::name).isEqualTo("name");
             soft.assertThat(name).get().extracting(Element::get).isNull();
@@ -361,7 +378,7 @@ public class ArangoDBDocumentManagerTest {
         entity.add("uuid", UUID.randomUUID());
         var documentEntity = entityManager.insert(entity);
         Optional<Element> uuid = documentEntity.find("uuid");
-        SoftAssertions.assertSoftly(soft -> {
+        assertSoftly(soft -> {
             soft.assertThat(uuid).isPresent();
             Element element = uuid.orElseThrow();
             soft.assertThat(element.name()).isEqualTo("uuid");
@@ -382,7 +399,7 @@ public class ArangoDBDocumentManagerTest {
 
         var result = entityManager.select(query).toList();
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(2);
             softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).contains(22, 23);
             softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).doesNotContain(25);
@@ -402,7 +419,7 @@ public class ArangoDBDocumentManagerTest {
 
         var result = entityManager.select(query).toList();
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(2);
             softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).contains(22, 23);
             softly.assertThat(result).map(e -> e.find("age").orElseThrow().get(Integer.class)).doesNotContain(25);
@@ -418,7 +435,7 @@ public class ArangoDBDocumentManagerTest {
                 "lia")), COLLECTION_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
@@ -433,7 +450,7 @@ public class ArangoDBDocumentManagerTest {
                 "Pol")), COLLECTION_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
@@ -448,7 +465,7 @@ public class ArangoDBDocumentManagerTest {
                 "ana")), COLLECTION_NAME, Collections.emptyList());
 
         var result = entityManager.select(query).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).hasSize(1);
             softly.assertThat(result.get(0).find("name").orElseThrow().get(String.class)).isEqualTo("Poliana");
         });
@@ -481,7 +498,7 @@ public class ArangoDBDocumentManagerTest {
         );
 
         var result = entityManager.aql(aql, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isNotEmpty());
+        assertSoftly(softly -> softly.assertThat(result).isNotEmpty());
 
         entityManager.remove(person1, "FRIEND", person2);
     }
@@ -504,7 +521,7 @@ public class ArangoDBDocumentManagerTest {
                      """;
         Map<String, Object> parameters = Map.of("edgeId", edge.id());
         var result = entityManager.aql(aql, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
+        assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
     @Test
@@ -520,7 +537,7 @@ public class ArangoDBDocumentManagerTest {
                 """;
         Map<String, Object> parameters = Map.of("id", edge.id());
         var result = entityManager.aql(aql, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> softly.assertThat(result).isEmpty());
+        assertSoftly(softly -> softly.assertThat(result).isEmpty());
     }
 
     @Test
@@ -532,7 +549,7 @@ public class ArangoDBDocumentManagerTest {
         var edgeId = edge.id();
         var retrievedEdge = entityManager.findEdgeById(edgeId);
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(retrievedEdge).isPresent();
             softly.assertThat(retrievedEdge.get().label()).isEqualTo("FRIEND");
             softly.assertThat(retrievedEdge.get().properties()).containsEntry("since", 2020);
@@ -555,7 +572,7 @@ public class ArangoDBDocumentManagerTest {
         Map<String, Object> parameters = Map.of("edgeId", edge.id());
 
         var result = entityManager.aql(aql, parameters).toList();
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(result).isNotEmpty();
             softly.assertThat(edge.properties()).containsEntry("since", 2019);
             softly.assertThat(edge.properties()).containsEntry("strength", "strong");
