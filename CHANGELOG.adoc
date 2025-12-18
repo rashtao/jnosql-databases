@@ -15,6 +15,10 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add count method to Cassandra Template with entity mapping
 - Add count method to ArangoDB Document Manager using AQL LENGTH function
 - Add count method to Couchbase Document Manager using N1QL COUNT queries
+- Add count query builder for SelectQuery at Neo4J Database Manager
+- Add count method to DefaultArangoDBDatabaseManager
+- Add count method to DefaultNeo4JDatabaseManager
+- Add count method to DefaultTinkerpopGraphDatabaseManager
 
 === Changed
 
