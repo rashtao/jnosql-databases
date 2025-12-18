@@ -35,6 +35,8 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Enhance QueryAQLConverter to support count query generation for ArangoDB
 - Enhance N1QLBuilder to support count query generation for Couchbase
 - Enhance QueryExecutor in Cassandra to support count operations
+- Update Neo4J query builder to use count queries
+- Add count method for SelectQuery in Solr Document Manager implementation
 
 == [1.1.10] - 2025-08-19
 
