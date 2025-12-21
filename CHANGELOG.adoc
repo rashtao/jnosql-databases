@@ -46,6 +46,18 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update test configuration for OrientDB
 - Update integration test configuration for OrientDB
 - Update README with database host details configuration for OrientDB
+- Enhance condition handling for count queries and add SelectCountBuilder for OracleNoSQL count queries support
+- Update condition handling in query builders
+- Improve assertions and add count query test
+- Add count method for SelectQuery support
+- Add count query support in QueryOSQLFactory for OrientDB
+- Improve URL handling in OrientDB factory
+- Enhance OrientDBDocumentConfiguration tests
+- Add count method with conditions to DefaultOrientDBDocumentManager
+- Initialize OrientDB container for testing
+- Update test configuration for OrientDB
+- Update integration test configuration for OrientDB
+- Update README with database host details configuration for OrientDB
 
 == [1.1.10] - 2025-08-19
 
