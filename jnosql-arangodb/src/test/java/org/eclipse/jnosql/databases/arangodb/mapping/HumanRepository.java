@@ -15,8 +15,17 @@
 package org.eclipse.jnosql.databases.arangodb.mapping;
 
 
+import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
+
+import java.util.List;
 
 @Repository
 public interface HumanRepository extends ArangoDBRepository<Human, String> {
+
+    @AQL("FOR p IN Person RETURN p")
+    List<Human> findAllQuery();
+
+    @AQL("FOR p IN Person FILTER p.name = @name RETURN p")
+    List<Human> findByName(@Param("name") String name);
 }
