@@ -17,12 +17,10 @@ package org.eclipse.jnosql.databases.arangodb.mapping;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.util.AnnotationLiteral;
-import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
@@ -48,17 +46,11 @@ class ArangoDBRepositoryBean<T, K> extends AbstractBean<ArangoDBRepository<T, K>
         return type;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public ArangoDBRepository<T, K> create(CreationalContext<ArangoDBRepository<T, K>> creationalContext) {
         ArangoDBTemplate template = getInstance(ArangoDBTemplate.class);
-        Converters converters = getInstance(Converters.class);
-        EntitiesMetadata entitiesMetadata = getInstance(EntitiesMetadata.class);
-
-        ArangoDBDocumentRepositoryProxy<T, K> handler = new ArangoDBDocumentRepositoryProxy<>(template, type, converters, entitiesMetadata);
-        return (ArangoDBRepository<T,K>) Proxy.newProxyInstance(type.getClassLoader(),
-                new Class[]{type},
-                handler);
+        var semiStructuredConverter = getInstance(SemistructuredRepositoryProducer.class);
+        return semiStructuredConverter.get(type, template);
     }
 
     @Override
