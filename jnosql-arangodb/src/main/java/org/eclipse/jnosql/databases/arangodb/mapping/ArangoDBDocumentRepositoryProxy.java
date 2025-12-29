@@ -114,7 +114,8 @@ class ArangoDBDocumentRepositoryProxy<T, K> extends AbstractSemiStructuredReposi
                     .returnType(method.getReturnType())
                     .result(() -> result)
                     .singleResult(toSingleResult(method.getName()).apply(() -> result))
-                    .build().execute();
+                    .build()
+                    .execute();
         }
         return super.invoke(instance, method, args);
     }
