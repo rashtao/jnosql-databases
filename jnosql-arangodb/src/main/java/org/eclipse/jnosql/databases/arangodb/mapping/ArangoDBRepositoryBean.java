@@ -38,7 +38,7 @@ class ArangoDBRepositoryBean<T, K> extends AbstractBean<ArangoDBRepository<T, K>
     private final Set<Annotation> qualifiers = Collections.singleton(new AnnotationLiteral<Default>() {
     });
 
-    ArangoDBRepositoryBean(Class type) {
+    ArangoDBRepositoryBean(Class<T> type) {
         this.type = type;
         this.types = Collections.singleton(type);
     }
@@ -73,7 +73,7 @@ class ArangoDBRepositoryBean<T, K> extends AbstractBean<ArangoDBRepository<T, K>
 
     @Override
     public String getId() {
-        return type.getName() + '@' + "orientdb";
+        return type.getName() + '@' + "arangodb";
     }
 
 }
