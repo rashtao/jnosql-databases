@@ -58,6 +58,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update test configuration for OrientDB
 - Update integration test configuration for OrientDB
 - Update README with database host details configuration for OrientDB
+- Update jakarta data engine
 
 == [1.1.10] - 2025-08-19
 
