@@ -29,7 +29,7 @@ public class ArangoDBExtension implements Extension {
     void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery) {
 
         ClassScanner scanner = ClassScanner.load();
-        Set<Class<?>> crudTypes = scanner.repositories(ArangoDBRepository.class);
+        var crudTypes = scanner.repositories(ArangoDBRepository.class);
 
         LOGGER.info("Starting the onAfterBeanDiscovery with elements number: " + crudTypes.size());
 
