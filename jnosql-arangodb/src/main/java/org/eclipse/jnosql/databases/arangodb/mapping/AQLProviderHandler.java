@@ -16,7 +16,6 @@ import static java.util.Collections.emptyMap;
 @ProviderQuery("aql")
 class AQLProviderHandler  implements ProviderQueryHandler {
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T execute(RepositoryInvocationContext context) {
         var method = context.method();
