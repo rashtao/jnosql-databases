@@ -21,19 +21,18 @@ class CQLProviderHandler implements ProviderQueryHandler {
         var method = context.method();
         var parameters = context.parameters();
         var template = (CassandraTemplate) context.template();
-        RepositoryMetadata metadata = context.metadata();
         var sampleQueryProvider = method.annotations().stream()
                 .filter(annotation -> CQL.class.equals(annotation.annotation()))
                 .findFirst().orElseThrow();
 
         Map<String, Object> attributes = sampleQueryProvider.attributes();
-        var aql = (String) attributes.get("value");
-        Map<String, Object> params = RepositoryMetadataUtils.INSTANCE.getParams(method, parameters);
+        var cql = (String) attributes.get("value");
+        Map<String, Object> params = RepositoryMetadataUtils.INSTANCE.getParamsFromName(method, parameters);
         Stream<T> result;
         if (params.isEmpty()) {
-            result = template.cql(aql, emptyMap());
+            result = template.cql(cql);
         } else {
-            result = template.cql(aql, params);
+            result = template.cql(cql, params);
         }
         return RepositoryMetadataUtils.INSTANCE.execute(context, result);
     }
