@@ -20,6 +20,7 @@ import org.eclipse.jnosql.communication.Settings;
 import org.eclipse.jnosql.communication.SettingsBuilder;
 import org.eclipse.jnosql.communication.keyvalue.KeyValueConfiguration;
 import org.infinispan.client.hotrod.RemoteCacheManager;
+import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.manager.DefaultCacheManager;
 
@@ -59,7 +60,7 @@ public class InfinispanKeyValueConfiguration implements KeyValueConfiguration {
      * @return the InfinispanBucketManagerFactory instance
      * @throws NullPointerException when config is null
      */
-    public InfinispanBucketManagerFactory get(org.infinispan.configuration.cache.Configuration config)throws NullPointerException {
+    public InfinispanBucketManagerFactory get(GlobalConfiguration config) throws NullPointerException {
         requireNonNull(config, "config is required");
 
         return new InfinispanBucketManagerFactory(new DefaultCacheManager(config));
