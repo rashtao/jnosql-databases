@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ProviderQuery("aql-query")
+@ProviderQuery("aql")
 public @interface AQL {
 
     /**

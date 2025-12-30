@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.emptyMap;
 
 @ApplicationScoped
-@ProviderQuery("aql-query")
+@ProviderQuery("aql")
 class AQLProviderHandler  implements ProviderQueryHandler {
 
     @SuppressWarnings("unchecked")
