@@ -15,16 +15,15 @@
 package org.eclipse.jnosql.databases.couchbase.mapping;
 
 import com.couchbase.client.java.json.JsonObject;
-import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
 import org.eclipse.jnosql.mapping.keyvalue.AbstractKeyValueTemplate;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
@@ -33,9 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Proxy;
 import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,27 +54,18 @@ public class CouchbaseDocumentRepositoryProxyTest {
     private CouchbaseTemplate template;
 
     @Inject
-    private Converters converters;
-
-    @Inject
-    private EntitiesMetadata entitiesMetadata;
+    private SemistructuredRepositoryProducer producer;
 
     private HumanRepository humanRepository;
-
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(CouchbaseTemplate.class);
-
-        CouchbaseDocumentRepositoryProxy handler = new CouchbaseDocumentRepositoryProxy(template,
-                HumanRepository.class, converters, entitiesMetadata);
-
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
-                new Class[]{HumanRepository.class},
-                handler);
+        humanRepository = producer.get(HumanRepository.class, template);
+
     }
 
 
@@ -126,14 +114,5 @@ public class CouchbaseDocumentRepositoryProxyTest {
         Human human = Human.of("Ada", 10);
         humanRepository.delete(human);
         verify(template).delete(Human.class, human.getName());
-    }
-
-    interface HumanRepository extends CouchbaseRepository<Human, String> {
-
-        @N1QL("select * from Person")
-        List<Human> findAllQuery();
-
-        @N1QL("select * from Person where name = $name")
-        List<Human> findByName(@Param("name") String name);
     }
 }

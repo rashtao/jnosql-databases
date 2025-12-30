@@ -15,8 +15,17 @@
 package org.eclipse.jnosql.databases.couchbase.mapping;
 
 
+import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
+
+import java.util.List;
 
 @Repository
 public interface HumanRepository extends CouchbaseRepository<Human, String> {
+
+    @N1QL("select * from Person")
+    List<Human> findAllQuery();
+
+    @N1QL("select * from Person where name = $name")
+    List<Human> findByName(@Param("name") String name);
 }
