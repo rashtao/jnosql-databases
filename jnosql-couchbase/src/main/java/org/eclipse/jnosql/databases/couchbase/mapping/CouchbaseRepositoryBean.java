@@ -17,12 +17,10 @@ package org.eclipse.jnosql.databases.couchbase.mapping;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.util.AnnotationLiteral;
-import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
@@ -49,16 +47,11 @@ class CouchbaseRepositoryBean<T, K> extends AbstractBean<CouchbaseRepository<T, 
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
     public CouchbaseRepository<T, K> create(CreationalContext<CouchbaseRepository<T, K>> creationalContext) {
-        CouchbaseTemplate template = getInstance(CouchbaseTemplate.class);
-        Converters converters = getInstance(Converters.class);
-        EntitiesMetadata entitiesMetadata = getInstance(EntitiesMetadata.class);
-        CouchbaseDocumentRepositoryProxy<T, K> handler = new CouchbaseDocumentRepositoryProxy<>(template, type, converters, entitiesMetadata);
-        return (CouchbaseRepository<T, K>) Proxy.newProxyInstance(type.getClassLoader(),
-                new Class[]{type},
-                handler);
+        var template = getInstance(CouchbaseTemplate.class);
+        var semiStructuredConverter = getInstance(SemistructuredRepositoryProducer.class);
+        return semiStructuredConverter.get(type, template);
     }
 
 

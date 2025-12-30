@@ -65,9 +65,7 @@ public enum ParamUtil {
         Annotation[][] annotations = method.getParameterAnnotations();
 
         for (int index = 0; index < annotations.length; index++) {
-
             final Object arg = args[index];
-
             Optional<Param> param = Stream.of(annotations[index])
                     .filter(Param.class::isInstance)
                     .map(Param.class::cast)
@@ -75,7 +73,6 @@ public enum ParamUtil {
             param.ifPresent(p -> params.put(p.value(), arg));
 
         }
-
         return params;
     }
 }

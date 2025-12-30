@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableAutoWeld
-@AddPackages(value = {Converters.class, AbstractKeyValueTemplate.class, Query.class})
+@AddPackages(value = {Converters.class, AbstractKeyValueTemplate.class, HazelcastTemplate.class})
 @AddPackages(MockProducer.class)
 @AddPackages(Reflections.class)
 @AddExtensions({ReflectionEntityMetadataExtension.class,

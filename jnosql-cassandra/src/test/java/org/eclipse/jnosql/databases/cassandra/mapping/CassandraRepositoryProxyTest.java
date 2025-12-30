@@ -14,7 +14,6 @@
  */
 package org.eclipse.jnosql.databases.cassandra.mapping;
 
-import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.eclipse.jnosql.communication.semistructured.DeleteQuery;
 import org.eclipse.jnosql.mapping.column.ColumnTemplate;
@@ -24,6 +23,7 @@ import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
@@ -32,9 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Proxy;
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,52 +59,50 @@ public class CassandraRepositoryProxyTest {
     @Inject
     private EntitiesMetadata entitiesMetadata;
 
-    private HumanRepository personRepository;
+    @Inject
+    private SemistructuredRepositoryProducer producer;
+
+    private HumanRepository humanRepository;
 
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(CassandraTemplate.class);
-        CassandraRepositoryProxy handler = new CassandraRepositoryProxy(template,
-                HumanRepository.class, converters, entitiesMetadata);
-
         when(template.insert(any(ContactCassandra.class))).thenReturn(new ContactCassandra());
         when(template.insert(any(ContactCassandra.class), any(Duration.class))).thenReturn(new ContactCassandra());
         when(template.update(any(ContactCassandra.class))).thenReturn(new ContactCassandra());
-        this.personRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
-                new Class[]{HumanRepository.class},
-                handler);
+        this.humanRepository = producer.get(HumanRepository.class, template);
     }
 
 
     @Test
     public void shouldFindByName() {
-        personRepository.findByName("Ada");
-        verify(template).cql("select * from Person where name = ?", "Ada");
+        humanRepository.findByName("Ada");
+        verify(template).cql("select * from Person where name = ?", Map.of("?", "Ada"));
     }
 
     @Test
     public void shouldDeleteByName() {
-        personRepository.deleteByName("Ada");
+        humanRepository.deleteByName("Ada");
         verify(template).delete(Mockito.any(DeleteQuery.class));
     }
 
     @Test
     public void shouldFindAll() {
-        personRepository.findAllQuery();
+        humanRepository.findAllQuery();
         verify(template).cql("select * from Person");
     }
 
     @Test
     public void shouldFindByNameCQL() {
-        personRepository.findByName("Ada");
-        verify(template).cql(Mockito.eq("select * from Person where name = ?"), Mockito.any(Object.class));
+        humanRepository.findByName("Ada");
+        verify(template).cql(Mockito.eq("select * from Person where name = ?"), Mockito.any(Map.class));
     }
 
     @Test
     public void shouldFindByName2CQL() {
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
 
-        personRepository.findByName2("Ada");
+        humanRepository.findByName2("Ada");
         verify(template).cql(Mockito.eq("select * from Person where name = :name"), captor.capture());
         Map map = captor.getValue();
         assertEquals("Ada", map.get("name"));
@@ -115,7 +111,7 @@ public class CassandraRepositoryProxyTest {
     @Test
     public void shouldSaveUsingInsert() {
         ContactCassandra contact = new ContactCassandra("Ada", 10);
-        personRepository.save(contact);
+        humanRepository.save(contact);
         verify(template).insert(eq(contact));
     }
 
@@ -123,13 +119,13 @@ public class CassandraRepositoryProxyTest {
     public void shouldSaveUsingUpdate() {
         ContactCassandra contact = new ContactCassandra("Ada-2", 10);
         when(template.find(ContactCassandra.class, "Ada-2")).thenReturn(Optional.of(contact));
-        personRepository.save(contact);
+        humanRepository.save(contact);
         verify(template).update(eq(contact));
     }
 
     @Test
     public void shouldDelete(){
-        personRepository.deleteById("id");
+        humanRepository.deleteById("id");
         verify(template).delete(ContactCassandra.class, "id");
     }
 
@@ -137,22 +133,8 @@ public class CassandraRepositoryProxyTest {
     @Test
     public void shouldDeleteEntity(){
         ContactCassandra contact = new ContactCassandra("Ada", 10);
-        personRepository.delete(contact);
+        humanRepository.delete(contact);
         verify(template).delete(ContactCassandra.class, contact.getName());
-    }
-
-    interface HumanRepository extends CassandraRepository<ContactCassandra, String> {
-
-        void deleteByName(String namel);
-
-        @CQL("select * from Person")
-        List<ContactCassandra> findAllQuery();
-
-        @CQL("select * from Person where name = ?")
-        List<ContactCassandra> findByName(String name);
-
-        @CQL("select * from Person where name = :name")
-        List<ContactCassandra> findByName2(@Param("name") String name);
     }
 
 }

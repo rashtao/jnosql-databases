@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022 Contributors to the Eclipse Foundation
+ *  Copyright (c) 2025 Contributors to the Eclipse Foundation
  *   All rights reserved. This program and the accompanying materials
  *   are made available under the terms of the Eclipse Public License v1.0
  *   and Apache License v2.0 which accompanies this distribution.
@@ -12,8 +12,7 @@
  *
  *   Otavio Santana
  */
-package org.eclipse.jnosql.databases.arangodb.mapping;
-
+package org.eclipse.jnosql.databases.cassandra.mapping;
 
 import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
@@ -21,11 +20,16 @@ import jakarta.data.repository.Repository;
 import java.util.List;
 
 @Repository
-public interface HumanRepository extends ArangoDBRepository<Human, String> {
+interface HumanRepository extends CassandraRepository<ContactCassandra, String> {
 
-    @AQL("FOR p IN Person RETURN p")
-    List<Human> findAllQuery();
+    void deleteByName(String namel);
 
-    @AQL("FOR p IN Person FILTER p.name = @name RETURN p")
-    List<Human> findByName(@Param("name") String name);
+    @CQL("select * from Person")
+    List<ContactCassandra> findAllQuery();
+
+    @CQL("select * from Person where name = ?")
+    List<ContactCassandra> findByName(@Param("?")String name);
+
+    @CQL("select * from Person where name = :name")
+    List<ContactCassandra> findByName2(@Param("name") String name);
 }

@@ -25,13 +25,17 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update OrientDB driver to 3.2.44
 - Update Couchbase driver to 3.9.2
 - Update Neo4J driver to 6.0.2
-- Update ArangoDB version to 7.23.0
-- Update Cassandra version to 4.19.1
+- Update MongoDB 5.6.2
+- Update ArangoDB version to 7.24.0
+- Update Cassandra version to 4.19.2
 - Update Couchabase version to 3.9.2
 - Update DynamioDB version to 2.37.5
 - Update Hazelcast to version 5.6.0
-- Update Redis driver to version 7.0.0
+- Update Redis driver to version 7.2.0
 - Update Oracle driver to version 5.4.18
+- Update infinispan to version 16.0.5
+- Update OrientDB to version 3.2.48
+
 - Enhance QueryAQLConverter to support count query generation for ArangoDB
 - Enhance N1QLBuilder to support count query generation for Couchbase
 - Enhance QueryExecutor in Cassandra to support count operations
@@ -58,6 +62,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update test configuration for OrientDB
 - Update integration test configuration for OrientDB
 - Update README with database host details configuration for OrientDB
+- Update jakarta data engine
 
 == [1.1.10] - 2025-08-19
 

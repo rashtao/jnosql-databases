@@ -14,6 +14,8 @@
  */
 package org.eclipse.jnosql.databases.couchbase.mapping;
 
+import org.eclipse.jnosql.mapping.ProviderQuery;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,6 +39,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@ProviderQuery("n1ql")
 public @interface N1QL {
     /**
      * The N1QL query string to be executed.

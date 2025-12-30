@@ -19,7 +19,6 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class ArangoDBExtension implements Extension {
@@ -29,7 +28,7 @@ public class ArangoDBExtension implements Extension {
     void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery) {
 
         ClassScanner scanner = ClassScanner.load();
-        Set<Class<?>> crudTypes = scanner.repositories(ArangoDBRepository.class);
+        var crudTypes = scanner.repositories(ArangoDBRepository.class);
 
         LOGGER.info("Starting the onAfterBeanDiscovery with elements number: " + crudTypes.size());
 

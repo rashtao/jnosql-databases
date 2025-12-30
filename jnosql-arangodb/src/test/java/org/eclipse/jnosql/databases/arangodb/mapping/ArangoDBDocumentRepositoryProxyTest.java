@@ -14,16 +14,15 @@
  */
 package org.eclipse.jnosql.databases.arangodb.mapping;
 
-import jakarta.data.repository.Param;
 import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.document.spi.DocumentExtension;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
@@ -32,9 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Proxy;
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,35 +46,26 @@ import static org.mockito.Mockito.when;
 @EnableAutoWeld
 @AddPackages(value = {Converters.class, EntityConverter.class, DocumentTemplate.class, AQL.class})
 @AddPackages(MockProducer.class)
-@AddPackages(Reflections.class)
+@AddPackages({Reflections.class, HumanRepository.class})
 @AddExtensions({ReflectionEntityMetadataExtension.class, DocumentExtension.class, ArangoDBExtension.class})
 public class ArangoDBDocumentRepositoryProxyTest {
 
     private ArangoDBTemplate template;
-    @Inject
-    private EntitiesMetadata entitiesMetadata;
 
     @Inject
-    private Converters converters;
+    private SemistructuredRepositoryProducer semistructuredRepositoryProducer;
 
     private HumanRepository humanRepository;
 
-    @SuppressWarnings("rawtypes")
     @BeforeEach
     public void setUp() {
         this.template = Mockito.mock(ArangoDBTemplate.class);
 
-        ArangoDBDocumentRepositoryProxy handler = new ArangoDBDocumentRepositoryProxy<>(template,
-                HumanRepository.class, converters, entitiesMetadata);
-
         when(template.insert(any(Human.class))).thenReturn(new Human());
         when(template.insert(any(Human.class), any(Duration.class))).thenReturn(new Human());
         when(template.update(any(Human.class))).thenReturn(new Human());
-        this.humanRepository = (HumanRepository) Proxy.newProxyInstance(HumanRepository.class.getClassLoader(),
-                new Class[]{HumanRepository.class},
-                handler);
+        this.humanRepository = semistructuredRepositoryProducer.get(HumanRepository.class, template);
     }
-
 
     @Test
     public void shouldFindAll() {
@@ -134,15 +122,5 @@ public class ArangoDBDocumentRepositoryProxyTest {
 
         Class<?> query = queryCaptor.getValue();
         Assertions.assertThat(query).isEqualTo(Human.class);
-    }
-
-
-    interface HumanRepository extends ArangoDBRepository<Human, String> {
-
-        @AQL("FOR p IN Person RETURN p")
-        List<Human> findAllQuery();
-
-        @AQL("FOR p IN Person FILTER p.name = @name RETURN p")
-        List<Human> findByName(@Param("name") String name);
     }
 }

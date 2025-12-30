@@ -35,10 +35,10 @@ public interface Projects {
     @Find
     Stream<Project> findAll();
 
-    @Find
+    @Find(SmallProject.class)
     Stream<SmallProject> findAllSmallProjects();
 
-    @Find
+    @Find(BigProject.class)
     Stream<BigProject> findAllBigProjects();
 
     @Find
