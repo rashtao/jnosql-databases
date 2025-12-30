@@ -28,7 +28,7 @@ class AQLProviderHandler  implements ProviderQueryHandler {
 
         Map<String, Object> attributes = sampleQueryProvider.attributes();
         var aql = (String) attributes.get("value");
-        Map<String, Object> params = RepositoryMetadataUtils.INSTANCE.getParams(method, parameters);
+        Map<String, Object> params = RepositoryMetadataUtils.INSTANCE.getParamsFromName(method, parameters);
         Stream<T> result;
         if (params.isEmpty()) {
             result = template.aql(aql, emptyMap());
