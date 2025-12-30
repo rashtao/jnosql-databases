@@ -17,14 +17,11 @@ package org.eclipse.jnosql.databases.cassandra.mapping;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.jnosql.mapping.ProviderQuery;
 import org.eclipse.jnosql.mapping.core.repository.RepositoryMetadataUtils;
-import org.eclipse.jnosql.mapping.metadata.repository.RepositoryMetadata;
 import org.eclipse.jnosql.mapping.metadata.repository.spi.ProviderQueryHandler;
 import org.eclipse.jnosql.mapping.metadata.repository.spi.RepositoryInvocationContext;
 
 import java.util.Map;
 import java.util.stream.Stream;
-
-import static java.util.Collections.emptyMap;
 
 @ApplicationScoped
 @ProviderQuery("cql")
