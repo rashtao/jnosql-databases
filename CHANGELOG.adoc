@@ -34,6 +34,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Update Redis driver to version 7.0.0
 - Update Oracle driver to version 5.4.18
 - Update infinispan to version 16.0.5
+- Update OrientDB to version 3.2.48
 - Enhance QueryAQLConverter to support count query generation for ArangoDB
 - Enhance N1QLBuilder to support count query generation for Couchbase
 - Enhance QueryExecutor in Cassandra to support count operations
