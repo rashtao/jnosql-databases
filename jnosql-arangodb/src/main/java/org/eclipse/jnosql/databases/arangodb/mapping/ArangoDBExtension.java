@@ -19,7 +19,6 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class ArangoDBExtension implements Extension {
