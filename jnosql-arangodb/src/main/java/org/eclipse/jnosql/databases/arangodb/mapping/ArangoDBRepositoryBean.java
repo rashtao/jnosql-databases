@@ -48,7 +48,7 @@ class ArangoDBRepositoryBean<T, K> extends AbstractBean<ArangoDBRepository<T, K>
 
     @Override
     public ArangoDBRepository<T, K> create(CreationalContext<ArangoDBRepository<T, K>> creationalContext) {
-        ArangoDBTemplate template = getInstance(ArangoDBTemplate.class);
+        var template = getInstance(ArangoDBTemplate.class);
         var semiStructuredConverter = getInstance(SemistructuredRepositoryProducer.class);
         return semiStructuredConverter.get(type, template);
     }
