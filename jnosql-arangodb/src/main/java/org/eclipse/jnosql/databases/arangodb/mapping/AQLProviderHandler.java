@@ -2,7 +2,6 @@ package org.eclipse.jnosql.databases.arangodb.mapping;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.jnosql.mapping.ProviderQuery;
-import org.eclipse.jnosql.mapping.core.repository.DynamicReturn;
 import org.eclipse.jnosql.mapping.core.repository.RepositoryMetadataUtils;
 import org.eclipse.jnosql.mapping.metadata.repository.RepositoryMetadata;
 import org.eclipse.jnosql.mapping.metadata.repository.spi.ProviderQueryHandler;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyMap;
-import static org.eclipse.jnosql.mapping.core.repository.DynamicReturn.toSingleResult;
 
 @ApplicationScoped
 @ProviderQuery("aql-query")
@@ -38,13 +36,6 @@ class AQLProviderHandler  implements ProviderQueryHandler {
         } else {
             result = template.aql(aql, params);
         }
-        return (T) DynamicReturn.builder()
-                .methodName(method.name())
-                .classSource(metadata.type())
-                .returnType(method.returnType().orElseThrow())
-                .result(() -> (Stream<Object>) result)
-                .singleResult(toSingleResult(method.name()).apply(() -> result))
-                .build()
-                .execute();
+        return RepositoryMetadataUtils.INSTANCE.execute(context, result);
     }
 }
