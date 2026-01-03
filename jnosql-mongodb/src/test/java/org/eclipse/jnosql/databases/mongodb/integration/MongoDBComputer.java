@@ -15,46 +15,42 @@
 package org.eclipse.jnosql.databases.mongodb.integration;
 
 import jakarta.nosql.Column;
-import jakarta.nosql.Embeddable;
+import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 
 import java.util.Map;
 import java.util.Objects;
 
-@Embeddable
-public class Program {
+@Entity
+public class MongoDBComputer {
     @Id
     private String name;
 
     @Column
-    private Map<String, String> socialMedia;
+    private Map<String, MongoDBProgram> programs;
+
+    private MongoDBComputer(String name, Map<String, MongoDBProgram> programs) {
+        this.name = name;
+        this.programs = programs;
+    }
+
+    @Deprecated
+    MongoDBComputer() {
+    }
 
     public String getName() {
         return name;
     }
 
-    public Map<String, String> getSocialMedia() {
-        return socialMedia;
+    public Map<String, MongoDBProgram> getPrograms() {
+        return programs;
     }
-
-    private Program(String name, Map<String, String> socialMedia) {
-        this.name = name;
-        this.socialMedia = socialMedia;
-    }
-
-
-    @Deprecated
-    Program() {
-    }
-
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Program program = (Program) o;
-        return Objects.equals(name, program.name);
+        if (o == null || getClass() != o.getClass()) return false;
+        MongoDBComputer mongoDBComputer = (MongoDBComputer) o;
+        return Objects.equals(name, mongoDBComputer.name);
     }
 
     @Override
@@ -64,13 +60,14 @@ public class Program {
 
     @Override
     public String toString() {
-        return "Program{" +
+        return "Computer{" +
                 "name='" + name + '\'' +
-                ", socialMedia=" + socialMedia +
+                ", programs=" + programs +
                 '}';
     }
 
-    public static Program of(String name, Map<String, String> socialMedia) {
-        return new Program(name, socialMedia);
+
+    public static MongoDBComputer of(String name, Map<String, MongoDBProgram> programs) {
+        return new MongoDBComputer(name, programs);
     }
 }

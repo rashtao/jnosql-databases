@@ -15,42 +15,46 @@
 package org.eclipse.jnosql.databases.mongodb.integration;
 
 import jakarta.nosql.Column;
-import jakarta.nosql.Entity;
+import jakarta.nosql.Embeddable;
 import jakarta.nosql.Id;
 
 import java.util.Map;
 import java.util.Objects;
 
-@Entity
-public class Computer {
+@Embeddable
+public class MongoDBProgram {
     @Id
     private String name;
 
     @Column
-    private Map<String, Program> programs;
-
-    private Computer(String name, Map<String, Program> programs) {
-        this.name = name;
-        this.programs = programs;
-    }
-
-    @Deprecated
-    Computer() {
-    }
+    private Map<String, String> socialMedia;
 
     public String getName() {
         return name;
     }
 
-    public Map<String, Program> getPrograms() {
-        return programs;
+    public Map<String, String> getSocialMedia() {
+        return socialMedia;
     }
+
+    private MongoDBProgram(String name, Map<String, String> socialMedia) {
+        this.name = name;
+        this.socialMedia = socialMedia;
+    }
+
+
+    @Deprecated
+    MongoDBProgram() {
+    }
+
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Computer computer = (Computer) o;
-        return Objects.equals(name, computer.name);
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MongoDBProgram mongoDBProgram = (MongoDBProgram) o;
+        return Objects.equals(name, mongoDBProgram.name);
     }
 
     @Override
@@ -60,14 +64,13 @@ public class Computer {
 
     @Override
     public String toString() {
-        return "Computer{" +
+        return "Program{" +
                 "name='" + name + '\'' +
-                ", programs=" + programs +
+                ", socialMedia=" + socialMedia +
                 '}';
     }
 
-
-    public static Computer of(String name, Map<String, Program> programs) {
-        return new Computer(name, programs);
+    public static MongoDBProgram of(String name, Map<String, String> socialMedia) {
+        return new MongoDBProgram(name, socialMedia);
     }
 }

@@ -163,12 +163,12 @@ class TemplateIntegrationTest {
 
     @Test
     void shouldInsertEntityWithMap() {
-        var program = Program.of(
+        var program = MongoDBProgram.of(
                 "Renamer",
                 Map.of("twitter", "x")
         );
         var id = "Computer" + randomUUID();
-        var computer = Computer.of(id,Map.of("Renamer", program));
+        var computer = MongoDBComputer.of(id,Map.of("Renamer", program));
 
         var result = this.template.insert(computer);
 
@@ -185,17 +185,17 @@ class TemplateIntegrationTest {
 
     @Test
     void shouldInsertEntityWithTwoMap() {
-        var program = Program.of(
+        var program = MongoDBProgram.of(
                 "Renamer",
                 Map.of("twitter", "x")
         );
 
-        var program2 = Program.of(
+        var program2 = MongoDBProgram.of(
                 "Apple",
                 Map.of("instagram", "x")
         );
         var id = "Computer" + randomUUID();
-        var computer = Computer.of(id,Map.of("Renamer", program,
+        var computer = MongoDBComputer.of(id,Map.of("Renamer", program,
                 "Apple", program2));
 
         var result = this.template.insert(computer);
