@@ -22,47 +22,53 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 === Changed
 
-- Update OrientDB driver to 3.2.44
-- Update Couchbase driver to 3.9.2
-- Update Neo4J driver to 6.0.2
+- Update jakarta data engine
+
+== [1.1.12] - 2026-01-05
+
+=== Changed
+
+- Remove unused import in DefaultCouchbaseDocumentManager
+- Add count method to DefaultCouchbaseDocumentManager
+- Add count functionality to N1QLBuilder
+- Enhance count test with delay
+- Enhance count tests in CouchbaseDocumentManager
+- Add person collection and index to Couchbase
+- Add count method for SelectQuery
+- Add count method to QueryAQLConverter
+- Add count method to CassandraTemplate
+- Enhance count methods in CassandraColumnManager
+- Enhance count query tests for CassandraColumnManager
+- Add count method based on query to CassandraColumnManager
+- Add default execute and count methods
+- Add count method based on a query to MongoDBDocumentManager
+- Add count query test for MongoDBDocumentManager
+- Add count query support with SelectQuery for Neo4J
+- Add count query builder for SelectQuery in Neo4J
+- Add count method to DefaultNeo4JDatabaseManager
+- Add count query tests for Neo4JQueryBuilder
+- Update Neo4J query builder to use count queries
+- Add count method to DefaultTinkerpopGraphDatabaseManager
+- Add count tests for entity manager in Tinkerpop
+- Add count method for SelectQuery in Solr Document Manager
+- Add count tests for SelectQuery to Solr Document Manager
+- Add count query support in QueryOSQLConverter for OrientDB
+- Add count query support in QueryOSQLFactory for OrientDB
+- Add count method with conditions to DefaultOrientDBDocumentManager
+- Improve URL handling in OrientDB factory
+- Update integration test configuration for OrientDB
+- Update README with database host details config for OrientDB
+- Add count method for SelectQuery support in OracleNoSQL
+- Enhance condition handling for count queries in OracleNoSQL
+- Add SelectCountBuilder for OracleNoSQL count queries support
+- Update condition handling in query builders
+- Improve assertions and add count query tests
 - Update MongoDB 5.6.2
 - Update ArangoDB version to 7.24.0
 - Update Cassandra version to 4.19.2
-- Update Couchabase version to 3.9.2
-- Update DynamioDB version to 2.37.5
-- Update Hazelcast to version 5.6.0
 - Update Redis driver to version 7.2.0
-- Update Oracle driver to version 5.4.18
 - Update infinispan to version 16.0.5
 - Update OrientDB to version 3.2.48
-
-- Enhance QueryAQLConverter to support count query generation for ArangoDB
-- Enhance N1QLBuilder to support count query generation for Couchbase
-- Enhance QueryExecutor in Cassandra to support count operations
-- Update Neo4J query builder to use count queries
-- Add count method for SelectQuery in Solr Document Manager implementation
-- Add count query support in QueryOSQLConverter for OrientDB
-- Add count query support in QueryOSQLFactory for OrientDB
-- Improve URL handling in OrientDB factory
-- Enhance OrientDBDocumentConfiguration tests
-- Add count method with conditions to DefaultOrientDBDocumentManager
-- Initialize OrientDB container for testing
-- Update test configuration for OrientDB
-- Update integration test configuration for OrientDB
-- Update README with database host details configuration for OrientDB
-- Enhance condition handling for count queries and add SelectCountBuilder for OracleNoSQL count queries support
-- Update condition handling in query builders
-- Improve assertions and add count query test
-- Add count method for SelectQuery support
-- Add count query support in QueryOSQLFactory for OrientDB
-- Improve URL handling in OrientDB factory
-- Enhance OrientDBDocumentConfiguration tests
-- Add count method with conditions to DefaultOrientDBDocumentManager
-- Initialize OrientDB container for testing
-- Update test configuration for OrientDB
-- Update integration test configuration for OrientDB
-- Update README with database host details configuration for OrientDB
-- Update jakarta data engine
 
 == [1.1.10] - 2025-08-19
 
